@@ -1,0 +1,13 @@
+{
+  "name": "modular-micro-service",
+  "version": "1.0.0",
+  "description": "Modular Micro Service",
+  "scripts": {
+    "start": "supabase start",
+    "stop": "supabase stop",
+    "reset": "supabase reset"
+  },
+  "devDependencies": {
+    "supabase": "^2.65.8"
+  }
+}

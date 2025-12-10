@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   node-backend:
-    build: ./backend/node-service
+    build:
+      context: ./backend/node-service
+      target: development
     ports:
       - "8000:8000"
     volumes:
