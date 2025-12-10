@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  node-backend:
+    build: ./backend/node-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/node-service:/app
+      - /app/node_modules
+    profiles:
+      - node
+    environment:
+      - NODE_ENV=development
