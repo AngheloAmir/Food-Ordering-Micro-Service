@@ -6,8 +6,16 @@ import { ProcurementTab } from './components/ProcurementTab';
 import { ProductsTab } from './components/ProductsTab';
 import { EmployeesTab } from './components/EmployeesTab';
 import { AccessTab } from './components/AccessTab';
+import { useState } from 'react';
+import { Login } from './components/Login';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <AppShell
       header={{ height: 100 }}

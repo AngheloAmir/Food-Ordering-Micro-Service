@@ -1,7 +1,15 @@
 import { AppShell, Title, Text, Container } from '@mantine/core';
 import Header from './components/Header';
+import { useState } from 'react';
+import { Login } from './components/Login';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <AppShell
       header={{ height: 100 }}

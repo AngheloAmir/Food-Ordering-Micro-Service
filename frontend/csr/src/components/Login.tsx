@@ -1,5 +1,5 @@
 import { Button, Center, PasswordInput, Stack, Text, TextInput, Title, Group } from '@mantine/core';
-import { IconChefHat, IconLock } from '@tabler/icons-react';
+import { IconHeadset, IconLock } from '@tabler/icons-react';
 import { useState } from 'react';
 
 interface LoginProps {
@@ -33,14 +33,14 @@ export function Login({ onLogin }: LoginProps) {
                         <div className="text-center mb-4">
                             <Center mb="md">
                                 <div className="p-4 bg-stone-100 dark:bg-stone-800 rounded-full border-2 border-stone-200 dark:border-stone-700">
-                                    <IconChefHat size={42} className="text-stone-700 dark:text-stone-300" stroke={1.5} />
+                                    <IconHeadset size={42} className="text-stone-700 dark:text-stone-300" stroke={1.5} />
                                 </div>
                             </Center>
                             <Title order={2} ff="monospace" className="uppercase tracking-widest text-stone-800 dark:text-stone-100">
-                                STATION LOGIN
+                                CSR ACCESS
                             </Title>
                             <Text size="sm" c="dimmed" ff="monospace" className="mt-2">
-                                KITCHEN DISPLAY SYSTEM ACCESS
+                                CUSTOMER SERVICE PORTAL
                             </Text>
                         </div>
 
@@ -53,7 +53,7 @@ export function Login({ onLogin }: LoginProps) {
                         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                             <Stack>
                                 <TextInput
-                                    label={<Text size="sm" ff="monospace" fw={700} className="uppercase text-stone-500">Operator ID</Text>}
+                                    label={<Text size="sm" ff="monospace" fw={700} className="uppercase text-stone-500">Agent ID</Text>}
                                     placeholder="Enter ID"
                                     value={username}
                                     onChange={(event) => setUsername(event.currentTarget.value)}
@@ -66,8 +66,8 @@ export function Login({ onLogin }: LoginProps) {
                                 />
 
                                 <PasswordInput
-                                    label={<Text size="sm" ff="monospace" fw={700} className="uppercase text-stone-500">Access Code</Text>}
-                                    placeholder="Enter Code"
+                                    label={<Text size="sm" ff="monospace" fw={700} className="uppercase text-stone-500">Access Key</Text>}
+                                    placeholder="Enter Key"
                                     value={password}
                                     onChange={(event) => setPassword(event.currentTarget.value)}
                                     error={!!error}
