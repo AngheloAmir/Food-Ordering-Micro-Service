@@ -1,56 +1,72 @@
-import { AppShell, Group, Title, Text, ActionIcon, useMantineColorScheme, useComputedColorScheme, Container, Image } from '@mantine/core';
-import { IconSun, IconMoon } from '@tabler/icons-react';
+import { AppShell, Group, Title, Text, Container, SimpleGrid } from '@mantine/core';
+import { useState } from 'react';
+import { mockOrders } from './data/mockOrders';
+import type { Order, OrderStatus } from './types';
+import { OrderCard } from './components/OrderCard';
+import Header from './components/Header';
 
-function ThemeToggle() {
-  const { setColorScheme } = useMantineColorScheme();
-  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
-
-  return (
-    <ActionIcon
-      onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
-      variant="default"
-      size="xl"
-      aria-label="Toggle color scheme"
-      className="dark:bg-gray-700 bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-    >
-      {computedColorScheme === 'dark' ? <IconSun stroke={1.5} /> : <IconMoon stroke={1.5} />}
-    </ActionIcon>
-  );
-}
 
 export default function App() {
+  const [orders, setOrders] = useState<Order[]>(mockOrders);
+
+  const handleStatusChange = (id: string, newStatus: OrderStatus) => {
+    setOrders((currentOrders) =>
+      currentOrders.map((order) =>
+        order.id === id ? { ...order, status: newStatus } : order
+      )
+    );
+  };
+
   return (
     <AppShell
       header={{ height: 100 }}
       padding="md"
     >
-      <AppShell.Header>
-        <div className="h-full bg-gray-100 dark:bg-gray-900 border-b border-gray-300 dark:border-gray-800 transition-colors duration-300">
-          <Container size="xl" h="100%">
-            <Group justify="space-between" h="100%">
-              <Group gap="md">
-                <Image src={"/brand.png"} h={60} w="auto" fit="contain" radius="md" />
-                <div>
-                  <Title order={2} >
-                    Amir Online Restaurant
-                  </Title>
-                  <Text size="sm" c="dimmed" fw={500}>
-                    Food deliveries and services
-                  </Text>
-                </div>
-              </Group>
-              <ThemeToggle />
-            </Group>
-          </Container>
-        </div>
-      </AppShell.Header>
+      <Header />
 
-      <AppShell.Main className="bg-white dark:bg-gray-800 transition-colors duration-300 min-h-screen">
+      <AppShell.Main className="bg-gray-50 dark:bg-gray-950 transition-colors duration-300 min-h-screen">
         <Container size="xl" py="xl">
-          <Title order={1} mb="md">Welcome to our refined dining experience</Title>
-          <Text>
-            This application uses Vite, React, TypeScript, Mantine UI, and Tailwind CSS v4.
-          </Text>
+          <div className="mb-10">
+            <Group justify="space-between" mb="lg">
+              <Title order={3}>Active Orders ({orders.filter(o => o.status === 'processing').length})</Title>
+            </Group>
+
+            {orders.filter(o => o.status === 'processing').length > 0 ? (
+              <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
+                {orders
+                  .filter((order) => order.status === 'processing')
+                  .map((order) => (
+                    <OrderCard
+                      key={order.id}
+                      order={order}
+                      onStatusChange={handleStatusChange}
+                    />
+                  ))}
+              </SimpleGrid>
+            ) : (
+              <Text c="dimmed" fs="italic">No active orders to process.</Text>
+            )}
+          </div>
+
+          <div>
+            <Title order={4} mb="lg" c="dimmed">Completed Orders ({orders.filter(o => o.status === 'completed').length})</Title>
+
+            {orders.filter(o => o.status === 'completed').length > 0 ? (
+              <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
+                {orders
+                  .filter((order) => order.status === 'completed')
+                  .map((order) => (
+                    <OrderCard
+                      key={order.id}
+                      order={order}
+                      onStatusChange={handleStatusChange}
+                    />
+                  ))}
+              </SimpleGrid>
+            ) : (
+              <Text c="dimmed" fs="italic">No completed orders yet.</Text>
+            )}
+          </div>
         </Container>
       </AppShell.Main>
     </AppShell>
