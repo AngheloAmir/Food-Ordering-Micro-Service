@@ -6,11 +6,16 @@
     "init": "cd database && npm run start --debug",
     "db:start": "cd database && npm run start",
     "db:stop": "cd database && npm run stop",
+    ".": "========================================================================",
     "node:local": "cd backend/node-service && npm run dev",
     "node:docker": "docker compose -f backend/node-service/docker-compose.yml up -d",
-    "dev:local": "npm run db:start && npm run node:local",
+    "laravel:local": "cd backend/laravel && php artisan serve",
+    "laravel:docker": "docker compose -f backend/laravel/docker-compose.yml up -d",
+    "..": "========================================================================",
+    "restaurant:dev": "cd frontend/restaurant && npm run dev",
+    "...": "=======================================================================",
+    "dev:local": "npm run node:local && npm run restaurant:dev",
     "dev:docker": "npm run db:start && npm run node:docker",
-    "stop:docker": "docker compose -f backend/node-service/docker-compose.yml down",
-    "restaurant:dev": "cd frontend/restaurant && npm run dev"
+    "stop:docker": "docker compose -f backend/node-service/docker-compose.yml down"
   }
 }
