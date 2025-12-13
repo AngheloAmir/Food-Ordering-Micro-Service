@@ -1,4 +1,4 @@
-export type OrderStatus = 'processing' | 'completed';
+export type OrderStatus = 'pending' | 'cooking' | 'completed';
 export type OrderType = 'dine_in' | 'take_out';
 export type OrderSource = 'csr' | 'customer';
 

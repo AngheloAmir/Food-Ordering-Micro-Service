@@ -56,3 +56,11 @@ export const employeesList = [
     { id: 'e4', name: 'Sarah Wilson', role: 'Chef', status: 'Working', loginTime: '10:00 AM' },
     { id: 'e5', name: 'Tom Brown', role: 'Delivery', status: 'Off', loginTime: '--' },
 ];
+
+export const employeeAccessList = [
+    { id: 'a1', name: 'John Doe', role: 'Delivery', username: 'johnD', password: 'password123', accessLevel: 'Limited' },
+    { id: 'a2', name: 'Jane Smith', role: 'Chef', username: 'chefJane', password: 'securePass!', accessLevel: 'Full Kitchen' },
+    { id: 'a3', name: 'Mike Johnson', role: 'CSR', username: 'mikeCSR', password: 'csrPass2024', accessLevel: 'Customer Data' },
+    { id: 'a4', name: 'Sarah Wilson', role: 'Chef', username: 'sarahChef', password: 'chefSarah99', accessLevel: 'Full Kitchen' },
+    { id: 'admin', name: 'Admin User', role: 'Admin', username: 'admin', password: 'adminPassword', accessLevel: 'System Admin' },
+];

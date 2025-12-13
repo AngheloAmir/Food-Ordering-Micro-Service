@@ -1,10 +1,11 @@
 import { AppShell, Container, Tabs } from '@mantine/core';
 import Header from './components/Header';
-import { IconChartBar, IconShoppingCart, IconTag, IconUsers } from '@tabler/icons-react';
+import { IconChartBar, IconShoppingCart, IconTag, IconUsers, IconKey } from '@tabler/icons-react';
 import { DashboardTab } from './components/DashboardTab';
 import { ProcurementTab } from './components/ProcurementTab';
 import { ProductsTab } from './components/ProductsTab';
 import { EmployeesTab } from './components/EmployeesTab';
+import { AccessTab } from './components/AccessTab';
 
 export default function App() {
   return (
@@ -16,36 +17,43 @@ export default function App() {
 
       <AppShell.Main className="bg-gray-50 dark:bg-gray-950 transition-colors duration-300 min-h-screen">
         <Container size="xl" py="xl">
-          <Tabs defaultValue="dashboard" variant="outline" radius="md" keepMounted={false}>
-            <Tabs.List mb="md" className="bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-200 dark:border-gray-800">
-              <Tabs.Tab value="dashboard" leftSection={<IconChartBar size={16} />}>
+          <Tabs defaultValue="dashboard" variant="pills" radius="md" orientation="vertical" className="gap-6">
+            <Tabs.List className="bg-white dark:bg-gray-900 rounded-lg p-2 border border-gray-200 dark:border-gray-800 min-w-[240px] h-fit sticky top-4">
+              <Tabs.Tab value="dashboard" leftSection={<IconChartBar size={16} />} className="mb-1 justify-start">
                 Dashboard
               </Tabs.Tab>
-              <Tabs.Tab value="procurement" leftSection={<IconShoppingCart size={16} />}>
+              <Tabs.Tab value="procurement" leftSection={<IconShoppingCart size={16} />} className="mb-1 justify-start">
                 Procurement
               </Tabs.Tab>
-              <Tabs.Tab value="products" leftSection={<IconTag size={16} />}>
+              <Tabs.Tab value="products" leftSection={<IconTag size={16} />} className="mb-1 justify-start">
                 Products
               </Tabs.Tab>
-              <Tabs.Tab value="employees" leftSection={<IconUsers size={16} />}>
+              <Tabs.Tab value="employees" leftSection={<IconUsers size={16} />} className="justify-start">
                 Employees
+              </Tabs.Tab>
+              <Tabs.Tab value="access" leftSection={<IconKey size={16} />} className="justify-start">
+                Access
               </Tabs.Tab>
             </Tabs.List>
 
-            <Tabs.Panel value="dashboard">
+            <Tabs.Panel value="dashboard" className="flex-1">
               <DashboardTab />
             </Tabs.Panel>
 
-            <Tabs.Panel value="procurement">
+            <Tabs.Panel value="procurement" className="flex-1">
               <ProcurementTab />
             </Tabs.Panel>
 
-            <Tabs.Panel value="products">
+            <Tabs.Panel value="products" className="flex-1">
               <ProductsTab />
             </Tabs.Panel>
 
-            <Tabs.Panel value="employees">
+            <Tabs.Panel value="employees" className="flex-1">
               <EmployeesTab />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="access" className="flex-1">
+              <AccessTab />
             </Tabs.Panel>
           </Tabs>
         </Container>

@@ -8,14 +8,14 @@ interface OrderCardProps {
 }
 
 export function OrderCard({ order, onStatusChange }: OrderCardProps) {
-    const isProcessing = order.status === 'processing';
-    const isCompleted = order.status === 'completed';
+    //const isProcessing = order.status === 'cooking';
+    //const isCompleted = order.status === 'completed';
 
     // Dynamic Background classes based on status
     // Using Tailwind utility classes for colors
-    const cardBgClass = isProcessing
-        ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
-        : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
+    //const cardBgClass = isProcessing
+    //    ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
+    //    : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
 
     return (
         <Card
@@ -23,7 +23,7 @@ export function OrderCard({ order, onStatusChange }: OrderCardProps) {
             padding="lg"
             radius="md"
             withBorder
-            className={`transition-colors duration-300 ${cardBgClass}`}
+            className={`transition-colors duration-300 `}
         >
             <Group justify="space-between" mb="xs">
                 <Group>
@@ -88,24 +88,41 @@ export function OrderCard({ order, onStatusChange }: OrderCardProps) {
             </Card.Section>
 
             <Group mt="md" grow>
-                <Button
-                    leftSection={<IconChefHat size={20} />}
-                    color="orange"
-                    variant={isProcessing ? 'filled' : 'light'}
-                    onClick={() => onStatusChange(order.id, 'processing')}
-                    disabled={isProcessing} // Optional: allow re-clicking if needed, but usually disabled if active
-                >
-                    Processing
-                </Button>
-                <Button
-                    leftSection={<IconCheck size={20} />}
-                    color="green"
-                    variant={isCompleted ? 'filled' : 'light'}
-                    onClick={() => onStatusChange(order.id, 'completed')}
-                    disabled={isCompleted}
-                >
-                    Complete
-                </Button>
+                {order.status === 'pending' && (
+                    <Button
+                        leftSection={<IconChefHat size={20} />}
+                        color="blue"
+                        variant="light"
+                        onClick={() => onStatusChange(order.id, 'cooking')}
+                    >
+                        Prepare Dishes
+                    </Button>
+                )}
+
+                {order.status === 'cooking' && (
+                    <Button
+                        leftSection={<IconChefHat size={20} />}
+                        color="orange"
+                        variant="light"
+                        onClick={() => onStatusChange(order.id, 'completed')}
+                    >
+                        Dish Ready
+                    </Button>
+                )}
+
+                {order.status === 'completed' && (
+                    <Button
+                        leftSection={<IconChefHat size={20} />}
+                        color="green"
+                        variant="light"
+                        onClick={() => onStatusChange(order.id, 'pending')}
+                    >
+                        (remove this button) Reset
+                    </Button>
+                )}
+
+
+
             </Group>
         </Card>
     );

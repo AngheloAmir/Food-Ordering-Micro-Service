@@ -13,7 +13,7 @@ export const mockOrders: Order[] = [
         isPaid: true,
         source: "customer",
         type: "take_out",
-        status: "processing",
+        status: "pending",
     },
     {
         id: "ORD-002",
@@ -25,7 +25,7 @@ export const mockOrders: Order[] = [
         isPaid: false,
         source: "csr",
         type: "dine_in",
-        status: "processing",
+        status: "pending",
     },
     {
         id: "ORD-003",
@@ -38,7 +38,7 @@ export const mockOrders: Order[] = [
         isPaid: true,
         source: "customer",
         type: "take_out",
-        status: "completed",
+        status: "pending",
     },
     {
         id: "ORD-004",
@@ -50,6 +50,6 @@ export const mockOrders: Order[] = [
         isPaid: true,
         source: "csr",
         type: "dine_in",
-        status: "processing",
+        status: "pending",
     },
 ];
