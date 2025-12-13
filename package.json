@@ -24,9 +24,11 @@
     "employee:docker": "docker compose -f frontend/employee/docker-compose.yml up -d",
     "pos:dev": "cd frontend/pos && npm run dev",
     "pos:docker": "docker compose -f frontend/pos/docker-compose.yml up -d",
+    "customer:dev": "cd frontend/customer && npm run dev",
+    "customer:docker": "docker compose -f frontend/customer/docker-compose.yml up -d",
     "...": "=======================================================================",
-    "dev:local": "npm run node:local && npm run admin:dev && npm run restaurant:dev && npm run csr:dev && npm run delivery:dev && npm run employee:dev && npm run pos:dev",
-    "dev:docker": "npm run db:start && npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker",
-    "dev:docker-nodb": "npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker"
+    "dev:local": "npm run node:local && npm run admin:dev && npm run restaurant:dev && npm run csr:dev && npm run delivery:dev && npm run employee:dev && npm run pos:dev && npm run customer:dev",
+    "dev:docker": "npm run db:start && npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker",
+    "dev:docker-nodb": "npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker"
   }
 }
