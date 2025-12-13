@@ -12,13 +12,15 @@
     "laravel:local": "cd backend/laravel && php artisan serve",
     "laravel:docker": "docker compose -f backend/laravel/docker-compose.yml up -d",
     "..": "========================================================================",
+    "admin:dev": "cd frontend/admin && npm run dev",
+    "admin:docker": "docker compose -f frontend/admin/docker-compose.yml up -d",
     "restaurant:dev": "cd frontend/restaurant && npm run dev",
     "restaurant:docker": "docker compose -f frontend/restaurant/docker-compose.yml up -d",
     "csr:dev": "cd frontend/csr && npm run dev",
     "csr:docker": "docker compose -f frontend/csr/docker-compose.yml up -d",
     "...": "=======================================================================",
-    "dev:local": "npm run node:local && npm run restaurant:dev && npm run csr:dev",
-    "dev:docker": "npm run db:start && npm run node:docker && npm run restaurant:docker && npm run csr:docker",
-    "dev:docker-nodb": "npm run node:docker && npm run restaurant:docker && npm run csr:docker"
+    "dev:local": "npm run node:local && npm run admin:dev && npm run restaurant:dev && npm run csr:dev",
+    "dev:docker": "npm run db:start && npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker",
+    "dev:docker-nodb": "npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker"
   }
 }
