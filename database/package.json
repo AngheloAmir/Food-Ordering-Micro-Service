@@ -5,6 +5,8 @@
   "scripts": {
     "start": "supabase start",
     "stop": "supabase stop",
+    "migration:new": "supabase migration new",
+    "migration:up": "supabase db reset",
     "reset": "supabase reset"
   },
   "devDependencies": {

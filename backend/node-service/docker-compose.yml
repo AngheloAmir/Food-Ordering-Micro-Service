@@ -1,13 +1,11 @@
 services:
   node-backend:
     build:
-      context: ./backend/node-service
+      context: .
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/node-service:/app
+      - .:/app
       - /app/node_modules
-    profiles:
-      - node
     environment:
       - NODE_ENV=development

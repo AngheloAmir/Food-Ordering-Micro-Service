@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "Node.js backend service with TypeScript",
   "scripts": {
-    "node-service:docker:build": "docker compose --profile node build",
-    "node-service:docker:run": "docker compose --profile node up",
     "init": "cd database && npm run start --debug",
-    "dev": "npm run node-service-dev",
-    "dockerdev": "npm run node-service:docker:run",
-    "stop": "cd database && npm run stop"
+    "db:start": "cd database && npm run start",
+    "db:stop": "cd database && npm run stop",
+    "node:local": "cd backend/node-service && npm run dev",
+    "node:docker": "docker compose -f backend/node-service/docker-compose.yml up -d",
+    "dev:local": "npm run db:start && npm run node:local",
+    "dev:docker": "npm run db:start && npm run node:docker",
+    "stop:docker": "docker compose -f backend/node-service/docker-compose.yml down",
+    "restaurant:dev": "cd frontend/Restaurant && npm run dev"
   }
 }
