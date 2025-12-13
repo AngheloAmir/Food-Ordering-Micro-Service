@@ -1,0 +1,13 @@
+services:
+  csr-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: csr-frontend
+    ports:
+      - "5204:5204"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
