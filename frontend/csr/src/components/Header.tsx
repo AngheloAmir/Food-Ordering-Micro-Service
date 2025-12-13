@@ -1,28 +1,29 @@
-import { AppShell, Group, Title, Text, ActionIcon, useMantineColorScheme, useComputedColorScheme, Container, Image } from '@mantine/core';
+import { Group, Title, ActionIcon, useMantineColorScheme, useComputedColorScheme, Container, Image } from '@mantine/core';
 import { IconSun, IconMoon } from '@tabler/icons-react';
 
 export default function Header() {
     return (
-        <AppShell.Header>
-            <div className="h-full w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
-                <Container size="xl" h="100%">
-                    <Group justify="space-between" h="100%">
-                        <Group gap="md">
-                            <Image src={'/brand.png'} h={80} w="auto" fit="contain" radius="md" />
-                            <div>
-                                <Title order={2} className="text-red-600 dark:text-blue-400">
-                                    Amir Online Restaurant - Customer Service
-                                </Title>
-                                <Text size="sm" c="dimmed" fw={500}>
-                                    Food deliveries and services
-                                </Text>
-                            </div>
-                        </Group>
-                        <ThemeToggle />
+        <header className="h-16 w-full bg-stone-900 dark:bg-black border-b-4 border-stone-600 dark:border-stone-800 shadow-md z-50">
+            <Container fluid h="100%" className="px-6">
+                <Group justify="space-between" h="100%">
+                    <Group gap="md">
+                        <div className="bg-white p-1 rounded-sm">
+                            <Image src={'/brand.png'} h={40} w="auto" fit="contain" />
+                        </div>
+                        <div className="flex flex-col">
+                            <Title
+                                order={4}
+                                className="text-stone-100 uppercase tracking-widest"
+                                ff="monospace"
+                            >
+                                Amir Online Restaurant <span className="text-stone-500">/</span> CSR / SALES CLERK
+                            </Title>
+                        </div>
                     </Group>
-                </Container>
-            </div>
-        </AppShell.Header>
+                    <ThemeToggle />
+                </Group>
+            </Container>
+        </header>
     )
 }
 

@@ -1,7 +1,7 @@
-import { Checkbox, Paper, Stack, Text, Button, Group } from '@mantine/core';
+import { Checkbox, Stack, Text, Button, Group } from '@mantine/core';
 import { useState } from 'react';
 import { procurementList } from '../data/mockData';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconClipboardList } from '@tabler/icons-react';
 
 export function ProcurementTab() {
     const [items, setItems] = useState(procurementList);
@@ -13,57 +13,74 @@ export function ProcurementTab() {
     };
 
     const clearCompleted = () => {
-        setItems(current => current.map(item => item.checked ? { ...item, checked: false } : item));
-        // Alternatively, if "clear" means remove:
-        // setItems(current => current.filter(item => !item.checked));
-        // But usually regular lists just uncheck or "archive". Let's assume uncheck for now or maybe delete? 
-        // The user said "clear checked items", usually implies removing them or resetting.
-        // Let's implement removing completed for "Grocery list" style
         setItems(current => current.filter(item => !item.checked));
     };
 
     return (
-        <Paper withBorder p="md" radius="md">
-            <Group justify="space-between" mb="lg">
-                <Text fz="lg" fw={700}>Procurement List</Text>
+        <div className="relative p-6 pt-16 min-h-[400px] bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 shadow-md border border-stone-300 dark:border-stone-700 mx-auto max-w-4xl">
+            {/* Clipboard Clip Visual */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-stone-800 dark:bg-black rounded-lg shadow-lg z-10 flex items-center justify-center border-b-4 border-stone-600">
+                <div className="w-40 h-8 border-2 border-stone-500 rounded flex items-center justify-center">
+                    <Text c="white" fw={700} size="xs" tt="uppercase" ff="monospace">Procurement List</Text>
+                </div>
+            </div>
+
+            <Group justify="space-between" mb="lg" align="end" className="border-b-2 border-dashed border-stone-300 dark:border-stone-600 pb-4">
+                <Group gap="xs">
+                    <IconClipboardList size={24} className="text-stone-500" />
+                    <Text fz="xl" fw={900} ff="monospace" tt="uppercase">Restock Manifesto</Text>
+                </Group>
+
                 <Button
                     color="red"
-                    variant="light"
+                    variant="subtle"
                     leftSection={<IconTrash size={16} />}
                     onClick={clearCompleted}
                     disabled={!items.some(i => i.checked)}
+                    className="hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
-                    Clear Completed
+                    Clear Done
                 </Button>
             </Group>
 
-            <Stack gap="sm">
+            <Stack gap={0}>
                 {items.length === 0 ? (
-                    <Text c="dimmed" fs="italic">No items on the list.</Text>
+                    <div className="py-12 text-center text-stone-400 border-2 border-dashed border-stone-200 dark:border-stone-700 rounded-lg">
+                        <Text fs="italic" ff="monospace">All stocks are replenished.</Text>
+                    </div>
                 ) : (
-                    items.map((item) => (
-                        <Paper
+                    items.map((item, index) => (
+                        <div
                             key={item.id}
-                            p="sm"
-                            withBorder
-                            className={item.checked ? "bg-gray-50 dark:bg-gray-900/50" : ""}
+                            className={`p-3 border-b border-stone-200 dark:border-stone-700 transition-colors ${item.checked ? "bg-stone-100 dark:bg-stone-900/50 opacity-60" : "hover:bg-stone-50 dark:hover:bg-stone-700/30"}`}
                         >
                             <Checkbox
+                                color="dark"
                                 label={
-                                    <Group>
-                                        <Text td={item.checked ? 'line-through' : undefined} c={item.checked ? 'dimmed' : undefined}>
+                                    <Group justify="space-between" w="100%">
+                                        <Text
+                                            ff="monospace"
+                                            fw={600}
+                                            td={item.checked ? 'line-through' : undefined}
+                                        >
                                             {item.item}
                                         </Text>
-                                        <Text size="sm" c="dimmed">{item.quantity}</Text>
+                                        <Text size="sm" ff="monospace" c="dimmed" className="bg-stone-200 dark:bg-stone-700 px-2 py-0.5 rounded">
+                                            QTY: {item.quantity}
+                                        </Text>
                                     </Group>
                                 }
                                 checked={item.checked}
                                 onChange={() => toggleItem(item.id)}
+                                styles={{
+                                    label: { width: '100%' },
+                                    input: { cursor: 'pointer', borderColor: 'currentColor' }
+                                }}
                             />
-                        </Paper>
+                        </div>
                     ))
                 )}
             </Stack>
-        </Paper>
+        </div>
     );
 }
