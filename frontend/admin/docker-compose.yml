@@ -1,9 +1,9 @@
 services:
-  csr-frontend:
+  admin-frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    image: csr-frontend
+    image: admin-frontend
     ports:
       - "5200:5200"
     volumes:

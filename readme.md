@@ -22,3 +22,7 @@ You also need to change the .env.local to use the remote supabase project
 The node service runs on port 5199
 The restaurant service runs on port 5201
 The csr service runs on port 5202
+The customer service runs on port 5203
+Delivery at port 5204
+Employee at port 5205
+POS at port 5206

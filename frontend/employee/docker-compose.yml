@@ -1,9 +1,9 @@
 services:
-  csr-frontend:
+  employee-frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    image: csr-frontend
+    image: employee-frontend
     ports:
       - "5204:5204"
     volumes:
