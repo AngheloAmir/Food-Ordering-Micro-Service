@@ -1,0 +1,13 @@
+{
+  "name": "modular-micro-service",
+  "version": "1.0.0",
+  "description": "Node.js backend service with TypeScript",
+  "scripts": {
+    "node-service:docker:build": "docker compose --profile node build",
+    "node-service:docker:run": "docker compose --profile node up",
+    "init": "cd database && npm run start --debug",
+    "dev": "npm run node-service-dev",
+    "dockerdev": "npm run node-service:docker:run",
+    "stop": "cd database && npm run stop"
+  }
+}
