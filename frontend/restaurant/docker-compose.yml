@@ -1,0 +1,13 @@
+services:
+  restaurant-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: restaurant-frontend
+    ports:
+      - "5201:5201"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true

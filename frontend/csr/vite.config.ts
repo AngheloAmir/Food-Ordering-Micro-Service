@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    port: 5201, // Restaurant Port
+    port: 5202, // CSR Port
     strictPort: true,
   }
 })
