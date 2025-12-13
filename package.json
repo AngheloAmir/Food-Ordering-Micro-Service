@@ -18,6 +18,7 @@
     "csr:docker": "docker compose -f frontend/csr/docker-compose.yml up -d",
     "...": "=======================================================================",
     "dev:local": "npm run node:local && npm run restaurant:dev && npm run csr:dev",
-    "dev:docker": "npm run db:start && npm run node:docker && npm run restaurant:docker && npm run csr:docker"
+    "dev:docker": "npm run db:start && npm run node:docker && npm run restaurant:docker && npm run csr:docker",
+    "dev:docker-nodb": "npm run node:docker && npm run restaurant:docker && npm run csr:docker"
   }
 }

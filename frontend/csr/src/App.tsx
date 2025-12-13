@@ -32,13 +32,14 @@ export default function App() {
                 <Image src={"/brand.png"} h={60} w="auto" fit="contain" radius="md" />
                 <div>
                   <Title order={2} >
-                    Amir Online Restaurant
+                    Amir Online Restaurant - Customer Service
                   </Title>
                   <Text size="sm" c="dimmed" fw={500}>
                     Food deliveries and services
                   </Text>
                 </div>
               </Group>
+
               <ThemeToggle />
             </Group>
           </Container>

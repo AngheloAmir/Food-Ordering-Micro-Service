@@ -3,7 +3,7 @@ services:
     build:
       context: .
     ports:
-      - "8000:8000"
+      - "5199:5199"
     volumes:
       - .:/app
       - /app/node_modules

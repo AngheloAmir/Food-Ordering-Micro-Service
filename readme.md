@@ -17,3 +17,8 @@ You also need to change the .env.local to use the remote supabase project
 
 ## Run with docker
 ``` npm run dev:docker ```
+
+## Services
+The node service runs on port 5199
+The restaurant service runs on port 5201
+The csr service runs on port 5202
