@@ -11,6 +11,6 @@
     "dev:local": "npm run db:start && npm run node:local",
     "dev:docker": "npm run db:start && npm run node:docker",
     "stop:docker": "docker compose -f backend/node-service/docker-compose.yml down",
-    "restaurant:dev": "cd frontend/Restaurant && npm run dev"
+    "restaurant:dev": "cd frontend/restaurant && npm run dev"
   }
 }
