@@ -7,12 +7,28 @@ import { ChartOfAccounts } from './components/ChartOfAccounts';
 import { JournalEntry } from './components/JournalEntry';
 import { LedgerMaintenance } from './components/LedgerMaintenance';
 import { Reporting } from './components/Reporting';
-import { IconBook, IconSettings, IconList, IconWriting, IconReportAnalytics } from '@tabler/icons-react';
+import { Login } from './components/Login';
+import { AccountsReceivable } from './components/AccountsReceivable';
+import { AccountsPayable } from './components/AccountsPayable';
+import { FixedAssets } from './components/FixedAssets';
+import { InventorySystem } from './components/InventorySystem';
+import { BankReconciliation } from './components/BankReconciliation';
+import { Payroll } from './components/Payroll';
+
+import {
+  IconBook, IconSettings, IconList, IconWriting, IconReportAnalytics,
+  IconCash, IconReceipt, IconBuildingSkyscraper, IconPackage, IconBuildingBank, IconUsers
+} from '@tabler/icons-react';
 import { useState } from 'react';
 
 function AppContent() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   // Main module selection
   const [activeModule, setActiveModule] = useState<string | null>('ledger');
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <AppShell
@@ -59,7 +75,7 @@ function AppContent() {
                 <LedgerSystemView />
               )}
               {activeModule === 'acct_func' && (
-                <EmptySystemView />
+                <AccountingFunctionsView />
               )}
             </main>
           </div>
@@ -89,7 +105,7 @@ function LedgerSystemView() {
   return (
     <Tabs defaultValue="chart" variant="outline" radius="xs" classNames={{
       list: 'mb-4 border-b-2 border-stone-300 dark:border-stone-700 bg-white/50 dark:bg-stone-900/50 backdrop-blur-sm p-1 rounded-t-sm',
-      tab: 'font-mono uppercase font-bold text-xs tracking-wide border-0 data-[active]:bg-stone-200 dark:data-[active]:bg-stone-800 data-[active]:text-stone-900 hover:bg-stone-100/50'
+      tab: 'font-mono uppercase font-bold text-xs tracking-wide border-0 data-[active]:bg-stone-200 dark:data-[active]:bg-stone-800 data-[active]:text-stone-900 dark:data-[active]:text-stone-100 hover:bg-stone-100/50'
     }}>
       <Tabs.List>
         <Tabs.Tab value="chart" leftSection={<IconList size={14} />}>Chart of Accounts</Tabs.Tab>
@@ -114,14 +130,30 @@ function LedgerSystemView() {
   )
 }
 
-function EmptySystemView() {
+function AccountingFunctionsView() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-lg p-10 bg-stone-50/50 dark:bg-stone-900/20">
-      <IconSettings size={48} className="text-stone-300 mb-4" />
-      <Text className="font-mono text-xl uppercase font-bold text-stone-400">Accounting Functionality</Text>
-      <Text c="dimmed" className="font-mono mt-2">Module under development.</Text>
-    </div>
+    <Tabs defaultValue="receivable" variant="outline" radius="xs" classNames={{
+      list: 'mb-4 border-b-2 border-stone-300 dark:border-stone-700 bg-white/50 dark:bg-stone-900/50 backdrop-blur-sm p-1 rounded-t-sm overflow-x-auto flex-nowrap',
+      tab: 'font-mono uppercase font-bold text-xs tracking-wide border-0 data-[active]:bg-stone-200 dark:data-[active]:bg-stone-800 data-[active]:text-stone-900 dark:data-[active]:text-stone-100 hover:bg-stone-100/50 whitespace-nowrap'
+    }}>
+      <Tabs.List>
+        <Tabs.Tab value="receivable" leftSection={<IconCash size={14} />}>Accts Receivable</Tabs.Tab>
+        <Tabs.Tab value="payable" leftSection={<IconReceipt size={14} />}>Accts Payable</Tabs.Tab>
+        <Tabs.Tab value="fixed_assets" leftSection={<IconBuildingSkyscraper size={14} />}>Fixed Assets</Tabs.Tab>
+        <Tabs.Tab value="inventory" leftSection={<IconPackage size={14} />}>Inventory</Tabs.Tab>
+        <Tabs.Tab value="bank" leftSection={<IconBuildingBank size={14} />}>Bank Rec.</Tabs.Tab>
+        <Tabs.Tab value="payroll" leftSection={<IconUsers size={14} />}>Payroll</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="receivable" className="animate-fade-in"><AccountsReceivable /></Tabs.Panel>
+      <Tabs.Panel value="payable" className="animate-fade-in"><AccountsPayable /></Tabs.Panel>
+      <Tabs.Panel value="fixed_assets" className="animate-fade-in"><FixedAssets /></Tabs.Panel>
+      <Tabs.Panel value="inventory" className="animate-fade-in"><InventorySystem /></Tabs.Panel>
+      <Tabs.Panel value="bank" className="animate-fade-in"><BankReconciliation /></Tabs.Panel>
+      <Tabs.Panel value="payroll" className="animate-fade-in"><Payroll /></Tabs.Panel>
+    </Tabs>
   )
 }
+
 
 export default AppContent;

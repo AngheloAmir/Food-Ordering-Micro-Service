@@ -23,9 +23,11 @@ This will open all of the vite ports in the browser
 
 ## Services
 The node service runs on port 5199
-The restaurant service runs on port 5201
-The csr service runs on port 5202
-The customer service runs on port 5203
-Delivery at port 5204
-Employee at port 5205
-POS at port 5206
+Admin App runs on port 5200
+Restaurant App runs on port 5201
+Customer App runs on port 5202
+Delivery App runs on port 5203
+Employee App runs on port 5204
+POS App runs on port 5205
+The Main App for customer runs on port 5206
+Accounting App runs on port 5207
