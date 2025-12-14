@@ -1,4 +1,4 @@
-import type { FoodItem, Order, Transaction } from '../types';
+import type { FoodItem, Order, Transaction } from '../../types';
 
 
 export const foodItems: FoodItem[] = [

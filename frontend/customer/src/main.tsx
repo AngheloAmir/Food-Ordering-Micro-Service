@@ -6,7 +6,6 @@ import './index.css' // Tailwind overrides should be last if possible, or mixed.
 import App from './App.tsx'
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
