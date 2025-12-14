@@ -26,9 +26,17 @@
     "pos:docker": "docker compose -f frontend/pos/docker-compose.yml up -d",
     "customer:dev": "cd frontend/customer && npm run dev",
     "customer:docker": "docker compose -f frontend/customer/docker-compose.yml up -d",
+    "accounting:dev": "cd frontend/accounting && npm run dev",
+    "accounting:docker": "docker compose -f frontend/accounting/docker-compose.yml up -d",
     "...": "=======================================================================",
-    "dev:local": "npm run node:local && npm run admin:dev && npm run restaurant:dev && npm run csr:dev && npm run delivery:dev && npm run employee:dev && npm run pos:dev && npm run customer:dev",
-    "dev:docker": "npm run db:start && npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker",
-    "dev:docker-nodb": "npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker"
+    "open": "node open-ports.mjs",
+    "....": "======================================================================",
+    "dev:local": "concurrently \"npm run node:local\" \"npm run admin:dev\" \"npm run restaurant:dev\" \"npm run csr:dev\" \"npm run delivery:dev\" \"npm run employee:dev\" \"npm run pos:dev\" \"npm run customer:dev\" \"npm run accounting:dev\"",
+    "dev:docker": "npm run db:start && npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker && npm run accounting:docker",
+    "dev:docker-nodb": "npm run node:docker && npm run admin:docker && npm run restaurant:docker && npm run csr:docker && npm run delivery:docker && npm run employee:docker && npm run pos:docker && npm run customer:docker && npm run accounting:docker"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "open": "^11.0.0"
   }
 }

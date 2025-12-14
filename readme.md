@@ -15,6 +15,9 @@ Docker is a good way to prevent this application from being affected by the envi
 As of this writting, the version of the node used is v25.2.1
 You also need to change the .env.local to use the remote supabase project
 
+To open the vite ports, run ``` npm run open ```
+This will open all of the vite ports in the browser
+
 ## Run with docker
 ``` npm run dev:docker ```
 
