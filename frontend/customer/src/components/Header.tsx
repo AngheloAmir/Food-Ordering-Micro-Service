@@ -9,7 +9,10 @@ import HeaderButtons from './Header/HeaderButtons';
 import { IconMessageCircle, IconReceipt, IconShoppingCart, IconUser, IconHome } from '@tabler/icons-react';
 
 
+import { useNavigate } from 'react-router-dom';
+
 export default function HeaderSearch() {
+    const navigate = useNavigate();
     const cart = useCartStore.use.cart();
     const isAuthenticated = useUserStore.use.isAuthenticated();
     const openLogin = useModalStore.use.openLogin();
@@ -19,6 +22,7 @@ export default function HeaderSearch() {
             openLogin();
             return;
         }
+        navigate('/cart');
     }
 
     function onOpenOrder() {
@@ -26,6 +30,7 @@ export default function HeaderSearch() {
             openLogin();
             return;
         }
+        navigate('/orders');
     }
 
     function onOpenChat() {
@@ -33,6 +38,7 @@ export default function HeaderSearch() {
             openLogin();
             return;
         }
+        navigate('/chats');
     }
 
     function onOpenProfile() {
@@ -40,6 +46,7 @@ export default function HeaderSearch() {
             openLogin();
             return;
         }
+        navigate('/profile');
     }
 
     return (
@@ -51,7 +58,7 @@ export default function HeaderSearch() {
                     <Group ml={20} gap={15} visibleFrom="sm">
                         <HeaderButtons
                             title="Home"
-                            onClick={() => { }}
+                            onClick={() => navigate('/')}
                             notificationCount={0}
                             isNotAvailable={false}
                             icon={<IconHome className="text-yellow-900 dark:text-white" size={30} stroke={1.5} />}
