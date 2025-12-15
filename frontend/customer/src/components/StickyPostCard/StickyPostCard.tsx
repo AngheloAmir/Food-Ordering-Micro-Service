@@ -22,6 +22,10 @@ interface StickyPostCardProps {
     containsListTable?: Array<{ name?: string; quantity?: number, price?: number }>
     containsOrderTable?: Array<{ name?: string; quantity?: number, price?: number }>
 
+    /**Buttons */
+    buttonName?: string;
+    onClickButton?: () => void;
+
 }
 
 export default function StickyPostCard(props: StickyPostCardProps) {
@@ -42,14 +46,16 @@ export default function StickyPostCard(props: StickyPostCardProps) {
             {props.containsOrderTable && <OrderTable order={props.containsOrderTable} />}
             {props.children && props.children}
 
-            <Button
+            {props.buttonName && <Button
                 fullWidth
                 size="lg"
                 mt="xl"
                 className="bg-stone-900 hover:bg-stone-800 text-yellow-100 hover:text-white transition-all transform hover:scale-[1.02] shadow-lg"
             >
-                Checkout
+                {props.buttonName}
             </Button>
+            }
+
         </PostCardBody>
     );
 
