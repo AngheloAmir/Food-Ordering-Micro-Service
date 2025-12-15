@@ -1,5 +1,5 @@
 import Header from './components/Header';
-import LoginForm from './components/modals/LoginForm';
+import LoginForm from './components/Modals/LoginForm';
 import useLogin from './hooks/useLogin';
 import useModalStore from './store/useModals';
 
