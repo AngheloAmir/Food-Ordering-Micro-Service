@@ -4,8 +4,7 @@ import useLogin from './hooks/useLogin';
 import useModalStore from './store/useModals';
 
 export default function App() {
-
-  //Login related functions
+  //Login related functions===================================================
   const { login } = useLogin();
   const isLoginOpen = useModalStore.use.isLoginOpen();
   const hideLogin = useModalStore.use.closeAll();

@@ -15,6 +15,7 @@ interface HeaderButtonProps {
 export default function HeaderButtons({ title, onClick, notificationCount, isNotAvailable, icon, notifcationColor }: HeaderButtonProps) {
     if (isNotAvailable) return (
         <Button
+            visibleFrom="md"
             onClick={onClick}
             variant="subtle" leftSection={icon}
             className="opacity-50">
@@ -25,7 +26,7 @@ export default function HeaderButtons({ title, onClick, notificationCount, isNot
     )
 
     if (notificationCount === 0) return (
-        <Button onClick={onClick} variant="subtle" leftSection={icon}>
+        <Button visibleFrom="md" onClick={onClick} variant="subtle" leftSection={icon}>
             <p className="text-yellow-900 dark:text-white">
                 {title}
             </p>
@@ -33,7 +34,7 @@ export default function HeaderButtons({ title, onClick, notificationCount, isNot
     );
 
     return (
-        <Indicator inline color={notifcationColor ?? "blue"} label={notificationCount} size={24} offset={5}>
+        <Indicator visibleFrom="md" inline color={notifcationColor ?? "blue"} label={notificationCount} size={24} offset={5}>
             <Button onClick={onClick} variant="subtle" leftSection={icon}>
                 <p className="text-yellow-900 dark:text-white">
                     {title}

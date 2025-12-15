@@ -6,7 +6,7 @@ import useCartStore from '../store/cartStore';
 import useModalStore from '../store/useModals';
 import useUserStore from '../store/userStore';
 import HeaderButtons from './Header/HeaderButtons';
-import { IconMessageCircle, IconReceipt, IconShoppingCart, IconUser } from '@tabler/icons-react';
+import { IconMessageCircle, IconReceipt, IconShoppingCart, IconUser, IconHome } from '@tabler/icons-react';
 
 
 export default function HeaderSearch() {
@@ -45,10 +45,18 @@ export default function HeaderSearch() {
     return (
         <header className="h-[64px] mb-[120px] bg-yellow-200 dark:bg-yellow-900 shadow-lg shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-b-4 border-dashed border-stone-300 dark:border-stone-800">
             <div className="h-[64px] flex justify-between items-center">
-                <Brand />
+                <Brand title='Amir Online Restaurant' subtitle='Food deliveries and services' />
 
                 <Group>
                     <Group ml={20} gap={15} visibleFrom="sm">
+                        <HeaderButtons
+                            title="Home"
+                            onClick={() => { }}
+                            notificationCount={0}
+                            isNotAvailable={false}
+                            icon={<IconHome className="text-yellow-900 dark:text-white" size={30} stroke={1.5} />}
+                        />
+
                         <HeaderButtons
                             title="Cart"
                             onClick={() => onOpenCart()}
