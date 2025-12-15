@@ -1,6 +1,7 @@
 import { Container, Title, Grid, Image, Text, Group, Button, ActionIcon, Stack, Paper } from '@mantine/core';
 import { IconTrash, IconMinus, IconPlus, IconReceipt } from '@tabler/icons-react';
 import { useState } from 'react';
+import StickyPostCard from '../components/StickyPostCard/StickyPostCard';
 
 const INITIAL_CART_ITEMS = [
     {
@@ -152,48 +153,30 @@ export default function Cart() {
 
                 {/* Summary Section */}
                 <Grid.Col span={{ base: 12, md: 4 }}>
-                    <Paper
-                        className="sticky top-24 transform rotate-1 p-6 bg-yellow-200 dark:bg-yellow-800 shadow-xl shadow-yellow-900/10 dark:shadow-black/40"
-                        radius="sm"
-                    >
-                        {/* Tape effect */}
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 bg-yellow-100/30 dark:bg-white/10 backdrop-blur-sm transform -rotate-2"></div>
-
-                        <Title order={3} className="font-sans text-stone-900 dark:text-stone-900 mb-6 flex items-center gap-2">
-                            Receipt
-                        </Title>
-
-                        <Stack gap="md" className="font-mono text-stone-800 dark:text-stone-900/80">
-                            <Group justify="space-between">
-                                <Text>Subtotal</Text>
-                                <Text>${subtotal.toFixed(2)}</Text>
-                            </Group>
-                            <Group justify="space-between">
-                                <Text>Tax (10%)</Text>
-                                <Text>${tax.toFixed(2)}</Text>
-                            </Group>
-                            <Group justify="space-between">
-                                <Text>Delivery Fee</Text>
-                                <Text>${deliveryFee.toFixed(2)}</Text>
-                            </Group>
-
-                            <div className="border-t-2 border-dashed border-stone-800/20 my-2"></div>
-
-                            <Group justify="space-between" className="text-xl font-bold text-stone-900 dark:text-stone-950">
-                                <Text>Total</Text>
-                                <Text>${total.toFixed(2)}</Text>
-                            </Group>
-                        </Stack>
-
-                        <Button
-                            fullWidth
-                            size="lg"
-                            mt="xl"
-                            className="bg-stone-900 hover:bg-stone-800 text-yellow-100 hover:text-white transition-all transform hover:scale-[1.02] shadow-lg"
-                        >
-                            Checkout
-                        </Button>
-                    </Paper>
+                    <StickyPostCard
+                        design="default"
+                        rotation="default"
+                        titleVariant="textcenter"
+                        title='Order Summary'
+                        titleBadge='12/15/2025'
+                        containsOrderTable={[
+                            {
+                                name: "Burger",
+                                quantity: 2,
+                                price: 10,
+                            },
+                            {
+                                name: "Fries",
+                                quantity: 1,
+                                price: 5,
+                            },
+                            {
+                                name: "Soda",
+                                quantity: 1,
+                                price: 2,
+                            },
+                        ]}
+                    />
                 </Grid.Col>
             </Grid>
         </Container>
