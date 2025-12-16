@@ -1,6 +1,6 @@
 import { ActionIcon, Avatar, Box, Container, Group, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { IconSend, IconHeadset } from '@tabler/icons-react';
-import PaperLikeContainer from '../components/ui/StickyPostCard/PaperLikeContainer';
+import PaperLikeContainer from '../ui/StickyPostCard/PaperLikeContainer';
 
 const MOCK_MESSAGES = [
     {

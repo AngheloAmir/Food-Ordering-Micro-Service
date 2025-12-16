@@ -1,12 +1,16 @@
 
 import { Container, Title } from '@mantine/core';
-import StickyPostCard from '../components/ui/StickyPostCard/StickyPostCard';
-import PaperLikeMainContainer from '../components/ui/StickyPostCard/PaperLikeMainContainer';
+import StickyPostCard from '../ui/StickyPostCard/StickyPostCard';
+import PaperLikeMainContainer from '../ui/StickyPostCard/PaperLikeMainContainer';
 
-import { IconUser, IconTruckDelivery, IconHistory } from "@tabler/icons-react";
-import PaperLikeTornContainer from '../components/ui/StickyPostCard/PaperLikeTornContainer';
+import { IconUser, IconHistory } from "@tabler/icons-react";
+import PaperLikeTornContainer from '../ui/StickyPostCard/PaperLikeTornContainer';
+import { useState } from 'react';
+import UserProfile from '../components/UserProfile';
 
 export default function Home() {
+    const [activeTab, setActiveTab] = useState(0);
+
 
     return (
         <PaperLikeMainContainer
@@ -14,26 +18,25 @@ export default function Home() {
                 {
                     label: "Profile",
                     icon: IconUser,
-                    active: true,
-                    onClick: () => { }
-                },
-                {
-                    label: "Delivery Instructions",
-                    icon: IconTruckDelivery,
-                    active: false,
-                    onClick: () => { }
+                    active: activeTab === 0,
+                    onClick: () => { setActiveTab(0) }
                 },
                 {
                     label: "Order History",
                     icon: IconHistory,
-                    active: false,
-                    onClick: () => { }
+                    active: activeTab === 2,
+                    onClick: () => { setActiveTab(2) }
                 },
             ]}
         >
-            <PaperLikeTornContainer>
-                asd
-            </PaperLikeTornContainer>
+            {activeTab === 0 && <UserProfile />}
+            {
+                activeTab === 2 && (
+                    <PaperLikeTornContainer>
+                        two
+                    </PaperLikeTornContainer>
+                )
+            }
 
         </PaperLikeMainContainer>
     )

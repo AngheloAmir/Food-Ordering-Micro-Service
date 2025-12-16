@@ -3,7 +3,7 @@ import useModalStore from '../store/useModals';
 import useUserStore from '../store/userStore';
 import { IconMessageCircle, IconReceipt, IconShoppingCart, IconUser, IconHome } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import HeaderStickyPostCard from './ui/StickyPostCard/HeaderStickyPostCard';
+import HeaderStickyPostCard from '../ui/StickyPostCard/HeaderStickyPostCard';
 
 export default function HeaderSearch() {
     const navigate = useNavigate();
