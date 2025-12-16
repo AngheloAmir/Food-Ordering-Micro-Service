@@ -33,63 +33,76 @@ const MOCK_MESSAGES = [
         message: 'Absolutely! I have added a note to the kitchen. Anything else?',
         time: '10:06 AM'
     },
+    {
+        id: 6,
+        sender: 'user',
+        message: 'Great, thanks! Also, can I request extra napkins?',
+        time: '10:05 AM'
+    },
+    {
+        id: 7,
+        sender: 'support',
+        message: 'Absolutely! I have added a note to the kitchen. Anything else?',
+        time: '10:06 AM'
+    },
+    {
+        id: 8,
+        sender: 'user',
+        message: 'Great, thanks! Also, can I request extra napkins?',
+        time: '10:05 AM'
+    },
+    {
+        id: 9,
+        sender: 'support',
+        message: 'Absolutely! I have added a note to the kitchen. Anything else?',
+        time: '10:06 AM'
+    },
 ];
 
 export default function Chats() {
     return (
         <Container className='mt-10'>
-            <PaperLikeContainer
-            // design="blue"
-            // rotation="default"
-            // titleVariant="textcenter"
-            // title='Customer Support'
-            // titleBadge='Online'
-            >
-                <Paper
-                    h={500}
-                    className={`bg-transparent scrollContainer`}
-                    style={{ border: 'none', background: 'rgba(255,255,255,0.4)', borderRadius: '1rem', padding: '1rem' }}
-                >
-                    <Stack gap="md">
-                        {MOCK_MESSAGES.map((msg) => {
-                            const isUser = msg.sender === 'user';
-                            return (
-                                <Group
-                                    key={msg.id}
-                                    gap="xs"
-                                    justify={isUser ? 'flex-end' : 'flex-start'}
-                                    align="flex-end"
-                                >
-                                    {!isUser && (
-                                        <Avatar radius="xl" color="blue" size="md">
-                                            <IconHeadset size={20} />
-                                        </Avatar>
-                                    )}
+            <PaperLikeContainer className="flex flex-col h-[calc(100vh-170px)]" >
+                <div className="scrollContainer h-full overflow-y-auto">
+                    {MOCK_MESSAGES.map((msg) => {
+                        const isUser = msg.sender === 'user';
+                        return (
+                            <Group
+                                key={msg.id}
+                                gap="xs"
+                                justify={isUser ? 'flex-end' : 'flex-start'}
+                                align="flex-end"
+                            >
 
-                                    <Stack gap={4} align={isUser ? 'flex-end' : 'flex-start'} style={{ maxWidth: '70%' }}>
-                                        <Paper
-                                            p="sm"
-                                            radius="lg"
-                                            className={`${isUser
-                                                ? 'bg-stone-800 text-white rounded-br-none'
-                                                : 'bg-white text-stone-800 rounded-bl-none shadow-sm'
-                                                }`}
-                                        >
-                                            <Text size="sm">{msg.message}</Text>
-                                        </Paper>
-                                        <Text size="xs" c="dimmed" className="text-stone-600 font-medium">
-                                            {msg.time}
-                                        </Text>
-                                    </Stack>
+                                {!isUser && (
+                                    <Avatar radius="xl" color="blue" size="md">
+                                        <IconHeadset size={20} />
+                                    </Avatar>
+                                )}
 
-                                    {isUser && (
-                                        <Avatar radius="xl" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80" size="md" />
-                                    )}
-                                </Group>
-                            );
-                        })}
-                    </Stack>
-                </Paper>
+                                <Stack gap={4} align={isUser ? 'flex-end' : 'flex-start'} style={{ maxWidth: '70%' }}>
+                                    <Paper
+                                        p="sm"
+                                        radius="lg"
+                                        className={`${isUser
+                                            ? 'dark:text-white rounded-br-none'
+                                            : 'text-stone-800 rounded-bl-none shadow-sm'
+                                            }`}
+                                    >
+                                        <p className='text-sm font-medium dark:text-white'>{msg.message}</p>
+                                    </Paper>
+                                    <Text size="xs" c="dimmed" className="text-stone-600 font-medium">
+                                        {msg.time}
+                                    </Text>
+                                </Stack>
+
+                                {isUser && (
+                                    <Avatar radius="xl" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80" size="md" />
+                                )}
+                            </Group>
+                        );
+                    })}
+                </div>
 
                 <Box mt="md">
                     <Group gap="xs">
@@ -117,7 +130,7 @@ export default function Chats() {
                         </ActionIcon>
                     </Group>
                 </Box>
-            </PaperLikeContainer>
-        </Container>
+            </PaperLikeContainer >
+        </Container >
     );
 }
