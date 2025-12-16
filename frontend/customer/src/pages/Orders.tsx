@@ -1,6 +1,6 @@
 import { Container } from '@mantine/core';
-import PostCardBody from '../components/StickyPostCard/sub/PostCardBody';
-import TitleVariant2 from '../components/StickyPostCard/sub/TitleVariant2';
+import PostCardBody from '../components/ui/StickyPostCard/stickypostcard/PostCardBody';
+import TitleVariant2 from '../components/ui/StickyPostCard/stickypostcard/TitleVariant2';
 
 import OrderStatus from '../components/OrderStatus';
 import OrderDetails from '../components/OrderDetails';

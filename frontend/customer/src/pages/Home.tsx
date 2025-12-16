@@ -1,8 +1,42 @@
 
 import { Container, Title } from '@mantine/core';
-import StickyPostCard from '../components/StickyPostCard/StickyPostCard';
+import StickyPostCard from '../components/ui/StickyPostCard/StickyPostCard';
+import PaperLikeMainContainer from '../components/ui/StickyPostCard/PaperLikeMainContainer';
+
+import { IconUser, IconTruckDelivery, IconHistory } from "@tabler/icons-react";
 
 export default function Home() {
+
+    return (
+        <PaperLikeMainContainer
+            navigation={[
+                {
+                    label: "Profile",
+                    icon: IconUser,
+                    active: true,
+                    onClick: () => { }
+                },
+                {
+                    label: "Delivery Instructions",
+                    icon: IconTruckDelivery,
+                    active: false,
+                    onClick: () => { }
+                },
+                {
+                    label: "Order History",
+                    icon: IconHistory,
+                    active: false,
+                    onClick: () => { }
+                },
+            ]}
+        >
+
+
+        </PaperLikeMainContainer>
+    )
+
+
+
     return (
         <Container>
             <Title>Home Page</Title>

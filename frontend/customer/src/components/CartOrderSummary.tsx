@@ -1,5 +1,5 @@
 import { Grid } from "@mantine/core";
-import StickyPostCard from "./StickyPostCard/StickyPostCard";
+import StickyPostCard from "./ui/StickyPostCard/StickyPostCard";
 
 export default function CartOrderSummary() {
     return (
@@ -27,6 +27,11 @@ export default function CartOrderSummary() {
                         price: 2,
                     },
                 ]}
+
+                buttonName="Place Order"
+                onClickButton={() => {
+
+                }}
             />
         </Grid.Col>
     );

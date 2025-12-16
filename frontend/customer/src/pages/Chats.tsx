@@ -1,6 +1,6 @@
 import { ActionIcon, Avatar, Box, Container, Group, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { IconSend, IconHeadset } from '@tabler/icons-react';
-import StickyPostCard from '../components/StickyPostCard/StickyPostCard';
+import StickyPostCard from '../components/ui/StickyPostCard/StickyPostCard';
 import classes from '../components/CartItems.module.css';
 
 const MOCK_MESSAGES = [

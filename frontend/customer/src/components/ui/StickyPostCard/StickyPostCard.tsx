@@ -1,10 +1,10 @@
 import { Button } from '@mantine/core';
-import CardHr from './sub/CardHr';
-import ListTable from './sub/ListTable';
-import OrderTable from './sub/OrderTable';
-import PostCardBody from './sub/PostCardBody';
-import TitleVariant1 from './sub/TitleVariant1';
-import TitleVariant2 from './sub/TitleVariant2';
+import CardHr from './stickypostcard/CardHr';
+import ListTable from './stickypostcard/ListTable';
+import OrderTable from './stickypostcard/OrderTable';
+import PostCardBody from './stickypostcard/PostCardBody';
+import TitleVariant1 from './stickypostcard/TitleVariant1';
+import TitleVariant2 from './stickypostcard/TitleVariant2';
 
 interface StickyPostCardProps {
     children?: React.ReactNode;
