@@ -1,4 +1,5 @@
-import { Container, Grid, Stack, Paper } from "@mantine/core";
+import { Container, Grid, Stack } from "@mantine/core";
+import PaperLikeTornContainer from "./PaperLikeTornContainer";
 
 interface NavButtonProps {
     label: string;
@@ -17,6 +18,7 @@ export default function PaperLikeMainContainer(props: PaperLikeContainerProps) {
     return (
         <Container size="xl" className='mt-10 mb-20'>
             <Grid gutter="xl">
+                {/* Left Navigation Sidebar */}
                 <Grid.Col span={{ base: 12, md: 3 }}>
                     <Stack gap="sm">
                         {props.navigation?.map((item, index) => (
@@ -33,13 +35,9 @@ export default function PaperLikeMainContainer(props: PaperLikeContainerProps) {
 
                 {/* Right Content Area */}
                 <Grid.Col span={{ base: 12, md: 9 }}>
-                    <Paper
-                        radius="md"
-                        p="md"
-                        className="dark:bg-yellow-900 shadow-lg shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-4 border-dashed border-stone-300 dark:border-stone-800"
-                    >
-                        asdasdasda
-                    </Paper>
+                    <PaperLikeTornContainer>
+
+                    </PaperLikeTornContainer>
                 </Grid.Col>
             </Grid>
         </Container>
