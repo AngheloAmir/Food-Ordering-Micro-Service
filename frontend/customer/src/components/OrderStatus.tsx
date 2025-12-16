@@ -4,14 +4,14 @@ import { IconCircleCheck, IconReceipt, IconChefHat, IconTruckDelivery } from "@t
 
 export default function OrderStatus() {
     return (
-        <div className='mt-5 p-5 bg-white dark:bg-stone-800 rounded-xl'>
+        <div className='mt-5 p-5 bg-white dark:bg-stone-700 rounded-xl'>
             <Stepper
                 active={1}
                 completedIcon={<IconCircleCheck size={18} />}
                 size="xs"
                 classNames={{
-                    stepIcon: 'border-2 border-stone-800',
-                    separator: 'bg-stone-800 h-[2px]',
+                    stepIcon: 'border-2 border-stone-700',
+                    separator: 'bg-stone-700 h-[2px]',
                 }}
             >
                 <Stepper.Step

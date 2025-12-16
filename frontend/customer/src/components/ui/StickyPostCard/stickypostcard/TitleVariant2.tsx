@@ -1,5 +1,3 @@
-import { Text } from "@mantine/core";
-
 interface TitleVariant2Props {
     title?: string;
     badge?: string;
@@ -9,12 +7,12 @@ export default function TitleVariant2(props: TitleVariant2Props) {
 
     return (
         <div className="text-center flex flex-col">
-            <Text fw={900} size="xl" ff="monospace" className="uppercase tracking-widest text-center">
+            <p className="font-bold text-xl text-[#242424] dark:text-[#e5e5e5] uppercase tracking-widest text-center">
                 {props.title}
-            </Text>
-            <Text size="xs" ff="monospace" ta="center" className="opacity-70">
+            </p>
+            <p className="text-xs  text-lg text-[#242424] dark:text-[#e5e5e5] opacity-70">
                 {props.badge}
-            </Text>
+            </p>
         </div>
 
     );

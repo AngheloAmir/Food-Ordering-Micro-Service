@@ -13,11 +13,13 @@ interface CartItemCardProps {
 
     onDelete?: () => void;
     onQuantityChange?: (quantity: number, id: number) => void;
+
+    className?: string;
 }
 
 export default function CartItemCard(props: CartItemCardProps) {
     return (
-        <Paper className="overflow-hidden border-2 border-dashed border-stone-300 dark:border-stone-700 shadow-sm" radius="md">
+        <Paper className={`overflow-hidden border-2 border-dashed border-stone-300 dark:border-stone-700 shadow-sm ${props.className}`} radius="md">
             <div className="flex flex-col sm:flex-row h-full">
                 <div className="w-full sm:w-40 h-40 sm:h-auto shrink-0 relative">
                     <Image

@@ -1,14 +1,10 @@
-import { Paper } from "@mantine/core";
 
-
-export default function PaperLike() {
+export default function PaperLikeContainer(props: { children: React.ReactNode, className?: string }) {
     return (
-        <Paper
-            radius="md"
-            p="md"
-            className="dark:bg-yellow-900 shadow-lg shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-4 border-dashed border-stone-300 dark:border-stone-800"
+        <div
+            className={`w-100% p-4 rounded-lg dark:bg-[#242424] border-4 border-dashed border-stone-300 dark:border-stone-700 ${props.className}`}
         >
-            asdasdasda
-        </Paper>
+            {props.children}
+        </div>
     );
 }

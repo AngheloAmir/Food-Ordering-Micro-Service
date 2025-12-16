@@ -6,12 +6,16 @@ import CartHeading from '../components/Cart/CartHeading';
 export default function Cart() {
     return (
         <Container size="xl" className="pb-10">
-            <CartHeading />
+            <div className="w-full h-[calc(100vh-130px)]">
+                <CartHeading />
+                <Grid gutter="xl" className="w-full">
+                    <div className="w-[65%]">
+                        <CartItems />
+                    </div>
+                    <CartOrderSummary />
+                </Grid>
+            </div>
 
-            <Grid gutter="xl">
-                <CartItems />
-                <CartOrderSummary />
-            </Grid>
         </Container>
     );
 }

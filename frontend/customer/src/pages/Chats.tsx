@@ -1,7 +1,6 @@
 import { ActionIcon, Avatar, Box, Container, Group, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { IconSend, IconHeadset } from '@tabler/icons-react';
-import StickyPostCard from '../components/ui/StickyPostCard/StickyPostCard';
-import classes from '../components/CartItems.module.css';
+import PaperLikeContainer from '../components/ui/StickyPostCard/PaperLikeContainer';
 
 const MOCK_MESSAGES = [
     {
@@ -39,16 +38,16 @@ const MOCK_MESSAGES = [
 export default function Chats() {
     return (
         <Container className='mt-10'>
-            <StickyPostCard
-                design="blue"
-                rotation="default"
-                titleVariant="textcenter"
-                title='Customer Support'
-                titleBadge='Online'
+            <PaperLikeContainer
+            // design="blue"
+            // rotation="default"
+            // titleVariant="textcenter"
+            // title='Customer Support'
+            // titleBadge='Online'
             >
                 <Paper
                     h={500}
-                    className={`bg-transparent ${classes.scrollContainer}`}
+                    className={`bg-transparent scrollContainer`}
                     style={{ border: 'none', background: 'rgba(255,255,255,0.4)', borderRadius: '1rem', padding: '1rem' }}
                 >
                     <Stack gap="md">
@@ -118,7 +117,7 @@ export default function Chats() {
                         </ActionIcon>
                     </Group>
                 </Box>
-            </StickyPostCard>
+            </PaperLikeContainer>
         </Container>
     );
 }

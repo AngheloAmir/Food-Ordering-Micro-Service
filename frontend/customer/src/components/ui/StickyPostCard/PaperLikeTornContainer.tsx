@@ -19,7 +19,7 @@ export default function PaperLikeTornContainer(props: PaperLikeTornContainerProp
                 }}
             />
 
-            <div className="bg-gray-100 dark:bg-[#242424] relative z-0 p-8 min-h-[400px] shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-b-1 border-x-1 border-stone-300 dark:border-stone-800">
+            <div className="bg-gray-100 dark:bg-[#242424] relative z-0 px-8 pt-4 pb-8 min-h-[400px] shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-b-1 border-x-1 border-stone-300 dark:border-stone-800">
                 <div className="dark:text-stone-900">
                     {props.children ? props.children : (
                         <div className="text-center text-stone-500 italic mt-10">

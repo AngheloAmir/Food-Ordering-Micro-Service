@@ -4,6 +4,7 @@ import StickyPostCard from '../components/ui/StickyPostCard/StickyPostCard';
 import PaperLikeMainContainer from '../components/ui/StickyPostCard/PaperLikeMainContainer';
 
 import { IconUser, IconTruckDelivery, IconHistory } from "@tabler/icons-react";
+import PaperLikeTornContainer from '../components/ui/StickyPostCard/PaperLikeTornContainer';
 
 export default function Home() {
 
@@ -30,7 +31,9 @@ export default function Home() {
                 },
             ]}
         >
-
+            <PaperLikeTornContainer>
+                asd
+            </PaperLikeTornContainer>
 
         </PaperLikeMainContainer>
     )

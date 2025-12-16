@@ -1,7 +1,6 @@
-import { Grid, Stack } from '@mantine/core';
 import CartItemCard from './Cart/CartItemCard';
 import { useState } from 'react';
-import classes from './CartItems.module.css';
+import PaperLikeContainer from './ui/StickyPostCard/PaperLikeContainer';
 
 export default function CartItems() {
     const [cartItems, setCartItems] = useState([
@@ -49,11 +48,11 @@ export default function CartItems() {
 
 
     return (
-        <Grid.Col span={{ base: 12, md: 8 }} className={classes.scrollContainer}>
-            <Stack gap="lg">
-
+        <PaperLikeContainer className="scrollContainer w-100% overflow-y-auto">
+            <div>
                 {cartItems.map((item) => (
                     <CartItemCard
+                        className='mb-4'
                         id={item.id}
                         title={item.name}
                         description={item.description}
@@ -81,8 +80,10 @@ export default function CartItems() {
                             </Text>
                         </Paper>
                     )} */}
-            </Stack>
-        </Grid.Col>
+
+
+            </div>
+        </PaperLikeContainer>
 
     );
 }
