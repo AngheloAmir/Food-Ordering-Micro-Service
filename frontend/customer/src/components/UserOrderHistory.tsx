@@ -1,5 +1,5 @@
 import { Stack, Group, Badge } from "@mantine/core";
-import PaperLikeTornContainer from "../ui/StickyPostCard/PaperLikeTornContainer";
+import PaperLikeTornContainer from "./ui/StickyPostCard/PaperLikeTornContainer";
 
 export default function UserOrderHistory() {
     return (

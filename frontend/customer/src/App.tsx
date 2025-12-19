@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Chats from './pages/Chats';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
   //Login related functions===================================================
@@ -20,9 +21,11 @@ export default function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/chats" element={<Chats />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/chats" element={<Chats />} />
+          </Route>
         </Routes>
         <LoginForm showLogin={isLoginOpen} hide={hideLogin} onLogin={login} />
       </div>

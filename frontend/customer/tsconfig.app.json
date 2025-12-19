@@ -30,6 +30,6 @@
   },
   "include": [
     "src",
-    "src/ui/StickyPostCard/.tsx"
+    "src/components/ui/StickyPostCard/.tsx"
   ]
 }

@@ -1,9 +1,10 @@
 import useCartStore from '../store/cartStore';
 import useModalStore from '../store/useModals';
 import useUserStore from '../store/userStore';
-import { IconMessageCircle, IconReceipt, IconShoppingCart, IconHome } from '@tabler/icons-react';
+import { IconMessageCircle, IconReceipt, IconShoppingCart, IconHome, IconUser, IconHistory } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import HeaderStickyPostCard from '../ui/StickyPostCard/HeaderStickyPostCard';
+import HeaderStickyPostCard from './ui/StickyPostCard/HeaderStickyPostCard';
+import useNavStore from '../store/navStore';
 
 export default function HeaderSearch() {
     const navigate = useNavigate();
@@ -12,8 +13,12 @@ export default function HeaderSearch() {
     const isAuthenticated = useUserStore.use.isAuthenticated();
     const openLogin = useModalStore.use.openLogin();
 
+    const activeTab = useNavStore.use.activeTab();
+    const setActiveTab = useNavStore.use.setActiveTab();
+
     function onOpenHome() {
         navigate('/');
+        setActiveTab("menu");
     }
 
     function onOpenCart() {
@@ -22,6 +27,7 @@ export default function HeaderSearch() {
             return;
         }
         navigate('/cart');
+        setActiveTab("none");
     }
 
     function onOpenOrder() {
@@ -30,6 +36,7 @@ export default function HeaderSearch() {
             return;
         }
         navigate('/orders');
+        setActiveTab("none");
     }
 
     function onOpenChat() {
@@ -38,6 +45,26 @@ export default function HeaderSearch() {
             return;
         }
         navigate('/chats');
+        setActiveTab("none");
+    }
+
+    //Additional Tabs for mobile users==================
+    function onOpenProfile() {
+        navigate('/');
+        if (!isAuthenticated) {
+            openLogin();
+            return;
+        }
+        setActiveTab("profile");
+    }
+
+    function onOpenOrderHistory() {
+        navigate('/');
+        if (!isAuthenticated) {
+            openLogin();
+            return;
+        }
+        setActiveTab("orderHistory");
     }
 
     return (
@@ -46,7 +73,7 @@ export default function HeaderSearch() {
             subtitle="Food deliveries and services"
             navigations={[
                 {
-                    isSelected: location.pathname === '/',
+                    isSelected: location.pathname === '/' && activeTab == "menu",
                     title: 'Home',
                     onClick: onOpenHome,
                     notificationCount: 0,
@@ -79,6 +106,27 @@ export default function HeaderSearch() {
                     isNotAvailable: !isAuthenticated,
                     icon: IconMessageCircle,
                 }
+            ]}
+
+            additonalNaviations={[
+                {
+                    isSelected: activeTab === "profile",
+                    title: 'Profile',
+                    onClick: () => onOpenProfile(),
+                    notificationCount: 0,
+                    notifcationColor: 'blue',
+                    isNotAvailable: !isAuthenticated,
+                    icon: IconUser,
+                },
+                {
+                    isSelected: activeTab === "orderHistory",
+                    title: 'Order History',
+                    onClick: () => onOpenOrderHistory(),
+                    notificationCount: 0,
+                    notifcationColor: 'blue',
+                    isNotAvailable: !isAuthenticated,
+                    icon: IconHistory,
+                },
             ]}
         />
     );

@@ -1,8 +1,8 @@
 import { SimpleGrid, Stack, Group, Badge, Text } from "@mantine/core";
 import { IconCash, IconMapPin, IconNote } from "@tabler/icons-react";
-import CardHr from "../ui/StickyPostCard/stickypostcard/CardHr";
-import OrderTable from "../ui/StickyPostCard/stickypostcard/OrderTable";
-import PostCardBody from "../ui/StickyPostCard/stickypostcard/PostCardBody";
+import CardHr from "./ui/StickyPostCard/stickypostcard/CardHr";
+import OrderTable from "./ui/StickyPostCard/stickypostcard/OrderTable";
+import PostCardBody from "./ui/StickyPostCard/stickypostcard/PostCardBody";
 
 
 export default function OrderDetails() {

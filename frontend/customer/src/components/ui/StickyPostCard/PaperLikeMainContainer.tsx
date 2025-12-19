@@ -32,9 +32,9 @@ export default function PaperLikeMainContainer(props: PaperLikeContainerProps) {
         <Container size="xl" className={props.className}>
             <Grid gutter="xl">
                 {/* Left Navigation Sidebar */}
-                <Grid.Col span={{ base: 12, md: 3 }}>
+                <Grid.Col span={{ base: 12, md: 3 }} visibleFrom="sm">
                     <PaperLikeContainer>
-                        <Stack gap="sm">
+                        <Stack gap="sm" >
                             {props.navigation?.map((item, index) => (
                                 <NavButton
                                     key={index}

@@ -1,9 +1,9 @@
 import { Container } from '@mantine/core';
-import TitleVariant2 from '../ui/StickyPostCard/stickypostcard/TitleVariant2';
+import TitleVariant2 from '../components/ui/StickyPostCard/stickypostcard/TitleVariant2';
 
 import OrderStatus from '../components/OrderStatus';
 import OrderDetails from '../components/OrderDetails';
-import PaperLikeTornContainer from '../ui/StickyPostCard/PaperLikeTornContainer';
+import PaperLikeTornContainer from '../components/ui/StickyPostCard/PaperLikeTornContainer';
 
 export default function Orders() {
     return (

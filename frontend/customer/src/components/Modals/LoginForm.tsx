@@ -33,7 +33,7 @@ export default function LoginForm({ showLogin, hide, onLogin }: LoginProps) {
             <div onClick={() => hide()} className="fixed inset-0 bg-blue-100 dark:bg-gray-900 opacity-50"></div>
 
             <Center h="100vh">
-                <div className="w-[400px] relative">
+                <div className="w-[90%] md:w-[400px] relative">
                     {/* Industrial Header Tape */}
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-stone-300/50 backdrop-blur-sm shadow-sm z-10 border-l border-r border-stone-400/30"></div>
 
@@ -46,7 +46,7 @@ export default function LoginForm({ showLogin, hide, onLogin }: LoginProps) {
                                 <Center mb="md">
                                 </Center>
                                 <Title order={2} ff="monospace" className="uppercase tracking-widest text-stone-800 dark:text-stone-100">
-                                    LOGIN
+                                    LOGIN FIRST
                                 </Title>
                                 <Text size="sm" c="dimmed" ff="monospace" className="mt-2">
                                     and start ordering

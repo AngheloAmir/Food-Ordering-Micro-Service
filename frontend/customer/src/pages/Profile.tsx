@@ -1,4 +1,4 @@
-import PaperLikeMainContainer from '../ui/StickyPostCard/PaperLikeMainContainer';
+import PaperLikeMainContainer from '../components/ui/StickyPostCard/PaperLikeMainContainer';
 import { IconUser, IconHistory } from "@tabler/icons-react";
 import { useState } from 'react';
 import UserProfile from '../components/UserProfile';

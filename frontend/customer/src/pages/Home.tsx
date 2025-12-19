@@ -1,13 +1,14 @@
-import PaperLikeMainContainer from '../ui/StickyPostCard/PaperLikeMainContainer';
+import PaperLikeMainContainer from '../components/ui/StickyPostCard/PaperLikeMainContainer';
 
 import { IconUser, IconHistory, IconToolsKitchen } from "@tabler/icons-react";
-import { useState } from 'react';
 import UserProfile from '../components/UserProfile';
 import UserOrderHistory from '../components/UserOrderHistory';
 import FoodMenu from '../components/FoodMenu';
+import useNavStore from '../store/navStore';
 
 export default function Home() {
-    const [activeTab, setActiveTab] = useState(0);
+    const activeTab = useNavStore.use.activeTab();
+    const setActiveTab = useNavStore.use.setActiveTab();
 
     return (
         <PaperLikeMainContainer
@@ -15,27 +16,27 @@ export default function Home() {
                 {
                     label: "Menu",
                     icon: IconToolsKitchen,
-                    active: activeTab === 0,
-                    onClick: () => { setActiveTab(0) }
+                    active: activeTab === "menu",
+                    onClick: () => { setActiveTab("menu"); console.log('clicked me') }
                 },
                 {
                     label: "Profile",
                     icon: IconUser,
-                    active: activeTab === 1,
-                    onClick: () => { setActiveTab(1) }
+                    active: activeTab === "profile",
+                    onClick: () => { setActiveTab("profile") }
                 },
                 {
                     label: "Order History",
                     icon: IconHistory,
-                    active: activeTab === 2,
-                    onClick: () => { setActiveTab(2) }
+                    active: activeTab === "orderHistory",
+                    onClick: () => { setActiveTab("orderHistory") }
                 },
             ]}
             className="pt-5"
         >
-            {activeTab === 0 && <FoodMenu />}
-            {activeTab === 1 && <UserProfile />}
-            {activeTab === 2 && <UserOrderHistory />}
+            {activeTab === "menu" && <FoodMenu />}
+            {activeTab === "profile" && <UserProfile />}
+            {activeTab === "orderHistory" && <UserOrderHistory />}
         </PaperLikeMainContainer>
     )
 }

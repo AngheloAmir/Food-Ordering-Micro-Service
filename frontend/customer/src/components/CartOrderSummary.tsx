@@ -1,5 +1,5 @@
 import { Grid } from "@mantine/core";
-import StickyPostCard from "../ui/StickyPostCard/StickyPostCard";
+import StickyPostCard from "./ui/StickyPostCard/StickyPostCard";
 
 export default function CartOrderSummary() {
     return (

@@ -1,5 +1,5 @@
 import { Button, Group, Stack } from "@mantine/core";
-import PaperLikeContainer from "../ui/StickyPostCard/PaperLikeContainer";
+import PaperLikeContainer from "./ui/StickyPostCard/PaperLikeContainer";
 import Profile from "./Profile/Profile";
 import UserDetails from "./Profile/UserDetails";
 import { IconDeviceFloppy } from "@tabler/icons-react";

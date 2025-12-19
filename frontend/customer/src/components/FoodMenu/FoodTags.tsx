@@ -1,6 +1,6 @@
 import { Tabs } from "@mantine/core";
 import { useState } from "react";
-import PaperLikeContainer from "../../ui/StickyPostCard/PaperLikeContainer";
+import PaperLikeContainer from "../ui/StickyPostCard/PaperLikeContainer";
 
 const TABS = ['All', 'Burgers', 'Pizza', 'Pasta', 'Desserts', 'Drinks', 'Vegetables', 'Sweets'];
 

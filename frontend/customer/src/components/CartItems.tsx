@@ -1,6 +1,6 @@
 import CartItemCard from './Cart/CartItemCard';
 import { useState } from 'react';
-import PaperLikeContainer from '../ui/StickyPostCard/PaperLikeContainer';
+import PaperLikeContainer from './ui/StickyPostCard/PaperLikeContainer';
 
 export default function CartItems() {
     const [cartItems, setCartItems] = useState([
