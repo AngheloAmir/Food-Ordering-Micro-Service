@@ -8,6 +8,7 @@ import TitleVariant2 from './stickypostcard/TitleVariant2';
 
 interface StickyPostCardProps {
     children?: React.ReactNode;
+    className?: string;
     design?: "default" | "blue" | "green";
     rotation?: "default" | "toright" | "toleft";
 
@@ -30,7 +31,7 @@ interface StickyPostCardProps {
 
 export default function StickyPostCard(props: StickyPostCardProps) {
     return (
-        <PostCardBody design={props.design} rotation={props.rotation}>
+        <PostCardBody design={props.design} rotation={props.rotation} className={props.className}>
             {
                 (!props.titleVariant || props.titleVariant === "default") &&
                 <TitleVariant1 title={props.title} badge={props.titleBadge} />

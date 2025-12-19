@@ -2,6 +2,7 @@
 
 interface PostCardBodyProps {
     children: React.ReactNode;
+    className?: string;
     design?: "default" | "blue" | "green";
     rotation?: "default" | "toright" | "toleft";
 }
@@ -28,7 +29,7 @@ export default function PostCardBody(props: PostCardBodyProps) {
     }
 
     return (
-        <div className={`relative p-6 min-h-[320px] flex flex-col transition-all hover:-translate-y-1 duration-200 ${defaultColorStyle} ${rotation}`}>
+        <div className={`relative p-6 min-h-[320px] flex flex-col transition-all hover:-translate-y-1 duration-200 ${defaultColorStyle} ${rotation} ${props.className}`}>
             {/* Scotch Tape Visual */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 bg-gray-200/80 backdrop-blur-sm rotate-[-2deg] shadow-sm z-10"></div>
             {props.children}

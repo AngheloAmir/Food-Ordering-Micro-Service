@@ -25,6 +25,126 @@ export default function OrderDetails() {
                         quantity: 1,
                         price: 2,
                     },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
+                    {
+                        name: "Burger",
+                        quantity: 2,
+                        price: 10,
+                    },
+                    {
+                        name: "Fries",
+                        quantity: 1,
+                        price: 5,
+                    },
+                    {
+                        name: "Soda",
+                        quantity: 1,
+                        price: 2,
+                    },
                 ]} />
             </PostCardBody>
             <PostCardBody design="default" rotation="default">

@@ -2,7 +2,7 @@ import CartItemCard from './Cart/CartItemCard';
 import { useState } from 'react';
 import PaperLikeContainer from './ui/StickyPostCard/PaperLikeContainer';
 
-export default function CartItems() {
+export default function CartItems({ className }: { className?: string }) {
     const [cartItems, setCartItems] = useState([
         {
             id: 1,
@@ -48,10 +48,11 @@ export default function CartItems() {
 
 
     return (
-        <PaperLikeContainer className="scrollContainer w-100% overflow-y-auto">
+        <PaperLikeContainer className={` w-100% overflow-y-auto md:scrollContainer ${className}`}>
             <div>
-                {cartItems.map((item) => (
+                {cartItems.map((item, key) => (
                     <CartItemCard
+                        key={key}
                         className='mb-4'
                         id={item.id}
                         title={item.name}

@@ -36,7 +36,7 @@ export default function HeaderStickyPostCard(props: HeaderProps) {
     const [opened, { toggle, close }] = useDisclosure(false);
 
     return (
-        <header className="h-[64px] bg-yellow-200 dark:bg-yellow-900 shadow-lg shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-b-4 border-dashed border-stone-300 dark:border-stone-800">
+        <header className="sticky top-0 z-50 h-[64px] bg-yellow-200 dark:bg-yellow-900 shadow-lg shadow-yellow-900/10 dark:shadow-yellow-900/50 px-4 border-b-4 border-dashed border-stone-300 dark:border-stone-800">
             <div className="h-[64px] flex justify-between items-center">
                 <Group>
                     <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="md" />

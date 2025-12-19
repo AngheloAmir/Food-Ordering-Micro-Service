@@ -4,6 +4,7 @@ import { IconTrash, IconMinus, IconPlus } from '@tabler/icons-react';
 //transition-all hover:shadow-md hover:scale-[1.1] duration-200
 
 interface CartItemCardProps {
+    key?: number;
     id?: number;
     title?: string;
     description?: string;
@@ -19,7 +20,7 @@ interface CartItemCardProps {
 
 export default function CartItemCard(props: CartItemCardProps) {
     return (
-        <Paper className={`overflow-hidden border-2 border-dashed border-stone-300 dark:border-stone-700 shadow-sm ${props.className}`} radius="md">
+        <Paper key={props.key} className={`overflow-hidden border-2 border-dashed border-stone-300 dark:border-stone-700 shadow-sm ${props.className}`} radius="md">
             <div className="flex flex-col sm:flex-row h-full">
                 <div className="w-full sm:w-40 h-40 sm:h-auto shrink-0 relative">
                     <Image
