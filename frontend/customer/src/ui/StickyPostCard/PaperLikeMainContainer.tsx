@@ -4,6 +4,7 @@ import type { NavButtonProps } from "./paperlike/NavButtons";
 import NavButton from "./paperlike/NavButtons";
 
 interface PaperLikeContainerProps {
+    className?: string;
     children?: React.ReactNode;
     navigation?: NavButtonProps[];
 }
@@ -28,7 +29,7 @@ interface PaperLikeContainerProps {
  */
 export default function PaperLikeMainContainer(props: PaperLikeContainerProps) {
     return (
-        <Container size="xl" className='mt-10 mb-20'>
+        <Container size="xl" className={props.className}>
             <Grid gutter="xl">
                 {/* Left Navigation Sidebar */}
                 <Grid.Col span={{ base: 12, md: 3 }}>

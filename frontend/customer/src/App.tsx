@@ -7,14 +7,12 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Chats from './pages/Chats';
-import Profile from './pages/Profile';
 
 export default function App() {
   //Login related functions===================================================
   const { login } = useLogin();
   const isLoginOpen = useModalStore.use.isLoginOpen();
   const hideLogin = useModalStore.use.closeAll();
-
 
   return (
     <BrowserRouter>
@@ -25,7 +23,6 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/chats" element={<Chats />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
         <LoginForm showLogin={isLoginOpen} hide={hideLogin} onLogin={login} />
       </div>

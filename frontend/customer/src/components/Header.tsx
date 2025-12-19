@@ -1,7 +1,7 @@
 import useCartStore from '../store/cartStore';
 import useModalStore from '../store/useModals';
 import useUserStore from '../store/userStore';
-import { IconMessageCircle, IconReceipt, IconShoppingCart, IconUser, IconHome } from '@tabler/icons-react';
+import { IconMessageCircle, IconReceipt, IconShoppingCart, IconHome } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import HeaderStickyPostCard from '../ui/StickyPostCard/HeaderStickyPostCard';
 
@@ -38,14 +38,6 @@ export default function HeaderSearch() {
             return;
         }
         navigate('/chats');
-    }
-
-    function onOpenProfile() {
-        if (!isAuthenticated) {
-            openLogin();
-            return;
-        }
-        navigate('/profile');
     }
 
     return (
@@ -86,16 +78,7 @@ export default function HeaderSearch() {
                     notifcationColor: 'red',
                     isNotAvailable: !isAuthenticated,
                     icon: IconMessageCircle,
-                },
-                {
-                    isSelected: location.pathname === '/profile',
-                    title: 'Profile',
-                    onClick: () => onOpenProfile(),
-                    notificationCount: cart.length + 1,
-                    notifcationColor: 'blue',
-                    isNotAvailable: !isAuthenticated,
-                    icon: IconUser,
-                },
+                }
             ]}
         />
     );
