@@ -26,7 +26,11 @@ interface JwtPayload {
     is_anonymous: boolean;
 }
 
-export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * This middleware checks if the user has a valid JWT token before processing the request.
+ * This is ideal for protected routes.
+ */
+export default async function verifyUser(req: Request, res: Response, next: NextFunction) {
     //Check the if the request has the authorization header========================================
     const authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -52,12 +56,19 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
             process.env.SUPABASE_JWT_SECRET
         ) as JwtPayload;
 
+        //this will throw an error if the token is invalid
         req.user = {
             id: decoded.sub,
             role: decoded.role,
         };
 
-    } catch (err) {
+    } catch (err: any) {
+        if (err.name === 'TokenExpiredError') {
+            // Specifically identify that the token is expired so the frontend 
+            // knows to call your /api/refresh endpoint
+            res.status(401).json({ error: 'Token expired', code: 'TOKEN_EXPIRED' });
+            return;
+        }
         console.error('JWT Verification failed:', err);
         res.status(401).json({ error: 'Invalid token' });
         return;
