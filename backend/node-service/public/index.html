@@ -46,39 +46,41 @@
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-
-
-                    <!-- Input Section -->
-                    <div class="flex flex-col">
-                        <label class="text-sm font-medium text-gray-400 mb-2">Input (JSON Body)</label>
-                        <!-- Suggested Inputs Container -->
-                        <div id="suggested-inputs-container" class="flex flex-wrap gap-2 mb-2">
-                            <!-- Buttons injected here -->
+                    <!-- Left Column: Input & Expected -->
+                    <div class="space-y-6">
+                        <!-- Input Section -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-400 mb-2">Input (JSON Body)</label>
+                            <!-- Suggested Inputs Container -->
+                            <div id="suggested-inputs-container" class="flex flex-wrap gap-2 mb-2">
+                                <!-- Buttons injected here -->
+                            </div>
+                            <textarea id="input-area"
+                                class="w-full border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y bg-gray-900 text-gray-300 min-h-[120px]"
+                                placeholder='{"key": "value"}'></textarea>
                         </div>
-                        <textarea id="input-area"
-                            class="w-full border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y bg-gray-900 text-gray-300 min-h-[120px]"
-                            placeholder='{"key": "value"}'></textarea>
+
+                        <!-- Expected Outcome Section -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-400 mb-2">Expected Outcome</label>
+                            <div class="relative w-full">
+                                <pre id="expected-area"
+                                    class="w-full border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-x-auto min-h-[80px] whitespace-pre-wrap"></pre>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Expected Outcome Section -->
-                    <div class="flex flex-col">
-                        <label class="text-sm font-medium text-gray-400 mb-2">Expected Outcome</label>
-                        <div class="relative w-full">
-                            <pre id="expected-area"
-                                class="w-full border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-x-auto min-h-[80px] whitespace-pre-wrap"></pre>
-                        </div>
-                    </div>
-
-                    <!-- Output Section -->
-                    <div class="flex flex-col">
+                    <!-- Right Column: Actual Output -->
+                    <div class="flex flex-col h-full">
                         <label class="text-sm font-medium text-gray-400 mb-2">Actual Output</label>
-                        <div class="relative w-full">
+                        <div class="relative w-full flex-1">
                             <pre id="output-area"
-                                class="w-full border border-gray-600 rounded p-3 font-mono text-sm bg-black text-green-400 overflow-x-auto min-h-[150px]">Waiting for request...</pre>
+                                class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm bg-black text-green-400 overflow-x-auto min-h-[300px]">Waiting for request...</pre>
                         </div>
                     </div>
+
                 </div>
             </div>
 

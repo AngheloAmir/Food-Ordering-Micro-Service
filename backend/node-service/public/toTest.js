@@ -19,12 +19,12 @@ const apiTests = [
                 route: "/api/logout",
                 methods: ["POST"],
                 description: "Invalidates the user's session token.",
-                sampleInput: '',
+                sampleInput: '{}',
                 suggested: [],
                 expectedOutcome: '{\n  "message": "Logout successful"\n}'
             },
             {
-                label: "Auth DB Test",
+                label: "/api/authdbtest",
                 route: "/api/authdbtest",
                 methods: ["GET"],
                 description: "This one test the RLS policies. The endpoint will return all data associated with the user in the testuser table",
