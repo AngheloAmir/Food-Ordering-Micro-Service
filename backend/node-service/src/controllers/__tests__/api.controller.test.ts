@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getHello, getTest } from '../api.controller';
+import { getHello, getTest } from '../_testControllers';
 
 describe('API Controllers', () => {
     let mockRequest: Partial<Request>;
