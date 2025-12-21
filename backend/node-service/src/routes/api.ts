@@ -6,9 +6,9 @@ import AuthLogin from '../controllers/auth.login';
 import Logout from '../controllers/auth.logout';
 
 const router = Router();
-router.get('/authdbtest', AuthMiddleware, getAuthDbTest);
-router.post('/login', AuthLogin);
-router.post('/logout', AuthMiddleware, Logout);
+router.get('/auth/dbtest', AuthMiddleware, getAuthDbTest);
+router.post('/auth/login', AuthLogin);
+router.post('/auth/logout', AuthMiddleware, Logout);
 
 
 export default router;
