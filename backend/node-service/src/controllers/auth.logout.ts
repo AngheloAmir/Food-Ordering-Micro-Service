@@ -2,14 +2,12 @@ import { Request, Response } from 'express';
 import supabase from '../config/supabase';
 
 export default async function Logout(req: Request, res: Response) {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.access_token;
 
-    if (!authHeader) {
-        res.status(400).json({ error: 'No authorization header provided' });
+    if (!token) {
+        res.status(401).json({ error: 'No active session' });
         return;
     }
-
-    const token = authHeader.split(' ')[1];
 
     try {
         const { error } = await supabase.auth.admin.signOut(token);
@@ -20,6 +18,8 @@ export default async function Logout(req: Request, res: Response) {
             return;
         }
 
+        res.clearCookie('access_token');
+        res.clearCookie('refresh_token');
         res.json({ message: 'Logout successful' });
 
     } catch (err: any) {

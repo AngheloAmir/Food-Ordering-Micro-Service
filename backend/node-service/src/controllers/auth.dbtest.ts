@@ -20,7 +20,9 @@ import { Request, Response } from 'express';
  */
 export default async function getAuthDbTest(req: Request, res: Response) {
     try {
-        const userSupabase = createSupabase(req.headers.authorization);
+        // Retrieve token from cookie or header
+        const token = req.cookies.access_token || req.headers.authorization;
+        const userSupabase = createSupabase(token);
         const { data, error } = await userSupabase
             .from('testuser')
             .select('*');
@@ -31,12 +33,7 @@ export default async function getAuthDbTest(req: Request, res: Response) {
             return;
         }
 
-        res.json({
-            message: 'Authenticated DB query successful',
-            data: data,
-            rls_note: 'If data is empty but you are logged in, ensure you own the records.',
-            user_id_used: req.user?.id // Provided by middleware
-        });
+        res.json(data);
 
     } catch (err: any) {
         console.error('Server error during auth db test:', err);

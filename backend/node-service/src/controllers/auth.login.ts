@@ -24,7 +24,7 @@ export default async function AuthLogin(req: Request, res: Response) {
             return;
         }
 
-        //user info
+        //user info=============================================================================
         const userAgent = req.headers['user-agent'] || '';
         const parser = new UAParser(userAgent);
         const deviceResult = parser.getResult();
@@ -49,17 +49,34 @@ export default async function AuthLogin(req: Request, res: Response) {
             }
         }
 
+        //THIS SHOULD BE STORING THE LOGIN DATA IN THE DB====================================
         console.log("user login data");
         console.log(login_info);
 
+        // Set HTTP-only cookie
+        res.cookie('access_token', data.session.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600 * 1000, // 1 hour
+            sameSite: 'strict',
+            path: '/'
+        });
+
+        res.cookie('refresh_token', data.session.refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 30 * 24 * 3600 * 1000, // 30 days (typical refresh token life)
+            sameSite: 'strict',
+            path: '/'
+        });
+
         res.json({
-            message: 'success',
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
+            message: 'user logged in successfully',
+            code: 'LOGIN_SUCCESS'
         });
 
     } catch (err: any) {
         console.error('Server error during login:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message, code: 'LOGIN_ERROR' });
     }
 };

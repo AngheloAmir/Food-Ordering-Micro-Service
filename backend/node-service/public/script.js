@@ -170,15 +170,9 @@ async function executeTest() {
     const method = document.getElementById('method-select').value;
     const inputElement = document.getElementById('input-area');
     const outputElement = document.getElementById('output-area');
-    const authTokenInput = document.getElementById('auth-token-input');
-    const authToken = authTokenInput ? authTokenInput.value.trim() : null;
 
     let body = null;
     let headers = {};
-
-    if (authToken) {
-        headers['Authorization'] = `Bearer ${authToken}`;
-    }
 
     outputElement.textContent = 'Loading...';
     outputElement.classList.remove('text-green-400', 'text-red-400', 'text-gray-500', 'text-yellow-400');

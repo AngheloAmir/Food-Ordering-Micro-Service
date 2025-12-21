@@ -10,7 +10,10 @@ const port = process.env.PORT || 5199;
 
 import path from 'path';
 
+import cookieParser from 'cookie-parser';
+
 app.use(express.json());
+app.use(cookieParser());
 
 //Define routes here
 app.use('/api', apiRoutes);
