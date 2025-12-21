@@ -10,6 +10,8 @@ const port = process.env.PORT || 5199;
 
 import path from 'path';
 
+app.use(express.json());
+
 //Define routes here
 app.use('/api', apiRoutes);
 

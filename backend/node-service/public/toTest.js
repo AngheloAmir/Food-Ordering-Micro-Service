@@ -19,6 +19,39 @@ const apiTests = [
         ]
     },
     {
+        category: "Authentication Tests",
+        items: [
+            {
+                label: "/api/login",
+                route: "/api/login",
+                methods: ["POST"],
+                sampleInput: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}',
+                expectedOutcome: '{\n  "message": "Login successful",\n  "session": {...},\n  "user": {...}\n}'
+            },
+            {
+                label: "/api/verify-token",
+                route: "/api/verify-token",
+                methods: ["GET"],
+                sampleInput: '',
+                expectedOutcome: '{\n  "message": "Token is valid",\n  "user": { ... }\n}'
+            },
+            {
+                label: "/api/logout",
+                route: "/api/logout",
+                methods: ["POST"],
+                sampleInput: '',
+                expectedOutcome: '{\n  "message": "Logout successful"\n}'
+            },
+            {
+                label: "/api/verify-login",
+                route: "/api/verify-login",
+                methods: ["POST"],
+                sampleInput: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}',
+                expectedOutcome: '{\n  "message": "Login verification successful",\n  "access_token": "...",\n  ... \n} OR error if already logged in'
+            }
+        ]
+    },
+    {
         category: "Products (Mock)",
         items: [
             {

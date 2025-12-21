@@ -7,26 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function simulateLogin() {
-    const user = document.getElementById('username-in').value || 'User';
-    // Simple mock login UI update
-    document.getElementById('auth-form').classList.add('hidden');
-    document.getElementById('auth-status').classList.remove('hidden');
-    document.getElementById('user-display').textContent = `Logged in as ${user}`;
-
-    // Auto-update the auth header input if it looks generic
-    const authInput = document.getElementById('auth-header-input');
-    if (authInput.value.includes('mock-token')) {
-        authInput.value = `Bearer token-for-${user}-${Date.now()}`;
-    }
-}
-
-function simulateLogout() {
-    document.getElementById('auth-status').classList.add('hidden');
-    document.getElementById('auth-form').classList.remove('hidden');
-    document.getElementById('password-in').value = '';
-}
-
 function renderSidebar() {
     const listContainer = document.getElementById('test-list');
     listContainer.innerHTML = '';
@@ -172,15 +152,14 @@ async function executeTest() {
     const method = document.getElementById('method-select').value;
     const inputElement = document.getElementById('input-area');
     const outputElement = document.getElementById('output-area');
-
-    // Auth Header
-    const authHeaderValue = document.getElementById('auth-header-input').value;
+    const authTokenInput = document.getElementById('auth-token-input');
+    const authToken = authTokenInput ? authTokenInput.value.trim() : null;
 
     let body = null;
     let headers = {};
 
-    if (authHeaderValue && authHeaderValue.trim() !== '') {
-        headers['Authorization'] = authHeaderValue.trim();
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
     }
 
     outputElement.textContent = 'Loading...';

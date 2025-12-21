@@ -24,29 +24,6 @@
     <main class="flex-1 overflow-y-auto p-8 bg-gray-900">
         <div class="max-w-4xl mx-auto">
 
-            <!-- Global Auth / Header -->
-            <div
-                class="bg-gray-800 rounded-lg shadow-sm p-4 mb-8 border border-gray-700 flex flex-wrap gap-4 items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-gray-400 text-sm font-bold uppercase tracking-wider">Auth Simulation</span>
-                </div>
-
-                <div id="auth-form" class="flex items-center gap-2">
-                    <input type="text" id="username-in" placeholder="Username"
-                        class="bg-gray-900 border border-gray-600 rounded px-3 py-1 text-sm text-gray-200 outline-none focus:border-blue-500 placeholder-gray-600">
-                    <input type="password" id="password-in" placeholder="Password"
-                        class="bg-gray-900 border border-gray-600 rounded px-3 py-1 text-sm text-gray-200 outline-none focus:border-blue-500 placeholder-gray-600">
-                    <button onclick="simulateLogin()"
-                        class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded transition">Login</button>
-                </div>
-
-                <div id="auth-status" class="hidden flex items-center gap-4">
-                    <span id="user-display" class="text-green-400 text-sm font-medium">Logged in as admin</span>
-                    <button onclick="simulateLogout()"
-                        class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1 rounded transition">Logout</button>
-                </div>
-            </div>
-
             <!-- Dynamic Test Card -->
             <div id="test-card" class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700 hidden">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -67,14 +44,14 @@
                 </div>
 
                 <div class="space-y-6">
-                    <!-- Auth Headers Section -->
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="flex flex-col">
-                            <label class="text-sm font-medium text-gray-400 mb-2">Authorization Header</label>
-                            <input type="text" id="auth-header-input"
-                                class="w-full border border-gray-600 rounded p-2 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-gray-900 text-yellow-300"
-                                placeholder="Content for Authorization header..." value="Bearer mock-token-12345">
-                        </div>
+
+                    <!-- Auth Token Input (Optional) -->
+                    <div class="flex flex-col">
+                        <label class="text-sm font-medium text-gray-400 mb-2">Auth Token (Optional for Protected
+                            Routes)</label>
+                        <input type="text" id="auth-token-input"
+                            class="w-full border border-gray-600 rounded p-2 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-gray-900 text-yellow-300"
+                            placeholder="Paste access_token here...">
                     </div>
 
                     <!-- Input Section -->
