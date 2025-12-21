@@ -25,20 +25,23 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         return;
     }
 
-    try {
-        const { data: { user }, error } = await supabase.auth.getUser(token);
+    next();
 
-        if (error || !user) {
-            console.error('Auth error:', error);
-            res.status(401).json({ error: 'Invalid or expired token' });
-            return;
-        }
+    //This is commented because calling the getUser method consume API requests
+    // try {
+    //     const { data: { user }, error } = await supabase.auth.getUser(token);
 
-        req.user = user;
-        next();
+    //     if (error || !user) {
+    //         console.error('Auth error:', error);
+    //         res.status(401).json({ error: 'Invalid or expired token' });
+    //         return;
+    //     }
 
-    } catch (err) {
-        console.error('Auth Middleware Error:', err);
-        res.status(500).json({ error: 'Internal server error during auth check' });
-    }
+    //     req.user = user;
+    //     next();
+
+    // } catch (err) {
+    //     console.error('Auth Middleware Error:', err);
+    //     res.status(500).json({ error: 'Internal server error during auth check' });
+    // }
 };

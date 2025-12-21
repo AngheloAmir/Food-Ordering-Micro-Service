@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import supabase from '../config/supabase';
+import supabase, { createSupabase } from '../config/supabase';
+import { UAParser } from 'ua-parser-js';
+import geoip from 'geoip-lite';
+import requestIp from 'request-ip';
+
 
 export const getHello = (req: Request, res: Response) => {
     res.json({ message: 'Hello World from Node.js with TypeScript! hehe' });
@@ -135,7 +139,15 @@ export const postVerifyLogin = async (req: Request, res: Response) => {
             return;
         }
 
-        // Return specific token info as requested
+        // 3. Gather Device and Location Info
+        const userAgent = req.headers['user-agent'] || '';
+        const parser = new UAParser(userAgent);
+        const deviceResult = parser.getResult();
+
+        const clientIp = requestIp.getClientIp(req) || '';
+        const geo = geoip.lookup(clientIp);
+
+        // Return specific token info as requested along with device/location data
         res.json({
             message: 'Login verification successful',
             access_token: data.session.access_token,
@@ -144,6 +156,23 @@ export const postVerifyLogin = async (req: Request, res: Response) => {
                 id: data.user.id,
                 email: data.user.email,
                 role: data.user.role
+            },
+            login_info: {
+                ip_address: clientIp,
+                device: {
+                    browser: deviceResult.browser.name,
+                    version: deviceResult.browser.version,
+                    os: `${deviceResult.os.name} ${deviceResult.os.version}`,
+                    type: deviceResult.device.type || 'desktop/unknown'
+                },
+                location: geo ? {
+                    country: geo.country,
+                    region: geo.region,
+                    city: geo.city,
+                    timezone: geo.timezone
+                } : {
+                    message: "Location not found (likely localhost or private IP)"
+                }
             }
         });
 

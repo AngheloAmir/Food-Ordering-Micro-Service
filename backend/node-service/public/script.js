@@ -120,6 +120,7 @@ function loadTestHelper(test, element) {
     // Populate Card
     document.getElementById('card-title').textContent = "Testing: " + test.label;
     document.getElementById('card-route').textContent = test.route;
+    document.getElementById('card-desc').textContent = test.description || '';
 
     // Set current route for execution
     currentTestRoute = test;
@@ -135,7 +136,24 @@ function loadTestHelper(test, element) {
     });
 
     // Populate Input
-    document.getElementById('input-area').value = test.sampleInput || '';
+    const inputArea = document.getElementById('input-area');
+    inputArea.value = test.sampleInput || '';
+
+    // Suggested Inputs
+    const suggestedContainer = document.getElementById('suggested-inputs-container');
+    suggestedContainer.innerHTML = ''; // Clear previous
+    if (test.suggested && test.suggested.length > 0) {
+        test.suggested.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'text-xs bg-gray-700 hover:bg-gray-600 text-blue-300 border border-gray-600 rounded px-2 py-1 transition';
+            btn.textContent = item.name;
+            btn.title = "Load suggested input";
+            btn.onclick = () => {
+                inputArea.value = item.content;
+            };
+            suggestedContainer.appendChild(btn);
+        });
+    }
 
     // Populate Expected Outcome
     document.getElementById('expected-area').textContent = test.expectedOutcome || 'No expected outcome defined.';

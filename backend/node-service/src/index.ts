@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-// Port configuration updated
+// Port configuration updated - triggering restart for env vars
 import dotenv from 'dotenv';
 dotenv.config();
 
