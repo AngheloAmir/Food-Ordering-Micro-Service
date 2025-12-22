@@ -178,6 +178,10 @@ function loadTestHelper(test, element) {
     // Clear Output
     document.getElementById('output-area').textContent = 'Waiting for request...';
     document.getElementById('output-area').className = 'w-full border border-gray-600 rounded p-3 font-mono text-sm bg-black text-gray-500 overflow-x-auto min-h-[150px]';
+
+    // Clear Time
+    document.getElementById('request-time').classList.add('hidden');
+    document.getElementById('request-time').textContent = '';
 }
 
 async function executeTest() {
@@ -195,6 +199,13 @@ async function executeTest() {
     outputElement.classList.remove('text-green-400', 'text-red-400', 'text-gray-500', 'text-yellow-400');
     outputElement.classList.add('text-yellow-400');
     outputElement.parentElement.classList.add('opacity-50');
+
+    // Reset and show timer
+    const timeElement = document.getElementById('request-time');
+    timeElement.textContent = 'Sending...';
+    timeElement.classList.remove('hidden');
+
+    const startTime = performance.now();
 
     try {
         const inputValue = inputElement.value.trim();
@@ -222,6 +233,10 @@ async function executeTest() {
         };
 
         const response = await fetch(endpoint, options);
+
+        const endTime = performance.now();
+        const duration = (endTime - startTime).toFixed(2);
+        timeElement.textContent = `Time: ${duration}ms`;
 
         const contentType = response.headers.get('content-type');
         let result;
