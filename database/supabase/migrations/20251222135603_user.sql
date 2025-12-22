@@ -19,9 +19,17 @@ CREATE TABLE public.users (
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
--- READ POLICY
 CREATE POLICY "Users can only see their own user data"
 ON public.users
 FOR SELECT
 USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can only update their own user data"
+ON public.users
+FOR UPDATE
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can only insert their own user data"
+ON public.users
+FOR INSERT
+WITH CHECK (auth.uid() = user_id);

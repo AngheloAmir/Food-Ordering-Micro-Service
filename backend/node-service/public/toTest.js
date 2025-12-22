@@ -78,6 +78,93 @@ const apiTests = [
 
     //======================================================================================
     {
+        category: "Products",
+        items: [
+            {
+                label: "get all products",
+                route: "/api/products/getall",
+                methods: ["GET"],
+                description: "??",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            }
+        ]
+    },
+
+    //======================================================================================
+    {
+        category: "Order and Delivery",
+        items: [
+            {
+                label: "get all orders",
+                route: "/api/orders/getall",
+                methods: ["GET"],
+                description: "??",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            }
+        ]
+    },
+
+    //======================================================================================
+    {
+        category: "Employee",
+        items: [
+            {
+                label: "get an employee",
+                route: "/api/employee/get",
+                methods: ["GET"],
+                description: "Get an employee by id",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            },
+            {
+                label: "on board an employee",
+                route: "/api/employee/onBoard",
+                methods: ["POST"],
+                description: "On board an employee",
+                sampleInput: "" +
+                    `{
+    "first_name" : "test",
+    "last_name" : "test",
+    "middle_name" : "test",
+    "gender" : "test",
+    "phone_number" : "test",
+    "address" : "test",
+    "city" : "test",
+    "state" : "test",
+    "zip_code" : "test",
+    "country" : "test",
+    "emergency_contacts" : ["test@test.com"]
+}`,
+                suggested: [],
+                expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }'
+            }
+        ]
+    },
+
+    //======================================================================================
+    {
+        category: "Workday",
+        items: [
+            {
+                label: "add work",
+                route: "/api/workday/add",
+                methods: ["POST"],
+                description: "Add work to the workday",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            },
+
+        ]
+    },
+
+    //======================================================================================
+    {
         category: "Tools",
         items: [
             {
@@ -88,6 +175,24 @@ const apiTests = [
                 sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
                 suggested: [],
                 expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }'
+            },
+            {
+                label: "list all users",
+                route: "/api/tools/listallusers",
+                methods: ["GET"],
+                description: "Lists all users",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... ]'
+            },
+            {
+                label: "list all employees",
+                route: "/api/tools/listallemployees",
+                methods: ["GET"],
+                description: "Lists all employees",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '[ ... ]'
             }
         ]
     },

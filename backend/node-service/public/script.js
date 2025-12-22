@@ -206,6 +206,14 @@ async function executeTest() {
     timeElement.classList.remove('hidden');
 
     const startTime = performance.now();
+    let timerInterval;
+
+    // Start live timer
+    timeElement.textContent = 'Time: 0ms';
+    timerInterval = setInterval(() => {
+        const current = performance.now();
+        timeElement.textContent = `Time: ${(current - startTime).toFixed(0)}ms`;
+    }, 50);
 
     try {
         const inputValue = inputElement.value.trim();
@@ -217,6 +225,7 @@ async function executeTest() {
                     body = JSON.stringify(JSON.parse(inputValue));
                     headers['Content-Type'] = 'application/json';
                 } catch (e) {
+                    clearInterval(timerInterval); // Stop timer on error
                     outputElement.textContent = '' + e;
                     outputElement.classList.remove('text-yellow-400');
                     outputElement.classList.add('text-red-400');
@@ -234,6 +243,7 @@ async function executeTest() {
 
         const response = await fetch(endpoint, options);
 
+        clearInterval(timerInterval); // Stop timer on response
         const endTime = performance.now();
         const duration = (endTime - startTime).toFixed(2);
         timeElement.textContent = `Time: ${duration}ms`;
@@ -258,6 +268,7 @@ async function executeTest() {
         }
 
     } catch (error) {
+        if (timerInterval) clearInterval(timerInterval);
         outputElement.textContent = 'Error: ' + error.message;
         outputElement.classList.remove('text-yellow-400');
         outputElement.classList.add('text-red-400');

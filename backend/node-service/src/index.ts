@@ -13,6 +13,10 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.routes';
 import toolsRoutes from './routes/tools.routes';
+import productsRoutes from './routes/products.routes';
+import ordersRoutes from './routes/orders.routes';
+import employeeRoutes from './routes/employee.routes';
+import workdayRoutes from './routes/workday.routes';
 
 app.use(express.json());
 app.use(cookieParser());
@@ -21,6 +25,10 @@ app.use(cookieParser());
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', toolsRoutes);
+app.use('/api', productsRoutes);
+app.use('/api', ordersRoutes);
+app.use('/api', employeeRoutes);
+app.use('/api', workdayRoutes);
 
 // Serve static files from 'public' directory===============================
 app.use(express.static(path.join(__dirname, '../public')));
