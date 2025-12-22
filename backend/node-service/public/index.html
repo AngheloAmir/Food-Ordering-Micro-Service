@@ -26,12 +26,14 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto p-8 bg-gray-900">
-        <div class="max-w-4xl mx-auto">
+    <main class="flex-1 overflow-hidden p-4 bg-gray-900 flex flex-col">
+        <div class="w-full h-full flex flex-col">
 
             <!-- Dynamic Test Card -->
-            <div id="test-card" class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700 hidden">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div id="test-card"
+                class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700 hidden flex-col h-full">
+                <!-- Header Section - Fixed Height -->
+                <div class="flex-none flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
                     <div>
                         <h2 id="card-title" class="text-2xl font-semibold text-gray-200">Testing Endpoint</h2>
                         <code id="card-route" class="text-blue-400 text-sm mt-1 block"></code>
@@ -49,38 +51,39 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Content Grid - Grow to fill remaining height -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
 
                     <!-- Left Column: Input & Expected -->
-                    <div class="space-y-6">
-                        <!-- Input Section -->
-                        <div class="flex flex-col">
-                            <label class="text-sm font-medium text-gray-400 mb-2">Input (JSON Body)</label>
-                            <!-- Suggested Inputs Container -->
-                            <div id="suggested-inputs-container" class="flex flex-wrap gap-2 mb-2">
-                                <!-- Buttons injected here -->
+                    <div class="flex flex-col h-full gap-4">
+                        <!-- Input Section - Grows -->
+                        <div class="flex-1 flex flex-col min-h-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-sm font-medium text-gray-400">Input (JSON Body)</label>
+                                <!-- Suggested Inputs Container -->
+                                <div id="suggested-inputs-container" class="flex flex-wrap gap-2"></div>
                             </div>
                             <textarea id="input-area"
-                                class="w-full border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y bg-gray-900 text-gray-300 min-h-[120px]"
+                                class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none bg-gray-900 text-gray-300"
                                 placeholder='{"key": "value"}'></textarea>
                         </div>
 
-                        <!-- Expected Outcome Section -->
-                        <div class="flex flex-col">
-                            <label class="text-sm font-medium text-gray-400 mb-2">Expected Outcome</label>
-                            <div class="relative w-full">
+                        <!-- Expected Outcome Section - Fixed Height or weighted grow? Let's make it flexible but smaller -->
+                        <div class="h-1/3 flex flex-col min-h-0">
+                            <label class="text-sm font-medium text-gray-400 mb-1">Expected Outcome</label>
+                            <div class="relative w-full h-full">
                                 <pre id="expected-area"
-                                    class="w-full border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-x-auto min-h-[80px] whitespace-pre-wrap"></pre>
+                                    class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-auto whitespace-pre-wrap"></pre>
                             </div>
                         </div>
                     </div>
 
                     <!-- Right Column: Actual Output -->
-                    <div class="flex flex-col h-full">
-                        <label class="text-sm font-medium text-gray-400 mb-2">Actual Output</label>
-                        <div class="relative h-full w-full flex-1">
+                    <div class="flex flex-col h-full min-h-0">
+                        <label class="text-sm font-medium text-gray-400 mb-1">Actual Output</label>
+                        <div class="relative h-full w-full flex-1 min-h-0">
                             <pre id="output-area"
-                                class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm bg-black text-green-400 overflow-x-auto min-h-[300px]">Waiting for request...</pre>
+                                class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm bg-black text-green-400 overflow-auto">Waiting for request...</pre>
                         </div>
                     </div>
 
