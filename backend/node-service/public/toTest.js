@@ -10,6 +10,7 @@ const apiTests = [
                 sampleInput: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}',
                 suggested: [
                     { name: "Admin Creds", content: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}' },
+                    { name: "Test Creds", content: '{\n  "email": "test@test.com",\n  "password": "test"\n}' },
                     { name: "Invalid Creds", content: '{\n  "email": "wrong@test.com",\n  "password": "wrong"\n}' }
                 ],
                 expectedOutcome: '{\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
@@ -43,6 +44,8 @@ const apiTests = [
             }
         ]
     },
+
+    //======================================================================================
     {
         category: "User",
         items: [
@@ -69,6 +72,22 @@ const apiTests = [
 `,
                 suggested: [],
                 expectedOutcome: '{\n  "message": "User information updated successfully"\n}'
+            },
+        ]
+    },
+
+    //======================================================================================
+    {
+        category: "Tools",
+        items: [
+            {
+                label: "cookie token decode",
+                route: "/api/tools/decode",
+                methods: ["POST"],
+                description: "Decodes the current cookie token. Dont change the code and pass to use this tool. MUST NOT BE USED IN THE FRONTEND!",
+                sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
+                suggested: [],
+                expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }'
             }
         ]
     }

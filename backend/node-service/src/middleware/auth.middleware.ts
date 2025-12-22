@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+
 import supabase from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
+import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
 
 declare global {
     namespace Express {
@@ -10,23 +11,6 @@ declare global {
             user?: any;
         }
     }
-}
-
-interface JwtPayload {
-    iss: string;
-    sub: string;
-    aud: string;
-    exp: number;
-    iat: number;
-    email: string;
-    phone: string;
-    app_metadata: { provider: string, providers: string[] };
-    user_metadata: { email_verified: boolean };
-    role: string;
-    aal: string;
-    amr: [{ method: string, timestamp: number }],
-    session_id: string;
-    is_anonymous: boolean;
 }
 
 /**
@@ -60,12 +44,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
     }
 
     try {
-        const decoded = jwt.verify(
-            token,
-            process.env.SUPABASE_JWT_SECRET
-        ) as JwtPayload;
-
-        //this will throw an error if the token is invalid
+        const decoded: JwtPayload = decodeToken(token);
         req.user = {
             id: decoded.sub,
             role: decoded.role,

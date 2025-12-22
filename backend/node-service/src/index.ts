@@ -12,6 +12,7 @@ import path from 'path';
 
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.routes';
+import toolsRoutes from './routes/tools.routes';
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,6 +20,7 @@ app.use(cookieParser());
 //Define routes here========================================================
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+app.use('/api', toolsRoutes);
 
 // Serve static files from 'public' directory===============================
 app.use(express.static(path.join(__dirname, '../public')));
