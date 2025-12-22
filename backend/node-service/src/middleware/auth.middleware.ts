@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import supabase from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
+import generateUserCookie from '../utils/generateUserCookie';
 
 declare global {
     namespace Express {
@@ -96,30 +97,13 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
                 }
 
                 // Update cookies with new tokens
-                res.cookie('access_token', data.session.access_token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    maxAge: 3600 * 1000,
-                    sameSite: 'strict',
-                    path: '/'
-                });
-
-                res.cookie('refresh_token', data.session.refresh_token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    maxAge: 30 * 24 * 3600 * 1000,
-                    sameSite: 'strict',
-                    path: '/'
-                });
+                generateUserCookie(res, data.session.access_token, data.session.refresh_token);
 
                 // Attach user and proceed
                 req.user = {
                     id: data.session.user.id,
                     role: data.session.user.role,
                 };
-
-                // Update the request with the new token so downstream controllers use the valid one
-                req.cookies.access_token = data.session.access_token;
 
                 next();
                 return;

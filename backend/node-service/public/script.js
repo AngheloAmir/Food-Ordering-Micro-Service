@@ -189,7 +189,7 @@ async function executeTest() {
                     body = JSON.stringify(JSON.parse(inputValue));
                     headers['Content-Type'] = 'application/json';
                 } catch (e) {
-                    outputElement.textContent = 'Error: Invalid JSON in input field';
+                    outputElement.textContent = '' + e;
                     outputElement.classList.remove('text-yellow-400');
                     outputElement.classList.add('text-red-400');
                     outputElement.parentElement.classList.remove('opacity-50');

@@ -2,16 +2,7 @@ import { createSupabase } from "../config/supabase";
 import { Request, Response } from 'express';
 import { ErrorMessages, ErrorCodes } from "../utils/errorCodes";
 
-
 export default async function getAuthDbTest(req: Request, res: Response) {
-    if (req.method !== 'GET') {
-        res.status(405).json({
-            error: ErrorMessages.METHOD_NOT_ALLOWED,
-            code: ErrorCodes.METHOD_NOT_ALLOWED
-        });
-        return;
-    }
-
     try {
         // Retrieve token from cookie or header
         const token = req.cookies.access_token || req.headers.authorization;

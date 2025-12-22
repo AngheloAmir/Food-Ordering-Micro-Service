@@ -11,12 +11,14 @@ const port = process.env.PORT || 5199;
 import path from 'path';
 
 import cookieParser from 'cookie-parser';
+import userRoutes from './routes/user.routes';
 
 app.use(express.json());
 app.use(cookieParser());
 
 //Define routes here========================================================
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 // Serve static files from 'public' directory===============================
 app.use(express.static(path.join(__dirname, '../public')));

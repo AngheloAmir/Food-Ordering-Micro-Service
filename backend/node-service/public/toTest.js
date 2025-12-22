@@ -3,7 +3,7 @@ const apiTests = [
         category: "Authentication",
         items: [
             {
-                label: "/api/auth/login",
+                label: "login",
                 route: "/api/auth/login",
                 methods: ["POST"],
                 description: "Authenticates a user with email and password. Returns session and token.",
@@ -15,7 +15,7 @@ const apiTests = [
                 expectedOutcome: '{\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
             },
             {
-                label: "/api/auth/logout",
+                label: "logout",
                 route: "/api/auth/logout",
                 methods: ["POST"],
                 description: "Invalidates the user's session token.",
@@ -24,7 +24,7 @@ const apiTests = [
                 expectedOutcome: '{\n  "message": "Logout successful"\n}'
             },
             {
-                label: "/api/auth/dbtest",
+                label: "dbtest",
                 route: "/api/auth/dbtest",
                 methods: ["GET"],
                 description: "This one test the RLS policies. The endpoint will return all data associated with the user in the testuser table",
@@ -33,7 +33,7 @@ const apiTests = [
                 expectedOutcome: '[\n {\n    id: "...", \n    user_id: "...", \n    message: "...", \n    created_at: "...", \n  }\n]'
             },
             {
-                label: "/api/auth/create",
+                label: "create",
                 route: "/api/auth/create",
                 methods: ["POST"],
                 description: "Creates a new user with email and password.",
@@ -47,13 +47,28 @@ const apiTests = [
         category: "User",
         items: [
             {
-                label: "/api/user/",
-                route: "/api/user/",
-                methods: ["GET"],
-                description: "Returns a list of products.",
-                sampleInput: '{\n   "search": "",\n   "category": ""\n  }',
+                label: 'getting-started',
+                route: '/api/user/gettingstarted',
+                methods: ["POST"],
+                description: "Setting the user information after registration. NOTE: This will use the current cookie token",
+                sampleInput: "" +
+                    `{
+    "name": "test",
+    "email": "test@test.com",
+    "phone1": "1234567890",
+    "phone2": "1234567890",
+    "address": "test address",
+    "city": "test city",
+    "state": "test state",
+    "zip": "test zip",
+    "country": "test country",
+    "icon": "test icon",
+    "gender": "test gender",
+    "delivery_notes": "test delivery notes"
+}
+`,
                 suggested: [],
-                expectedOutcome: '{\n  "products": []\n}'
+                expectedOutcome: '{\n  "message": "User information updated successfully"\n}'
             }
         ]
     }

@@ -3,14 +3,6 @@ import supabase from '../config/supabase';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 
 export default async function Logout(req: Request, res: Response) {
-    if (req.method !== 'POST') {
-        res.status(405).json({
-            error: ErrorMessages.METHOD_NOT_ALLOWED,
-            code: ErrorCodes.METHOD_NOT_ALLOWED
-        });
-        return;
-    }
-
     const token = req.cookies.access_token;
 
     if (!token) {

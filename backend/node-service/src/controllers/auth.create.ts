@@ -4,14 +4,6 @@ import { ErrorCodes, ErrorMessages } from "../utils/errorCodes";
 import generateUserCookie from "../utils/generateUserCookie";
 
 export default async function AuthCreateNewAccount(req: Request, res: Response) {
-    if (req.method !== 'POST') {
-        res.status(405).json({
-            error: ErrorMessages.METHOD_NOT_ALLOWED,
-            code: ErrorCodes.METHOD_NOT_ALLOWED
-        });
-        return;
-    }
-
     const { email, password } = req.body;
 
     if (!email || !password) {
