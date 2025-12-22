@@ -4,7 +4,24 @@ let currentTestRoute = null;
 // Initialize when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     renderSidebar();
+    initNotes();
 });
+
+function initNotes() {
+    const notesArea = document.getElementById('notes-area');
+    if (!notesArea) return;
+
+    // Load saved notes
+    const savedNotes = localStorage.getItem('api_tester_notes');
+    if (savedNotes) {
+        notesArea.value = savedNotes;
+    }
+
+    // Save notes on input
+    notesArea.addEventListener('input', (e) => {
+        localStorage.setItem('api_tester_notes', e.target.value);
+    });
+}
 
 
 function renderSidebar() {
