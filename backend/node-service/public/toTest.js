@@ -31,15 +31,24 @@ const apiTests = [
                 sampleInput: '{}',
                 suggested: [],
                 expectedOutcome: '[\n {\n    id: "...", \n    user_id: "...", \n    message: "...", \n    created_at: "...", \n  }\n]'
+            },
+            {
+                label: "/api/auth/create",
+                route: "/api/auth/create",
+                methods: ["POST"],
+                description: "Creates a new user with email and password.",
+                sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
+                suggested: [],
+                expectedOutcome: '{\n  "message": "user created successfully",\n   "code": "CREATE_SUCCESS"\n}'
             }
         ]
     },
     {
-        category: "Public",
+        category: "User",
         items: [
             {
-                label: "/api/products/list",
-                route: "/api/products/list",
+                label: "/api/user/",
+                route: "/api/user/",
                 methods: ["GET"],
                 description: "Returns a list of products.",
                 sampleInput: '{\n   "search": "",\n   "category": ""\n  }',

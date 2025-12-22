@@ -1,24 +1,17 @@
 import { createSupabase } from "../config/supabase";
 import { Request, Response } from 'express';
+import { ErrorMessages, ErrorCodes } from "../utils/errorCodes";
 
-/**
-    This controller just checks the authentication of the application.
-    So it checks if the user has token and if the token is valid.
-    If the token is valid, it will return the user data.
-    If the token is not valid, it will return an error.
 
-    @example
-    //in the frontend app
-    const response = await axios.get('/authdbtest', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    //this will return all data owned by the user in table testuser
-    console.log(response.data);
- */
 export default async function getAuthDbTest(req: Request, res: Response) {
+    if (req.method !== 'GET') {
+        res.status(405).json({
+            error: ErrorMessages.METHOD_NOT_ALLOWED,
+            code: ErrorCodes.METHOD_NOT_ALLOWED
+        });
+        return;
+    }
+
     try {
         // Retrieve token from cookie or header
         const token = req.cookies.access_token || req.headers.authorization;
@@ -29,7 +22,10 @@ export default async function getAuthDbTest(req: Request, res: Response) {
 
         if (error) {
             console.error('RLS Query Error:', error);
-            res.status(500).json({ error: error.message });
+            res.status(500).json({
+                error: ErrorMessages.SQL_ERROR,
+                code: ErrorCodes.SQL_ERROR
+            });
             return;
         }
 
@@ -37,6 +33,9 @@ export default async function getAuthDbTest(req: Request, res: Response) {
 
     } catch (err: any) {
         console.error('Server error during auth db test:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({
+            error: ErrorMessages.SERVER_ERROR + ' ' + err,
+            code: ErrorCodes.SERVER_ERROR
+        });
     }
 };

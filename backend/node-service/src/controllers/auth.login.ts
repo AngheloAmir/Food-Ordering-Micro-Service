@@ -3,12 +3,25 @@ import supabase from '../config/supabase';
 import { UAParser } from 'ua-parser-js';
 import requestIp from 'request-ip';
 import geoip from 'geoip-lite';
+import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
+import generateUserCookie from '../utils/generateUserCookie';
 
 export default async function AuthLogin(req: Request, res: Response) {
+    if (req.method !== 'POST') {
+        res.status(405).json({
+            error: ErrorMessages.METHOD_NOT_ALLOWED,
+            code: ErrorCodes.METHOD_NOT_ALLOWED
+        });
+        return;
+    }
+
     const { email, password } = req.body;
 
     if (!email || !password) {
-        res.status(400).json({ error: 'Email and password are required' });
+        res.status(400).json({
+            error: ErrorMessages.USER_CREATION_ERROR,
+            code: ErrorCodes.USER_CREATION_ERROR
+        });
         return;
     }
 
@@ -54,21 +67,7 @@ export default async function AuthLogin(req: Request, res: Response) {
         console.log(login_info);
 
         // Set HTTP-only cookie
-        res.cookie('access_token', data.session.access_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600 * 1000, // 1 hour
-            sameSite: 'strict',
-            path: '/'
-        });
-
-        res.cookie('refresh_token', data.session.refresh_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 30 * 24 * 3600 * 1000, // 30 days (typical refresh token life)
-            sameSite: 'strict',
-            path: '/'
-        });
+        generateUserCookie(res, data.session.access_token, data.session.refresh_token);
 
         res.json({
             message: 'user logged in successfully',
@@ -77,6 +76,9 @@ export default async function AuthLogin(req: Request, res: Response) {
 
     } catch (err: any) {
         console.error('Server error during login:', err);
-        res.status(500).json({ error: err.message, code: 'LOGIN_ERROR' });
+        res.status(500).json({
+            error: ErrorMessages.SERVER_ERROR + ' ' + err,
+            code: ErrorCodes.SERVER_ERROR
+        });
     }
 };

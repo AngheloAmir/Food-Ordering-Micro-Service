@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import supabase from '../config/supabase';
+import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 
 declare global {
     namespace Express {
@@ -43,7 +44,10 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
     }
 
     if (!token) {
-        res.status(401).json({ error: 'No authentication token provided' });
+        res.status(401).json({
+            error: ErrorMessages.NO_AUTH_TOKEN,
+            code: ErrorCodes.NO_AUTH_TOKEN
+        });
         return;
     }
 
@@ -72,8 +76,8 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
 
             if (!refreshToken) {
                 res.status(401).json({
-                    error: 'Token expired',
-                    code: 'TOKEN_EXPIRED'
+                    error: ErrorMessages.TOKEN_EXPIRED,
+                    code: ErrorCodes.TOKEN_EXPIRED
                 });
                 return;
             }
@@ -86,7 +90,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
                     res.clearCookie('refresh_token');
                     res.status(401).json({
                         error: 'Session expired, please login again',
-                        code: 'SESSION_EXPIRED'
+                        code: ErrorCodes.SESSION_EXPIRED
                     });
                     return;
                 }
@@ -123,16 +127,16 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
             } catch (refreshErr) {
                 console.error('Auto-refresh failed:', refreshErr);
                 res.status(401).json({
-                    error: 'Session invalid',
-                    code: 'SESSION_INVALID'
+                    error: ErrorMessages.SESSION_EXPIRED,
+                    code: ErrorCodes.SESSION_EXPIRED
                 });
                 return;
             }
         }
         console.error('JWT Verification failed:', err);
         res.status(401).json({
-            error: 'Invalid token',
-            code: 'INVALID_TOKEN'
+            error: ErrorMessages.INVALID_AUTH_TOKEN,
+            code: ErrorCodes.INVALID_AUTH_TOKEN
         });
         return;
     }

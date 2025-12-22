@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import apiRoutes from './routes/api';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 const port = process.env.PORT || 5199;
@@ -15,13 +15,13 @@ import cookieParser from 'cookie-parser';
 app.use(express.json());
 app.use(cookieParser());
 
-//Define routes here
-app.use('/api', apiRoutes);
+//Define routes here========================================================
+app.use('/api', authRoutes);
 
-// Serve static files from 'public' directory
+// Serve static files from 'public' directory===============================
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Fallback for root to ensure index.html is served
+// Fallback for root to ensure index.html is served=========================
 app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
