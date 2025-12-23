@@ -23,13 +23,13 @@ const apiTests = [
                 route: "/api/auth/login",
                 methods: ["POST"],
                 description: "Authenticates a user with email and password. Returns session and token.",
-                sampleInput: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}',
+                sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
                 suggested: [
                     { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
                     { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
                     { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
                 ],
-                expectedOutcome: '{\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
             },
             {
                 label: "logout",
@@ -60,7 +60,7 @@ const apiTests = [
                     { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
                     { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
                 ],
-                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "code": "CREATE_SUCCESS"\n}'
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "newUser": true\n}'
             }
         ]
     },
@@ -135,15 +135,15 @@ const apiTests = [
     {
         category: "Products",
         items: [
-            {
-                label: "get all products",
-                route: "/api/products/getall",
-                methods: ["GET"],
-                description: "??",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
-            }
+            // {
+            //     label: "get all products",
+            //     route: "/api/products/getall",
+            //     methods: ["GET"],
+            //     description: "??",
+            //     sampleInput: '{}',
+            //     suggested: [],
+            //     expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            // }
         ]
     },
 
@@ -151,15 +151,15 @@ const apiTests = [
     {
         category: "Order and Delivery",
         items: [
-            {
-                label: "get all orders",
-                route: "/api/orders/getall",
-                methods: ["GET"],
-                description: "??",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
-            }
+            // {
+            //     label: "get all orders",
+            //     route: "/api/orders/getall",
+            //     methods: ["GET"],
+            //     description: "??",
+            //     sampleInput: '{}',
+            //     suggested: [],
+            //     expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            // }
         ]
     },
 
@@ -168,35 +168,57 @@ const apiTests = [
         category: "Employee",
         items: [
             {
-                label: "get an employee",
+                label: "get employee data",
                 route: "/api/employee/get",
                 methods: ["GET"],
-                description: "Get an employee by id",
+                description: "Get my employee data. This uses RLS policy so make sure to login first the employee account.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+                expectedOutcome: 'Note: This use RLS policy so make sure to login first the employee account.\n\n[ { ...the employee information in the database... } ]'
             },
             {
                 label: "on board an employee",
-                route: "/api/employee/onBoard",
+                route: "/api/employee/onboard",
                 methods: ["POST"],
                 description: "On board an employee",
                 sampleInput: "" +
                     `{
-    "first_name" : "test",
-    "last_name" : "test",
-    "middle_name" : "test",
-    "gender" : "test",
-    "phone_number" : "test",
-    "address" : "test",
-    "city" : "test",
-    "state" : "test",
-    "zip_code" : "test",
-    "country" : "test",
-    "emergency_contacts" : ["test@test.com"]
+    "passkey": "adminallow",
+    "role": "employee",
+    "admin_notes": "test",
+    "first_name": "test",
+    "last_name": "test",
+    "middle_name": "test",
+    "gender": "unknown",
+    "phone_number": "123456789",
+    "address": "test",
+    "city": "test",
+    "state": "test",
+    "zip_code": "test",
+    "country": "test",
+    "emergency_contacts": "[12345789, 98765432]"
 }`,
-                suggested: [],
-                expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }'
+                suggested: [{
+                    name: "OnBoard Admin",
+                    content: "" +
+                        `{
+    "passkey": "adminallow",
+    "role": "admin",
+    "admin_notes": "This is the the admin account",
+    "first_name": "Admin",
+    "last_name": "Admin",
+    "middle_name": ".",
+    "gender": "ultimate",
+    "phone_number": "123456789",
+    "address": "unknown",
+    "city": "unknown",
+    "state": "unknown",
+    "zip_code": "unknown",
+    "country": "unknown",
+    "emergency_contacts": "[]"
+}`
+                }],
+                expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n}'
             }
         ]
     },
@@ -205,15 +227,15 @@ const apiTests = [
     {
         category: "Workday",
         items: [
-            {
-                label: "add work",
-                route: "/api/workday/add",
-                methods: ["POST"],
-                description: "Add work to the workday",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
-            },
+            // {
+            //     label: "add work",
+            //     route: "/api/workday/add",
+            //     methods: ["POST"],
+            //     description: "Add work to the workday",
+            //     sampleInput: '{}',
+            //     suggested: [],
+            //     expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
+            // },
 
         ]
     },
@@ -249,15 +271,15 @@ const apiTests = [
                 ],
                 expectedOutcome: '[ all of the users info if email is not specified ]'
             },
-            {
-                label: "list all employees",
-                route: "/api/tools/listallemployees",
-                methods: ["GET"],
-                description: "Lists all employees",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[ ... ]'
-            }
+            // {
+            //     label: "list all employees",
+            //     route: "/api/tools/listallemployees",
+            //     methods: ["GET"],
+            //     description: "Lists all employees",
+            //     sampleInput: '{}',
+            //     suggested: [],
+            //     expectedOutcome: '[ ... ]'
+            // }
         ]
     },
 

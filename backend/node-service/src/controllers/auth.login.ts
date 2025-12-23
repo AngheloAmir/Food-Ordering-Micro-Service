@@ -5,9 +5,10 @@ import requestIp from 'request-ip';
 import geoip from 'geoip-lite';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
+import santizer from "../utils/stringSanitizer";
 
 export default async function AuthLogin(req: Request, res: Response) {
-    const string = require("string-sanitizer");
+
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -18,7 +19,7 @@ export default async function AuthLogin(req: Request, res: Response) {
         return;
     }
 
-    if( !string.validate.isEmail(email) ) {
+    if( !santizer.validate.isEmail(email) ) {
         res.status(400).json({
             error: ErrorMessages.INVALID_EMAIL_OR_PASS,
             code: ErrorCodes.INVALID_EMAIL_OR_PASS,
@@ -26,7 +27,7 @@ export default async function AuthLogin(req: Request, res: Response) {
         return;
     }
 
-    if( !string.validate.isPassword6to20(password) ) {
+    if( !santizer.validate.isPassword6to20(password) ) {
         res.status(400).json({
             error: ErrorMessages.INVALID_EMAIL_OR_PASS,
             code: ErrorCodes.INVALID_EMAIL_OR_PASS,
@@ -36,8 +37,8 @@ export default async function AuthLogin(req: Request, res: Response) {
     
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
-            email: string.validate.isEmail(email),
-            password: string.validate.isPassword6to20(password),
+            email: santizer.validate.isEmail(email) as string,
+            password: santizer.validate.isPassword6to20(password) as string,
         });
 
         if (error) {

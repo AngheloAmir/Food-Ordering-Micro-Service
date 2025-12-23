@@ -5,6 +5,9 @@ import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
 
+//Refrence for string sanitizer
+//https://www.npmjs.com/package/string-sanitizer
+
 declare global {
     namespace Express {
         interface Request {

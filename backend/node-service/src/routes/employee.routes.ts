@@ -5,6 +5,6 @@ import OnBoardAnEmployee from '../controllers/employee.onBoard';
 
 const router = Router();
 router.get('/employee/get', AuthMiddleware, GetEmployee);
-router.post('/employee/onBoard', AuthMiddleware, OnBoardAnEmployee);
+router.post('/employee/onboard', AuthMiddleware, OnBoardAnEmployee);
 
 export default router;

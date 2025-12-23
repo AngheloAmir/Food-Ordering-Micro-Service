@@ -60,23 +60,23 @@
                     <!-- Left Column: Input & Expected -->
                     <div class="h-[calc(100vh-450px)]">
                         <!-- Input Section - Grows -->
-                        <div class="flex flex-col h-[40vh]">
+                        <div class="flex flex-col h-[45vh]">
                             <div class="flex justify-between items-center mb-1">
                                 <label class="text-sm font-medium text-gray-400">Input (JSON Body)</label>
                                 <!-- Suggested Inputs Container -->
                                 <div id="suggested-inputs-container" class="flex flex-wrap gap-2"></div>
                             </div>
                             <textarea id="input-area"
-                                class="w-full h-[calc(50vh)] border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none bg-gray-900 text-gray-300"
+                                class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none bg-gray-900 text-gray-300"
                                 placeholder='{"key": "value"}'></textarea>
                         </div>
 
                         <!-- Expected Outcome Section - Fixed Height or weighted grow? Let's make it flexible but smaller -->
                         <div class="h-full flex flex-col overflow-y-auto">
                             <label class="text-sm font-medium text-gray-400 mb-1">Expected Outcome</label>
-                            <div class="relative w-full h-full">
+                            <div class="relative w-full h-full overflow-auto">
                                 <pre id="expected-area"
-                                    class="w-full h-full border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-auto whitespace-pre-wrap"></pre>
+                                    class="w-full h-full overflow-y-auto border border-gray-600 rounded p-3 font-mono text-sm bg-gray-900 text-gray-400 overflow-auto whitespace-pre-wrap"></pre>
                             </div>
                         </div>
                     </div>

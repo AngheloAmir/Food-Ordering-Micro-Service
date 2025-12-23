@@ -2,10 +2,9 @@ import supabase from "../config/supabase";
 import { Request, Response } from 'express';
 import { ErrorCodes, ErrorMessages } from "../utils/errorCodes";
 import generateUserCookie from "../utils/generateUserCookie";
+import santizer from "../utils/stringSanitizer";
 
 export default async function AuthCreateNewAccount(req: Request, res: Response) {
-    const string = require("string-sanitizer");
-
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -16,7 +15,7 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
         return;
     }
 
-    if( !string.validate.isEmail(email) ) {
+    if( !santizer.validate.isEmail(email) ) {
         res.status(400).json({
             error: ErrorMessages.USER_CREATION_ERROR,
             code: ErrorCodes.USER_CREATION_ERROR,
@@ -25,7 +24,7 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
         return;
     }
 
-    if( !string.validate.isPassword6to20(password) ) {
+    if( !santizer.validate.isPassword6to20(password) ) {
         res.status(400).json({
             error: ErrorMessages.USER_CREATION_ERROR,
             code: ErrorCodes.USER_CREATION_ERROR,
@@ -36,8 +35,8 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
 
     try {
         const { error: createError } = await supabase.auth.admin.createUser({
-            email:    string.validate.isEmail(email),
-            password: string.validate.isPassword6to20(password),
+            email:    santizer.validate.isEmail(email) as string,
+            password: santizer.validate.isPassword6to20(password) as string,
             email_confirm: true,
             user_metadata: {
                 role: 'user'
