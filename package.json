@@ -39,5 +39,8 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "open": "^11.0.0"
+  },
+  "dependencies": {
+    "string-sanitizer": "^2.0.2"
   }
 }

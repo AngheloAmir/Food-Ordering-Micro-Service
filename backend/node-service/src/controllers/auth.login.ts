@@ -7,25 +7,45 @@ import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 
 export default async function AuthLogin(req: Request, res: Response) {
+    const string = require("string-sanitizer");
     const { email, password } = req.body;
 
     if (!email || !password) {
         res.status(400).json({
-            error: ErrorMessages.USER_CREATION_ERROR,
-            code: ErrorCodes.USER_CREATION_ERROR
+            error: ErrorMessages.USER_LOGIN_FAILED,
+            code: ErrorCodes.USER_LOGIN_FAILED
         });
         return;
     }
 
+    if( !string.validate.isEmail(email) ) {
+        res.status(400).json({
+            error: ErrorMessages.INVALID_EMAIL_OR_PASS,
+            code: ErrorCodes.INVALID_EMAIL_OR_PASS,
+        });
+        return;
+    }
+
+    if( !string.validate.isPassword6to20(password) ) {
+        res.status(400).json({
+            error: ErrorMessages.INVALID_EMAIL_OR_PASS,
+            code: ErrorCodes.INVALID_EMAIL_OR_PASS,
+        });
+        return;
+    }
+    
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
+            email: string.validate.isEmail(email),
+            password: string.validate.isPassword6to20(password),
         });
 
         if (error) {
             console.error('Login error:', error);
-            res.status(401).json({ error: error.message });
+            res.status(401).json({
+                error: error.message,
+                code: ErrorCodes.USER_LOGIN_FAILED
+            });
             return;
         }
 

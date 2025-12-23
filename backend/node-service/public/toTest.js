@@ -1,3 +1,19 @@
+/**
+ * @typedef {Object} APITest
+ * @property {string} category
+ * @property {APITestItem[]} items
+ */
+
+/**
+ * @typedef {Object} APITestItem
+ * @property {string} label
+ * @property {string} route
+ * @property {string[]} methods
+ * @property {string} description
+ * @property {string} sampleInput
+ * @property {Object[]} suggested
+ * @property {string} expectedOutcome
+ */
 const apiTests = [
     {
         category: "Authentication",
@@ -9,9 +25,9 @@ const apiTests = [
                 description: "Authenticates a user with email and password. Returns session and token.",
                 sampleInput: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}',
                 suggested: [
-                    { name: "Admin Creds", content: '{\n  "email": "admin@admin.com",\n  "password": "admin"\n}' },
-                    { name: "Test Creds", content: '{\n  "email": "test@test.com",\n  "password": "test"\n}' },
-                    { name: "Invalid Creds", content: '{\n  "email": "wrong@test.com",\n  "password": "wrong"\n}' }
+                    { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
+                    { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
+                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
                 ],
                 expectedOutcome: '{\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
             },
@@ -39,8 +55,12 @@ const apiTests = [
                 methods: ["POST"],
                 description: "Creates a new user with email and password.",
                 sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
-                suggested: [],
-                expectedOutcome: '{\n  "message": "user created successfully",\n   "code": "CREATE_SUCCESS"\n}'
+                suggested: [
+                    { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
+                    { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
+                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
+                ],
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "code": "CREATE_SUCCESS"\n}'
             }
         ]
     },
@@ -70,7 +90,42 @@ const apiTests = [
     "delivery_notes": "test delivery notes"
 }
 `,
-                suggested: [],
+                suggested: [
+                    {
+                        name: "CusRaRa", content: "" +
+                            `{
+    "name": "Cus Ra Ramana",
+    "email": "CusRaRa@customer.com",
+    "phone1": "11111111111",
+    "phone2": "11111111111",
+    "address": "5000 malapitan, malakas, philippines",
+    "city": "malapitan",
+    "state": "malakas",
+    "zip": "12345",
+    "country": "philippines",
+    "icon": "test icon",
+    "gender": "female",
+    "delivery_notes": "Make sure that it is packed correctly"
+}`
+                    },
+                    {
+                        name: "CusTaGe", content: "" +
+                            `{
+    "name": "Cus Ta Gero",
+    "email": "CusTaGe@customer.com",
+    "phone1": "22222",
+    "phone2": "222222",
+    "address": "800 kalan, kalayaan, philippines",
+    "city": "kalan",
+    "state": "kalayaan",
+    "zip": "12345",
+    "country": "philippines",
+    "icon": "test icon",
+    "gender": "male",
+    "delivery_notes": "Ayos basta mainit pa"
+}`
+                    },
+                ],
                 expectedOutcome: '{\n  "message": "User information updated successfully"\n}'
             },
         ]
@@ -179,11 +234,20 @@ const apiTests = [
             {
                 label: "list all users",
                 route: "/api/tools/listallusers",
-                methods: ["GET"],
+                methods: ["POST"],
                 description: "Lists all users",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[ ... ]'
+                sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
+                suggested: [
+                    {
+                        name: "Search CusRaRa",
+                        content: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8",\n   "email": "CusRaRa@customer.com"\n}'
+                    },
+                    {
+                        name: "Search CusTaGe",
+                        content: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8",\n   "email": "CusTaGe@customer.com"\n}'
+                    }
+                ],
+                expectedOutcome: '[ all of the users info if email is not specified ]'
             },
             {
                 label: "list all employees",

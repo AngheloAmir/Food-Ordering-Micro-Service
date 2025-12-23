@@ -4,6 +4,8 @@ import { ErrorCodes, ErrorMessages } from "../utils/errorCodes";
 import generateUserCookie from "../utils/generateUserCookie";
 
 export default async function AuthCreateNewAccount(req: Request, res: Response) {
+    const string = require("string-sanitizer");
+
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -14,10 +16,28 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
         return;
     }
 
+    if( !string.validate.isEmail(email) ) {
+        res.status(400).json({
+            error: ErrorMessages.USER_CREATION_ERROR,
+            code: ErrorCodes.USER_CREATION_ERROR,
+            message: "Invalid email"
+        });
+        return;
+    }
+
+    if( !string.validate.isPassword6to20(password) ) {
+        res.status(400).json({
+            error: ErrorMessages.USER_CREATION_ERROR,
+            code: ErrorCodes.USER_CREATION_ERROR,
+            message: "Invalid password. A password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter"
+        });
+        return;
+    }
+
     try {
         const { error: createError } = await supabase.auth.admin.createUser({
-            email,
-            password,
+            email:    string.validate.isEmail(email),
+            password: string.validate.isPassword6to20(password),
             email_confirm: true,
             user_metadata: {
                 role: 'user'
