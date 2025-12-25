@@ -478,15 +478,17 @@ const apiTests = [
                 isProtected: false,
                 isPublic: false
             },
-            // {
-            //     label: "list all employees",
-            //     route: "/api/tools/listallemployees",
-            //     methods: ["GET"],
-            //     description: "Lists all employees",
-            //     sampleInput: '{}',
-            //     suggested: [],
-            //     expectedOutcome: '[ ... ]'
-            // }
+            {
+                label: "list all employees",
+                route: "/api/tools/listemployee",
+                methods: ["POST"],
+                description: "Lists all employees",
+                sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
+                suggested: [],
+                expectedOutcome: '[ ... ]',
+                isProtected: false,
+                isPublic: false
+            }
         ]
     },
 

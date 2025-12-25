@@ -1,5 +1,5 @@
 CREATE TABLE public.category (
-    category_id BIGINT PRIMARY KEY,
+    category_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 

@@ -1,5 +1,5 @@
 CREATE TABLE public.delivery (
-    delivery_id BIGINT PRIMARY KEY,
+    delivery_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_id BIGINT REFERENCES public.orders(order_id),
     driver_id UUID REFERENCES public.employee(employee_id),
     status VARCHAR(50) DEFAULT 'pending',

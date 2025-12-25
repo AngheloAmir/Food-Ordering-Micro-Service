@@ -1,5 +1,5 @@
 CREATE TABLE public.orders (
-    order_id BIGINT PRIMARY KEY,
+    order_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id UUID REFERENCES public.users(user_id),
     order_date    TIMESTAMPTZ DEFAULT NOW(),
     delivery_date TIMESTAMPTZ,

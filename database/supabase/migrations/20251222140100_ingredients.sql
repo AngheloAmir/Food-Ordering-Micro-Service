@@ -1,5 +1,5 @@
 CREATE TABLE public.ingredients (
-    ingredient_id BIGINT PRIMARY KEY,
+    ingredient_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     cost_per_unit DECIMAL DEFAULT 0,
     available_quantity DECIMAL DEFAULT 0,
