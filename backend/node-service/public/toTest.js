@@ -13,6 +13,30 @@
  * @property {string} sampleInput
  * @property {Object[]} suggested
  * @property {string} expectedOutcome
+ * @property {boolean} isProtected
+ * @property {boolean} isPublic
+ * 
+ * @example
+ *  {
+        category: "Authentication",
+        items: [
+            {
+                label: "login",
+                route: "/api/auth/login",
+                methods: ["POST"],
+                description: "Authenticates a user with email and password. Returns session and token.",
+                sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
+                suggested: [
+                    { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
+                    { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
+                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
+                ],
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}',
+                isProtected: false,
+                isPublic: false
+            },
+        ]
+    },
  */
 const apiTests = [
     {
@@ -29,7 +53,9 @@ const apiTests = [
                     { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
                     { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
                 ],
-                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}'
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "logout",
@@ -38,7 +64,9 @@ const apiTests = [
                 description: "Invalidates the user's session token.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: '{\n  "message": "Logout successful"\n}'
+                expectedOutcome: '{\n  "message": "Logout successful"\n}',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "dbtest",
@@ -47,7 +75,9 @@ const apiTests = [
                 description: "This one test the RLS policies. The endpoint will return all data associated with the user in the testuser table",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: '[\n {\n    id: "...", \n    user_id: "...", \n    message: "...", \n    created_at: "...", \n  }\n]'
+                expectedOutcome: '[\n {\n    id: "...", \n    user_id: "...", \n    message: "...", \n    created_at: "...", \n  }\n]',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "create",
@@ -60,7 +90,9 @@ const apiTests = [
                     { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
                     { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
                 ],
-                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "newUser": true\n}'
+                expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "newUser": true\n}',
+                isProtected: false,
+                isPublic: false
             }
         ]
     },
@@ -126,7 +158,9 @@ const apiTests = [
 }`
                     },
                 ],
-                expectedOutcome: '{\n  "message": "User information updated successfully"\n}'
+                expectedOutcome: '{\n  "message": "User information updated successfully"\n}',
+                isProtected: false,
+                isPublic: false
             },
         ]
     },
@@ -141,7 +175,9 @@ const apiTests = [
                 description: "Note: This is a protected route, only admin can use this route. Return all inventory.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}'
+                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
+                isProtected: true,
+                isPublic: false
             },
         ]
     },
@@ -157,7 +193,9 @@ const apiTests = [
                 description: "Return all products. No authentication required.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: 'URL Params: search, category\n\n{\n  "message": "Products fetched successfully"\n  "data": [ ... ]\n}'
+                expectedOutcome: 'URL Params: search, category\n\n{\n  "message": "Products fetched successfully"\n  "data": [ ... ]\n}',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "add product",
@@ -178,7 +216,9 @@ const apiTests = [
     "tags": ["test tag 1", "test tag 2"]
 }`,
                 suggested: [],
-                expectedOutcome: '{\n  "message": "Product added successfully"\n}'
+                expectedOutcome: '{\n  "message": "Product added successfully"\n}',
+                isProtected: true,
+                isPublic: false
             },
             {
                 label: "category",
@@ -192,7 +232,9 @@ const apiTests = [
                     { name: "modify",     content: '{\n   "request": "modify",\n   "category": "test category",\n   "newname": "test category is modified"\n}' },
                     { name: "delete",     content: '{\n   "request": "delete",\n   "category": "test category"\n}' },
                 ],
-                expectedOutcome: '{\n  "message": "Category added successfully"\n}'
+                expectedOutcome: '{\n  "message": "Category added successfully"\n}',
+                isProtected: true,
+                isPublic: false
             },
             {
                 label: "get all categories",
@@ -201,7 +243,9 @@ const apiTests = [
                 description: "Return all categories. No authentication required.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}'
+                expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}',
+                isProtected: false,
+                isPublic: false
             }
         ]
     },
@@ -233,7 +277,9 @@ const apiTests = [
                 description: "Get my employee data. This uses RLS policy so make sure to login first the employee account.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: 'Note: This use RLS policy so make sure to login first the employee account.\n\n[ { ...the employee information in the database... } ]'
+                expectedOutcome: 'Note: This use RLS policy so make sure to login first the employee account.\n\n[ { ...the employee information in the database... } ]',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "on board an employee",
@@ -277,7 +323,9 @@ const apiTests = [
     "emergency_contacts": "[]"
 }`
                 }],
-                expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n}'
+                expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n}',
+                isProtected: false,
+                isPublic: false
             }
         ]
     },
@@ -310,7 +358,9 @@ const apiTests = [
                 description: "Decodes the current cookie token. Dont change the code and pass to use this tool. MUST NOT BE USED IN THE FRONTEND!",
                 sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
                 suggested: [],
-                expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }'
+                expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }',
+                isProtected: false,
+                isPublic: false
             },
             {
                 label: "list all users",
@@ -328,7 +378,9 @@ const apiTests = [
                         content: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8",\n   "email": "CusTaGe@customer.com"\n}'
                     }
                 ],
-                expectedOutcome: '[ all of the users info if email is not specified ]'
+                expectedOutcome: '[ all of the users info if email is not specified ]',
+                isProtected: false,
+                isPublic: false
             },
             // {
             //     label: "list all employees",

@@ -71,7 +71,15 @@ function renderSidebar() {
             nameSpan.textContent = test.label;
 
             const methodBadge = document.createElement('span');
-            methodBadge.className = 'text-[10px] bg-gray-700 text-gray-500 px-1.5 py-0.5 rounded group-hover:bg-gray-600 group-hover:text-gray-300 transition duration-150 border border-gray-600';
+            let badgeColorClass = 'text-gray-500 bg-gray-700 border-gray-600'; // Default
+            
+            if (test.isProtected) {
+                badgeColorClass = 'text-green-400 bg-green-900 border-green-700';
+            } else if (test.isPublic) {
+                badgeColorClass = 'text-blue-300 bg-blue-900 border-blue-700';
+            }
+
+            methodBadge.className = `text-[10px] px-1.5 py-0.5 rounded group-hover:opacity-100 transition duration-150 border ${badgeColorClass}`;
             methodBadge.textContent = test.methods[0];
 
             btn.appendChild(nameSpan);
@@ -138,6 +146,16 @@ function loadTestHelper(test, element) {
     document.getElementById('card-title').textContent = "Testing: " + test.label;
     document.getElementById('card-route').textContent = test.route;
     document.getElementById('card-desc').textContent = test.description || '';
+
+    // Protection Badge
+    const badge = document.getElementById('protection-badge');
+    if (test.isProtected) {
+        badge.textContent = 'require admin account to access';
+        badge.className = 'absolute -top-5 left-0 text-[10px] font-bold tracking-widest uppercase text-green-400';
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
 
     // Set current route for execution
     currentTestRoute = test;

@@ -34,7 +34,9 @@
                 class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700 hidden flex-col h-full">
                 <!-- Header Section - Fixed Height -->
                 <div class="flex-none flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-                    <div>
+                    <div class="relative">
+                        <span id="protection-badge" class="absolute -top-5 left-0 text-2xl font-bold tracking-widest uppercase hidden"></span>
+
                         <h2 id="card-title" class="text-2xl font-semibold text-gray-200">Testing Endpoint</h2>
                         <code id="card-route" class="text-blue-400 text-sm mt-1 block"></code>
                         <p id="card-desc" class="text-gray-400 text-sm mt-2 italic"></p>
