@@ -34,3 +34,20 @@ USING (
     AND role = 'admin'
   )
 );
+
+INSERT INTO public.products (
+  name,
+  price,
+  discount,
+  description,
+  image,
+  price_per_unit,
+  est_cook_time,
+  category_id,
+  ingredient_ids,
+  tags,
+  created_at,
+  updated_at
+) VALUES
+('Product 1', 10.00, 0.00, 'Burger Test1', 'default', 10.00, 10, 'test', '{Ingredient 1, Ingredient 2}', '{Tag 1, Tag 2}', NOW(), NOW()),
+('Product 2', 20.00, 0.00, 'Jolli Dog 2', 'default',  20.00, 20, 'test', '{Ingredient 3, Ingredient 4}', '{Tag 3, Tag 4}', NOW(), NOW());

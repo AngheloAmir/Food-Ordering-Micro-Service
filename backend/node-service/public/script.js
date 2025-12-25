@@ -156,6 +156,10 @@ function loadTestHelper(test, element) {
     const inputArea = document.getElementById('input-area');
     inputArea.value = test.sampleInput || '';
 
+    // Clear Query Params
+    const queryInput = document.getElementById('query-params');
+    if (queryInput) queryInput.value = '';
+
     // Suggested Inputs
     const suggestedContainer = document.getElementById('suggested-inputs-container');
     suggestedContainer.innerHTML = ''; // Clear previous
@@ -187,7 +191,12 @@ function loadTestHelper(test, element) {
 async function executeTest() {
     if (!currentTestRoute) return;
 
-    const endpoint = currentTestRoute.route;
+    let endpoint = currentTestRoute.route;
+    const queryParams = document.getElementById('query-params').value;
+    if (queryParams) {
+        endpoint += queryParams;
+    }
+
     const method = document.getElementById('method-select').value;
     const inputElement = document.getElementById('input-area');
     const outputElement = document.getElementById('output-area');

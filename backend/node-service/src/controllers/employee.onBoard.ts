@@ -47,12 +47,11 @@ export default async function OnBoardAnEmployee(req: Request, res: Response) {
         }
     ]);
     
-    if (error) {
+    if (error) 
         return res.status(500).json({
             message: 'Internal Server Error',
             reason: error
         });
-    }
 
     res.json({
         message: 'Employee created successfully',

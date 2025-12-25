@@ -135,15 +135,38 @@ const apiTests = [
     {
         category: "Products",
         items: [
-            // {
-            //     label: "get all products",
-            //     route: "/api/products/getall",
-            //     methods: ["GET"],
-            //     description: "??",
-            //     sampleInput: '{}',
-            //     suggested: [],
-            //     expectedOutcome: '[ ... the JSON representation of the Token from supabase ... ]'
-            // }
+            {
+                label: "get all products",
+                route: "/api/products/getall",
+                methods: ["GET"],
+                description: "Return all products. No authentication required.",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: 'URL Params: search, category\n\n{\n  "message": "Products fetched successfully"\n  "data": [ ... ]\n}'
+            },
+            {
+                label: "category",
+                route: "/api/products/category",
+                methods: ["POST"],
+                description: "Add or modify a category. Request available: insert, modify, delete",
+                sampleInput: '{}',
+                suggested: [
+                    { name: "get all", content: '{}' },
+                    { name: "insert",     content: '{\n   "request": "insert",\n   "category": "test category"\n}' },
+                    { name: "modify",     content: '{\n   "request": "modify",\n   "category": "test category",\n   "newname": "test category is modified"\n}' },
+                    { name: "delete",     content: '{\n   "request": "delete",\n   "category": "test category"\n}' },
+                ],
+                expectedOutcome: 'Note: This is a protected route, only admin can use this route.\n\n{\n  "message": "Category added successfully"\n}'
+            },
+            {
+                label: "get all categories",
+                route: "/api/products/getcategory",
+                methods: ["GET"],
+                description: "Return all categories. No authentication required.",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}'
+            }
         ]
     },
 

@@ -36,4 +36,4 @@ WITH CHECK (auth.uid() = user_id);
 
 -- 
 ALTER TABLE public.users
-ALTER COLUMN isOnboarded SET DATA TYPE BOOLEAN DEFAULT false;
+ADD COLUMN is_onboarded BOOLEAN DEFAULT false;
