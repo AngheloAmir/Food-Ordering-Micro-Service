@@ -33,3 +33,7 @@ CREATE POLICY "Users can only insert their own user data"
 ON public.users
 FOR INSERT
 WITH CHECK (auth.uid() = user_id);
+
+-- 
+ALTER TABLE public.users
+ALTER COLUMN isOnboarded SET DATA TYPE BOOLEAN DEFAULT false;
