@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import santizer from "../utils/stringSanitizer";
 import decodeToken from '../utils/tokenDecoder';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 
 export default async function OnBoardAnEmployee(req: Request, res: Response) {
     const { passkey } = req.body;
@@ -28,7 +28,7 @@ export default async function OnBoardAnEmployee(req: Request, res: Response) {
     
     const token        = req.cookies.access_token || req.headers.authorization;
     const tokenData    = decodeToken(token);
-    const { data, error } = await supabaseAdmin.from('employee').insert([
+    const { data, error } = await createSupabaseAdmin().from('employee').insert([
         {
             employee_id:    tokenData.sub,
             role:           santizer.sanitize(role),

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import { UAParser } from 'ua-parser-js';
 import requestIp from 'request-ip';
 import geoip from 'geoip-lite';
@@ -36,7 +36,7 @@ export default async function AuthLogin(req: Request, res: Response) {
     }
     
     try {
-        const { data, error } = await supabaseAdmin.auth.signInWithPassword({
+        const { data, error } = await createSupabaseAdmin().auth.signInWithPassword({
             email: santizer.validate.isEmail(email) as string,
             password: santizer.validate.isPassword6to20(password) as string,
         });

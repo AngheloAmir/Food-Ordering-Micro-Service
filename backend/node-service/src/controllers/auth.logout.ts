@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 
 export default async function Logout(req: Request, res: Response) {
@@ -14,7 +14,7 @@ export default async function Logout(req: Request, res: Response) {
     }
 
     try {
-        const { error } = await supabaseAdmin.auth.admin.signOut(token);
+        const { error } = await createSupabaseAdmin().auth.admin.signOut(token);
 
         if (error) {
             console.error('Logout error:', error);

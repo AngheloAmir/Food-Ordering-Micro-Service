@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
@@ -66,7 +66,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
             }
 
             try {
-                const { data, error } = await supabaseAdmin.auth.refreshSession({ refresh_token: refreshToken });
+                const { data, error } = await createSupabaseAdmin().auth.refreshSession({ refresh_token: refreshToken });
 
                 if (error || !data.session) {
                     res.clearCookie('access_token');

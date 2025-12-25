@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 
 export default async function ListOfIngridents(req: Request, res: Response) {
     try {
         const { search } = req.query;
 
         if( search ) {
-            const { data, error } = await supabaseAdmin.from('ingredients').select('*').eq('name', search);
+            const { data, error } = await createSupabaseAdmin().from('ingredients').select('*').eq('name', search);
             if (error) {
                 return res.status(500).json({ error: error.message });
             }
@@ -14,7 +14,7 @@ export default async function ListOfIngridents(req: Request, res: Response) {
         }
 
         else {
-            const { data, error } = await supabaseAdmin.from('ingredients').select('*');
+            const { data, error } = await createSupabaseAdmin().from('ingredients').select('*');
             if (error) {
                 return res.status(500).json({ error: error.message });
             }

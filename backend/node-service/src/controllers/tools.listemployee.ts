@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import santizer from "../utils/stringSanitizer";
 
 export default async function ListUsers(req: Request, res: Response) {
@@ -11,7 +11,7 @@ export default async function ListUsers(req: Request, res: Response) {
     }
 
     if(!req.body.email) {
-        const { data, error } = await supabaseAdmin.from('employee').select('*');
+        const { data, error } = await createSupabaseAdmin().from('employee').select('*');
         if(error) {
             res.status(500).json({
                 code: "Failed to list employees",
@@ -26,7 +26,7 @@ export default async function ListUsers(req: Request, res: Response) {
     let email = req.body.email;
     email = santizer.validate.isEmail(email) as string;
     email = email.toLowerCase();
-    const { data, error } = await supabaseAdmin.from('employee').select('*').eq('email', email);
+    const { data, error } = await createSupabaseAdmin().from('employee').select('*').eq('email', email);
     if(error) {
         res.status(500).json({
             code: "Failed to list employees",

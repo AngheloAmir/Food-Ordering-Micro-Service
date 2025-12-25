@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
@@ -50,7 +50,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
         const decoded: JwtPayload = decodeToken(token);
         
         // Check if user is an admin in the employee table
-        const { data: employeeData, error: employeeError } = await supabaseAdmin
+        const { data: employeeData, error: employeeError } = await createSupabaseAdmin()
             .from('employee')
             .select('role')
             .eq('employee_id', decoded.sub)
@@ -82,7 +82,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
             }
 
             try {
-                const { data, error } = await supabaseAdmin.auth.refreshSession({ refresh_token: refreshToken });
+                const { data, error } = await createSupabaseAdmin().auth.refreshSession({ refresh_token: refreshToken });
 
                 if (error || !data.session) {
                     res.clearCookie('access_token');
@@ -95,7 +95,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
                 }
 
                 // Check if refreshed user is an admin
-                const { data: employeeData, error: employeeError } = await supabaseAdmin
+                const { data: employeeData, error: employeeError } = await createSupabaseAdmin()
                     .from('employee')
                     .select('role')
                     .eq('employee_id', data.session.user.id)

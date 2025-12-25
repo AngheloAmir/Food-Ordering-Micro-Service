@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabaseAdmin } from '../config/supabase';
+import { createSupabaseAdmin } from '../config/supabase';
 import sanitizer from '../utils/stringSanitizer';
 
 export default async function AddInventory(req:Request, res:Response) {
@@ -15,7 +15,7 @@ export default async function AddInventory(req:Request, res:Response) {
             })
         }
 
-        const { error } = await supabaseAdmin.from('ingredients').insert([
+        const { error } = await createSupabaseAdmin().from('ingredients').insert([
             {
                 name: ingredient_name,
                 cost_per_unit: ingredient_cost_per_unit,
