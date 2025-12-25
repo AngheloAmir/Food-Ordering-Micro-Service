@@ -5,7 +5,7 @@
   "scripts": {
     "start": "supabase start",
     "stop": "supabase stop",
-    "migration:new": "supabase migration new workday",
+    "migration:new": "supabase migration new usercart",
     "migration:up": "supabase migration up",
     "reset": "supabase db reset"
   },
