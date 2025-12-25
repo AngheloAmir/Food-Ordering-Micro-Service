@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import supabase from '../config/supabase';
+import { supabaseAdmin } from '../config/supabase';
 
 export default async function GetAllProducts(req: Request, res: Response) {
     const { search, category } :any = req.query;
@@ -7,26 +7,26 @@ export default async function GetAllProducts(req: Request, res: Response) {
     let databaseResult : any;
     if (search && category) {
         databaseResult =
-            await supabase
+            await supabaseAdmin
             .from('products')
             .select('*')
             .eq('category', category)
             .ilike('name', `%${search}%`);
     } else if (search) {
         databaseResult =
-            await supabase
+            await supabaseAdmin
             .from('products')
             .select('*')
             .ilike('name', `%${search}%`);
     } else if (category) {
         databaseResult =
-            await supabase
+            await supabaseAdmin
             .from('products')
             .select('*')
             .eq('category', category);
     } else {
         databaseResult =
-            await supabase
+            await supabaseAdmin
             .from('products')
             .select('*');
     }

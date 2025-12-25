@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import supabase from '../config/supabase';
+import { supabaseAdmin } from '../config/supabase';
 
 export default async function GetAllCategories(req: Request, res: Response) {
-    const getAllSupa = await supabase
+    const getAllSupa = await supabaseAdmin
         .from('category')
         .select('*');
 

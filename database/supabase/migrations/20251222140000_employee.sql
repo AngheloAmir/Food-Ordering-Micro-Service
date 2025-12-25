@@ -38,3 +38,8 @@ USING (auth.uid() = employee_id);
 CREATE POLICY "Employees can only update their own user data" 
 ON public.employee FOR UPDATE 
 USING (auth.uid() = employee_id);
+
+CREATE POLICY "Enable insert for authenticated users" 
+ON public.employee FOR INSERT 
+TO authenticated 
+WITH CHECK (auth.uid() = employee_id);

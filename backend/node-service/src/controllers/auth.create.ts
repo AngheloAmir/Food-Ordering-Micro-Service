@@ -1,4 +1,4 @@
-import supabase from "../config/supabase";
+import { supabaseAdmin } from "../config/supabase";
 import { Request, Response } from 'express';
 import { ErrorCodes, ErrorMessages } from "../utils/errorCodes";
 import generateUserCookie from "../utils/generateUserCookie";
@@ -34,7 +34,7 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
     }
 
     try {
-        const { error: createError } = await supabase.auth.admin.createUser({
+        const { error: createError } = await supabaseAdmin.auth.admin.createUser({
             email:    santizer.validate.isEmail(email) as string,
             password: santizer.validate.isPassword6to20(password) as string,
             email_confirm: true,
@@ -53,7 +53,7 @@ export default async function AuthCreateNewAccount(req: Request, res: Response) 
         }
 
         // Auto-login after creation
-        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+        const { data: loginData, error: loginError } = await supabaseAdmin.auth.signInWithPassword({
             email,
             password,
         });

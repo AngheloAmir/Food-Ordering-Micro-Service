@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import supabase, { createSupabase } from '../config/supabase';
+import { supabaseAdmin, createSupabase } from '../config/supabase';
 import stringSanitizer from '../utils/stringSanitizer';
 
 export default async function category(req: Request, res: Response) {
@@ -11,7 +11,7 @@ export default async function category(req: Request, res: Response) {
         switch( requestType ) {
             case 'insert':
                 console.log(category);
-                const insertSupa = await supabase
+                const insertSupa = await supabaseAdmin
                     .from('category')
                     .insert({
                         name: category,
@@ -31,7 +31,7 @@ export default async function category(req: Request, res: Response) {
                 });
 
             case 'modify':
-                const modifySupa = await supabase
+                const modifySupa = await supabaseAdmin
                     .from('category')
                     .update({
                         name: newname,
@@ -52,7 +52,7 @@ export default async function category(req: Request, res: Response) {
                 });
 
             case 'delete':
-                const deleteSupa = await supabase
+                const deleteSupa = await supabaseAdmin
                     .from('category')
                     .delete()
                     .eq('id', req.body.id);

@@ -71,17 +71,6 @@ const apiTests = [
                 isPublic: false
             },
             {
-                label: "dbtest",
-                route: "/api/auth/dbtest",
-                methods: ["GET"],
-                description: "This one test the RLS policies. The endpoint will return all data associated with the user in the testuser table",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '[\n {\n    id: "...", \n    user_id: "...", \n    message: "...", \n    created_at: "...", \n  }\n]',
-                isProtected: false,
-                isPublic: false
-            },
-            {
                 label: "create",
                 route: "/api/auth/create",
                 methods: ["POST"],
@@ -413,7 +402,7 @@ const apiTests = [
                     content: "" +
                         `{
     "passkey": "adminallow",
-    "role": "delivery",
+    "role": "rider",
     "admin_notes": "This is the the delivery account",
     "first_name": "Delivery",
     "last_name": "Delivery",

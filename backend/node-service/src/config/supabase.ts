@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_KEY || '';
@@ -25,5 +27,5 @@ export function createSupabase(tokenParams: string | undefined) {
     return userSupabase;
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-export default supabase;
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
+
