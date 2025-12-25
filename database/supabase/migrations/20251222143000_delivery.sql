@@ -1,7 +1,7 @@
 CREATE TABLE public.delivery (
-    delivery_id UUID PRIMARY KEY,
-    order_id UUID REFERENCES public.orders(order_id),
-    driver_id UUID REFERENCES public.employee(employee_id),
+    delivery_id BIGINT PRIMARY KEY,
+    order_id BIGINT REFERENCES public.orders(order_id),
+    driver_id BIGINT REFERENCES public.employee(employee_id),
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()

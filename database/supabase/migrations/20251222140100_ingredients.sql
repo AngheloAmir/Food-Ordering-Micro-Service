@@ -1,6 +1,6 @@
 CREATE TABLE public.ingredients (
-    ingredient_id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    ingredient_id BIGINT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
     cost_per_unit DECIMAL DEFAULT 0,
     available_quantity DECIMAL DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW(),

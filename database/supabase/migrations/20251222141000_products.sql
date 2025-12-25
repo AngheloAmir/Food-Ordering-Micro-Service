@@ -1,6 +1,6 @@
 CREATE TABLE public.products (
-    product_id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    product_id BIGINT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
     price    DECIMAL NOT NULL DEFAULT 0,
     discount DECIMAL NOT NULL DEFAULT 0,
     description TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE public.products (
     price_per_unit DECIMAL NOT NULL,
     est_cook_time INT DEFAULT 0,
     category text,
-    ingredient_ids UUID[],
+    ingredient_ids BIGINT[],
     tags TEXT[],
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()

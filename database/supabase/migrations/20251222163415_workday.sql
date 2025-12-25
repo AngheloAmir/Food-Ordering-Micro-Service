@@ -1,5 +1,5 @@
 CREATE TABLE public.workday (
-    workday_id UUID PRIMARY KEY,
+    workday_id  BIGINT PRIMARY KEY,
     employee_id UUID REFERENCES public.employee(employee_id),
     login_time TIMESTAMPTZ,
     logout_time TIMESTAMPTZ

@@ -50,8 +50,10 @@ const apiTests = [
                 sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
                 suggested: [
                     { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
-                    { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
-                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
+                    { name: "CusRaRa", content: '{\n  "email": "cusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
+                    { name: "CusTaGe", content: '{\n  "email": "cusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' },
+                    { name: "Chef", content:    '{\n  "email": "chef@chef.com",\n  "password": "Chef123"\n}' },
+                    { name: "Delivery", content: '{\n  "email": "delivery@delivery.com",\n  "password": "Delivery123"\n}' }
                 ],
                 expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user logged in successfully",\n   "code": "LOGIN_SUCCESS"\n}',
                 isProtected: false,
@@ -88,7 +90,9 @@ const apiTests = [
                 suggested: [
                     { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
                     { name: "CusRaRa", content: '{\n  "email": "CusRaRa@customer.com",\n  "password": "CusRaRa526"\n}' },
-                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' }
+                    { name: "CusTaGe", content: '{\n  "email": "CusTaGe@customer.com",\n  "password": "CusTaGe789"\n}' },
+                    { name: "Chef", content:    '{\n  "email": "chef@chef.com",\n  "password": "Chef123"\n}' },
+                    { name: "Delivery", content: '{\n  "email": "delivery@delivery.com",\n  "password": "Delivery123"\n}' }
                 ],
                 expectedOutcome: 'NOTE: a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter. \n\n {\n  "message": "user created successfully",\n   "newUser": true\n}',
                 isProtected: false,
@@ -164,27 +168,10 @@ const apiTests = [
             },
         ]
     },
-    //======================================================================================
-    { 
-        category: "Inventory",
-        items: [
-            {
-                label: "list all inventory",
-                route: "/api/inventory/list",
-                methods: ["GET"],
-                description: "Note: This is a protected route, only admin can use this route. Return all inventory.",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
-                isProtected: true,
-                isPublic: false
-            },
-        ]
-    },
 
     //======================================================================================
     {
-        category: "Products",
+        category: "Products and Inventory",
         items: [
             {
                 label: "get all products",
@@ -195,7 +182,7 @@ const apiTests = [
                 suggested: [],
                 expectedOutcome: 'URL Params: search, category\n\n{\n  "message": "Products fetched successfully"\n  "data": [ ... ]\n}',
                 isProtected: false,
-                isPublic: false
+                isPublic: true
             },
             {
                 label: "add product",
@@ -212,10 +199,43 @@ const apiTests = [
     "price_per_unit": 10,
     "est_cook_time": 10,
     "category": "test category",
-    "ingredient_ids": ["test ingredient id 1", "test ingredient id 2"],
-    "tags": ["test tag 1", "test tag 2"]
+    "ingredient_ids": [],
+    "tags": ["test"]
 }`,
-                suggested: [],
+                suggested: [
+                    {
+                        name: "Burger",
+                        content: '' +
+`{
+    "name": "Burger",
+    "price": 20,
+    "discount": 0,
+    "description": "The best burger in world",
+    "image": "default",
+    "price_per_unit": 16,
+    "est_cook_time": 10,
+    "category": "burger",
+    "ingredient_ids": [1, 2],
+    "tags": ["patty", "buns"]
+}`
+                },
+                 {
+                    name: "Foot Long",
+                    content: '' +
+`{
+    "name": "Foot Long",
+    "price": 30,
+    "discount": 0,
+    "description": "Hotdog in a long bun",
+    "image": "default",
+    "price_per_unit": 26,
+    "est_cook_time": 10,
+    "category": "burger",
+    "ingredient_ids": [1, 2],
+    "tags": ["hotdog", "buns"]
+}`
+                 }
+            ],
                 expectedOutcome: '{\n  "message": "Product added successfully"\n}',
                 isProtected: true,
                 isPublic: false
@@ -245,8 +265,52 @@ const apiTests = [
                 suggested: [],
                 expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}',
                 isProtected: false,
+                isPublic: true
+            },
+                        {
+                label: "list all inventory",
+                route: "/api/inventory/list",
+                methods: ["GET"],
+                description: "Note: This is a protected route, only admin can use this route. Return all inventory.",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
+                isProtected: true,
                 isPublic: false
-            }
+            },
+            {
+                label: "add ingridents",
+                route: "/api/inventory/add",
+                methods: ["POST"],
+                description: "Note: This is a protected route, only admin can use this route. Add ingridents.",
+                sampleInput: "" +
+`{
+    "name": "test name",
+    "cost_per_unit": 10,
+    "available_quantity": 10
+}`,
+                suggested: [
+                    {
+                        name: "Buns",
+                        content: `{
+    "name": "Buns",
+    "cost_per_unit": 10,
+    "available_quantity": 100
+}`
+                    },
+                    {
+                        name: "Patty",
+                        content: `{
+    "name": "Patty",
+    "cost_per_unit": 25,
+    "available_quantity": 50
+}`
+                    }
+                ],
+                expectedOutcome: '{\n  "message": "Inventory added successfully"\n}',
+                isProtected: true,
+                isPublic: false
+            },
         ]
     },
 
@@ -303,7 +367,8 @@ const apiTests = [
     "country": "test",
     "emergency_contacts": "[12345789, 98765432]"
 }`,
-                suggested: [{
+                suggested: [
+                    {
                     name: "OnBoard Admin",
                     content: "" +
                         `{
@@ -322,7 +387,49 @@ const apiTests = [
     "country": "unknown",
     "emergency_contacts": "[]"
 }`
-                }],
+                },
+                { 
+                    name: "OnBoard Chef",
+                    content: "" +
+                        `{
+    "passkey": "adminallow",
+    "role": "chef",
+    "admin_notes": "This is the the chef account",
+    "first_name": "Chef",
+    "last_name": "Chef",
+    "middle_name": ".",
+    "gender": "ultimate",
+    "phone_number": "123456789",
+    "address": "unknown",
+    "city": "unknown",
+    "state": "unknown",
+    "zip_code": "unknown",
+    "country": "unknown",
+    "emergency_contacts": "[]"
+}`
+                },
+                {
+                    name: "OnBoard Delivery",
+                    content: "" +
+                        `{
+    "passkey": "adminallow",
+    "role": "delivery",
+    "admin_notes": "This is the the delivery account",
+    "first_name": "Delivery",
+    "last_name": "Delivery",
+    "middle_name": ".",
+    "gender": "ultimate",
+    "phone_number": "123456789",
+    "address": "unknown",
+    "city": "unknown",
+    "state": "unknown",
+    "zip_code": "unknown",
+    "country": "unknown",
+    "emergency_contacts": "[]"
+}`
+                }
+
+            ],
                 expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n}',
                 isProtected: false,
                 isPublic: false

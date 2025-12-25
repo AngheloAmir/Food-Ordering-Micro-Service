@@ -1,6 +1,6 @@
 CREATE TABLE public.category (
-    category_id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    category_id BIGINT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
 );
 
 ALTER TABLE public.category ENABLE ROW LEVEL SECURITY;

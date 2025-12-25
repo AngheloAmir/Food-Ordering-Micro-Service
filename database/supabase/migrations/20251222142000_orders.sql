@@ -1,5 +1,5 @@
 CREATE TABLE public.orders (
-    order_id UUID PRIMARY KEY,
+    order_id BIGINT PRIMARY KEY,
     user_id UUID REFERENCES public.users(user_id),
     order_date    TIMESTAMPTZ DEFAULT NOW(),
     delivery_date TIMESTAMPTZ,
@@ -7,7 +7,7 @@ CREATE TABLE public.orders (
 
     address VARCHAR(255),
     city VARCHAR(100),
-    state VARCHAR(100),
+    state VARCHAR(100), 
     zip VARCHAR(20),
     country VARCHAR(100),
     phone VARCHAR(20),
