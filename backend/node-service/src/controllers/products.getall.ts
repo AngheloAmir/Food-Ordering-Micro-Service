@@ -2,18 +2,33 @@ import { Request, Response } from 'express';
 import supabase from '../config/supabase';
 
 export default async function GetAllProducts(req: Request, res: Response) {
-    //get the url params
-    const { search, category } = req.query;
+    const { search, category } :any = req.query;
 
     let databaseResult : any;
     if (search && category) {
-        databaseResult = await supabase.from('products').select('*').eq('category', category).eq('name', search);
+        databaseResult =
+            await supabase
+            .from('products')
+            .select('*')
+            .eq('category', category)
+            .ilike('name', `%${search}%`);
     } else if (search) {
-        databaseResult = await supabase.from('products').select('*').eq('name', search);
+        databaseResult =
+            await supabase
+            .from('products')
+            .select('*')
+            .ilike('name', `%${search}%`);
     } else if (category) {
-        databaseResult = await supabase.from('products').select('*').eq('category', category);
+        databaseResult =
+            await supabase
+            .from('products')
+            .select('*')
+            .eq('category', category);
     } else {
-        databaseResult = await supabase.from('products').select('*');
+        databaseResult =
+            await supabase
+            .from('products')
+            .select('*');
     }
 
     if (databaseResult.error) {

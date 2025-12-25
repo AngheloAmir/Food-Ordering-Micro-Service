@@ -130,6 +130,21 @@ const apiTests = [
             },
         ]
     },
+    //======================================================================================
+    { 
+        category: "Inventory",
+        items: [
+            {
+                label: "list all inventory",
+                route: "/api/inventory/list",
+                methods: ["GET"],
+                description: "Note: This is a protected route, only admin can use this route. Return all inventory.",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}'
+            },
+        ]
+    },
 
     //======================================================================================
     {
@@ -145,10 +160,31 @@ const apiTests = [
                 expectedOutcome: 'URL Params: search, category\n\n{\n  "message": "Products fetched successfully"\n  "data": [ ... ]\n}'
             },
             {
+                label: "add product",
+                route: "/api/products/add",
+                methods: ["POST"],
+                description: "Note: This is a protected route, only admin can use this route. Add a product.",
+                sampleInput: "" +
+`{
+    "name": "test product",
+    "price": 10,
+    "discount": 0,
+    "description": "test product description",
+    "image": "test product image",
+    "price_per_unit": 10,
+    "est_cook_time": 10,
+    "category": "test category",
+    "ingredient_ids": ["test ingredient id 1", "test ingredient id 2"],
+    "tags": ["test tag 1", "test tag 2"]
+}`,
+                suggested: [],
+                expectedOutcome: '{\n  "message": "Product added successfully"\n}'
+            },
+            {
                 label: "category",
                 route: "/api/products/category",
                 methods: ["POST"],
-                description: "Add or modify a category. Request available: insert, modify, delete",
+                description: "Note: This is a protected route, only admin can use this route. Add or modify a category. Request available: insert, modify, delete",
                 sampleInput: '{}',
                 suggested: [
                     { name: "get all", content: '{}' },
@@ -156,7 +192,7 @@ const apiTests = [
                     { name: "modify",     content: '{\n   "request": "modify",\n   "category": "test category",\n   "newname": "test category is modified"\n}' },
                     { name: "delete",     content: '{\n   "request": "delete",\n   "category": "test category"\n}' },
                 ],
-                expectedOutcome: 'Note: This is a protected route, only admin can use this route.\n\n{\n  "message": "Category added successfully"\n}'
+                expectedOutcome: '{\n  "message": "Category added successfully"\n}'
             },
             {
                 label: "get all categories",

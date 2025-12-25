@@ -17,6 +17,7 @@ import productsRoutes from './routes/products.routes';
 import ordersRoutes from './routes/orders.routes';
 import employeeRoutes from './routes/employee.routes';
 import workdayRoutes from './routes/workday.routes';
+import inventoryRoutes from './routes/inventory.routes';
 
 app.use(express.json());
 app.use(cookieParser());
@@ -29,6 +30,7 @@ app.use('/api', productsRoutes);
 app.use('/api', ordersRoutes);
 app.use('/api', employeeRoutes);
 app.use('/api', workdayRoutes);
+app.use('/api', inventoryRoutes);
 
 // Serve static files from 'public' directory===============================
 app.use(express.static(path.join(__dirname, '../public')));
