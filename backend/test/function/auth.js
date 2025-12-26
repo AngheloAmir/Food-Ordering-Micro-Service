@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('auth-form');
     const accountsList = document.getElementById('auth-accounts-list');
     const descriptionContainer = document.getElementById('auth-description');
+    const authError = document.getElementById('auth-error');
+    const authErrorText = document.getElementById('auth-error-text');
 
     // 1. Render Quick Login Cards
     if (typeof authData !== 'undefined' && authData.accounts) {
@@ -62,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value;
         const password = passwordInput.value;
 
+        // Reset Error State
+        authError.classList.add('hidden');
+        authErrorText.textContent = '';
+
         // Visual loading state (mock)
         const submitBtn = loginForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerText;
@@ -76,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!authData?.routes?.login) {
             console.error('Login route configuration missing in authData');
+            authErrorText.textContent = 'Configuration Error: Login route missing.';
+            authError.classList.remove('hidden');
             submitBtn.innerText = originalText;
             submitBtn.disabled = false;
             return;
@@ -102,11 +110,50 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Login Response:', data);
 
             if (response.ok) {
-                // Success: Update UI
+                // Success: Update Header UI
                 const userEmailDisplay = document.getElementById('user-email-display');
                 if (userEmailDisplay) {
-                    userEmailDisplay.textContent = email;
+                    userEmailDisplay.innerHTML = `
+                        <span class="text-sm text-gray-400">Logged in as <span class="text-indigo-400 font-semibold">${email}</span></span>
+                        <button id="btn-header-logout" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-md border border-red-500/50 transition-colors flex items-center gap-1.5 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                <path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M6 10a.75.75 0 0 1 .75-.75h9.546l-1.048-.943a.75.75 0 1 1 1.004-1.114l2.5 2.25a.75.75 0 0 1 0 1.114l-2.5 2.25a.75.75 0 1 1-1.004-1.114l1.048-.943H6.75A.75.75 0 0 1 6 10Z" clip-rule="evenodd" />
+                            </svg>
+                            Log Out
+                        </button>
+                    `;
                     userEmailDisplay.classList.remove('hidden');
+
+                    // Bind Logout Event
+                    const logoutBtn = document.getElementById('btn-header-logout');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', async (evt) => {
+                            evt.preventDefault();
+                            console.log('Logout clicked');
+                            
+                            // Optimistically hide UI
+                            userEmailDisplay.classList.add('hidden');
+                            userEmailDisplay.innerHTML = '';
+
+                            if (!authData?.routes?.logout) {
+                                console.error('Logout route configuration missing');
+                                return;
+                            }
+                            const { url: logoutUrl, method: logoutMethod } = authData.routes.logout;
+                            
+                            try {
+                                const logoutRes = await fetch(logoutUrl, { method: logoutMethod });
+                                if (logoutRes.ok) {
+                                    console.log('Logged out successfully from API');
+                                } else {
+                                    console.error('Logout failed at API level');
+                                }
+                            } catch (err) {
+                                console.error('Logout network error:', err);
+                            }
+                        });
+                    }
                 }
                 
                 // Show Success State on Button temporarily
@@ -125,12 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
             } else {
-                throw new Error(data.message || 'Login failed');
+                throw new Error(data.message || data.error || 'Login failed');
             }
 
         } catch (error) {
             console.error('Login Error:', error);
-            alert(`Login Failed: ${error.message}`);
+            authErrorText.textContent = error.message;
+            authError.classList.remove('hidden');
             submitBtn.innerText = originalText;
             submitBtn.disabled = false;
         } finally {

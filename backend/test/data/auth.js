@@ -8,17 +8,31 @@ const authData = {
             color: "indigo"
         },
         {
-            label: "Customer RaRa",
-            email: "rara@customer.com",
+            label: "RaRa",
+            email: "cusRaRa@customer.com",
             password: "password123",
             role: "Customer",
             color: "green"
         },
         {
-            label: "Vendor Bob",
-            email: "bob@vendor.com",
+            label: "Tage",
+            email: "cusTage@customer.com",
             password: "password123",
-            role: "Vendor",
+            role: "Customer",
+            color: "green"
+        },
+        {
+            label: "Chef",
+            email: "chef@chef.com",
+            password: "password123",
+            role: "Chef",
+            color: "orange"
+        },
+        {
+            label: "Delivery",
+            email: "delivery@delivery.com",
+            password: "password123",
+            role: "Delivery",
             color: "orange"
         }
     ],

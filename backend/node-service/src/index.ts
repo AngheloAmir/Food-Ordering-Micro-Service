@@ -18,6 +18,20 @@ import ordersRoutes from './routes/orders.routes';
 import employeeRoutes from './routes/employee.routes';
 import workdayRoutes from './routes/workday.routes';
 
+if (true) {
+    app.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "http://127.0.0.1:5500"); // Update to match your frontend URL
+        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        res.header("Access-Control-Allow-Credentials", "true");
+        if (req.method === 'OPTIONS') {
+             res.sendStatus(200);
+        } else {
+             next();
+        }
+    });
+}
+
 app.use(express.json());
 app.use(cookieParser());
 
