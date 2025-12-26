@@ -2,6 +2,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modulesNav = document.getElementById('crud-modules-nav');
     const contentArea = document.getElementById('crud-content-area');
 
+    // Helper: JSON Syntax Highlighter
+    function syntaxHighlight(json) {
+        if (typeof json !== 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            if (/^"/.test(match) && /:$/.test(match)) {
+                return '<span class="text-orange-400">' + match.replace(/:$/, '') + '</span>:';
+            }
+            return match;
+        });
+    }
+
     // Store loaded modules
     const modules = {};
 
@@ -134,7 +148,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <!-- Method & Route -->
                         <div class="flex items-center gap-2 text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded border border-gray-800">
                              <span class="${getMethodColor(endpoint.methods[0])} font-bold">${endpoint.methods[0]}</span>
-                             <span class="select-all text-gray-300">${endpoint.route}</span>
+                             <span id="route-display" class="select-all text-gray-300 mr-2">${endpoint.route}</span>
+                             <span id="request-timer" class="text-gray-500 font-mono text-[10px] hidden">0ms</span>
                         </div>
                      </div>
                      
@@ -155,13 +170,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                      <!-- Presets Dropdown (Click Toggle) -->
                      ${endpoint.suggested && endpoint.suggested.length > 0 ? `
                      <div class="relative h-8">
-                        <button id="preset-toggle-btn" class="h-full bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 border border-gray-700 rounded text-xs transition flex items-center gap-1 focus:outline-none focus:border-gray-500">
+                        <button id="preset-toggle-btn" class="min-w-[140px] h-full bg-gray-800 hover:bg-gray-750 text-gray-300 font-medium border border-gray-600 hover:border-gray-500 rounded text-xs transition-all flex items-center justify-between px-3 focus:outline-none focus:border-indigo-500 shadow-sm">
                             <span>Presets</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 transition-transform duration-200" id="preset-arrow">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <div id="preset-menu" class="hidden absolute left-0 top-full mt-1 w-48 bg-gray-900 border border-gray-700 rounded shadow-xl z-20 py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                        <div id="preset-menu" class="hidden absolute left-0 top-full mt-1 w-full min-w-[160px] bg-gray-900 border border-gray-700 rounded shadow-xl z-20 py-1 max-h-60 overflow-y-auto custom-scrollbar">
                             ${endpoint.suggested.map((p, index) => `
                                 <button type="button" data-index="${index}" class="preset-option-btn block w-full text-left px-4 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-b border-gray-800 last:border-0 focus:bg-gray-800 focus:outline-none">
                                     ${p.name}
@@ -172,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                      ` : ''}
 
                      <!-- URL Params Input -->
-                     <input type="text" id="url-params-input" class="w-64 bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-xs placeholder-gray-700 h-8" placeholder="URL Params (Optional)">
+                     <input type="text" id="url-params-input" class="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-xs placeholder-gray-700 h-8" placeholder="URL Params (Optional)">
                 </div>
 
                 <!-- 3. Main Data Grid (3 Columns) -->
@@ -186,17 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
 
-                    <!-- Col 2: Expected Output -->
-                    <div class="flex flex-col h-full overflow-hidden">
-                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Expected Output</h3>
-                        <div class="flex-1 bg-gray-900/50 border border-gray-800 border-dashed rounded-lg relative overflow-hidden">
-                            <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
-                                <pre class="text-gray-500 font-mono text-xs whitespace-pre-wrap">${endpoint.expectedOutcome}</pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Col 3: Actual Response (Terminal Style) -->
+                    <!-- Col 2: Actual Response (MOVED TO MIDDLE) -->
                     <div class="flex flex-col h-full overflow-hidden">
                          <div class="flex-none flex items-center justify-between mb-2">
                             <h3 class="text-xs font-bold text-gray-500 uppercase">Response Output</h3>
@@ -205,6 +210,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="flex-1 bg-black border border-gray-800 rounded-lg relative overflow-hidden shadow-inner">
                             <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
                                 <pre id="response-output" class="text-green-500 font-mono text-xs whitespace-pre-wrap">Waiting for request...</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Col 3: Expected Output (MOVED TO RIGHT) -->
+                    <div class="flex flex-col h-full overflow-hidden">
+                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Expected Output</h3>
+                        <div class="flex-1 bg-gray-900/50 border border-gray-800 border-dashed rounded-lg relative overflow-hidden">
+                            <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
+                                <pre class="text-gray-500 font-mono text-xs whitespace-pre-wrap">${endpoint.expectedOutcome}</pre>
                             </div>
                         </div>
                     </div>
@@ -256,6 +271,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // 3. Dynamic Route Display Logic
+        const paramsInput = contentArea.querySelector('#url-params-input');
+        const routeDisplay = contentArea.querySelector('#route-display');
+        
+        if (paramsInput && routeDisplay) {
+            paramsInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                routeDisplay.textContent = endpoint.route + val;
+            });
+        }
+
         // 2. Send Request Handler
         const sendBtn = contentArea.querySelector('#btn-send-request');
         if(sendBtn) {
@@ -271,11 +297,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 sendBtn.disabled = true;
                 sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
+                // Timer Logic
+                const timerDisplay = document.getElementById('request-timer');
+                timerDisplay.classList.remove('hidden');
+                const startTime = performance.now();
+                const timerInterval = setInterval(() => {
+                    const current = performance.now();
+                    timerDisplay.textContent = `${(current - startTime).toFixed(0)}ms`;
+                }, 50);
+
                 try {
                     // Construct URL with params
                     let finalUrl = endpoint.route; 
-                    // Using localhost as per previous context
-                    const baseUrl = 'http://localhost:5199'; 
+                    // Dynamic Base URL
+                    const baseUrl = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
                     finalUrl = baseUrl + finalUrl + urlParams;
 
                     // Parse Body safely
@@ -314,7 +349,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     statusLabel.textContent = `Status: ${res.status} ${res.statusText}`;
                     statusLabel.className = res.ok ? 'text-xs font-mono text-green-500' : 'text-xs font-mono text-red-500';
                     
-                    responseOutput.textContent = JSON.stringify(data, null, 2);
+                    responseOutput.innerHTML = syntaxHighlight(data);
                     responseOutput.className = 'text-green-400 font-mono text-xs whitespace-pre-wrap';
 
                 } catch (err) {
@@ -323,6 +358,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                      responseOutput.textContent = err.message;
                      responseOutput.className = 'text-red-500 font-mono text-xs whitespace-pre-wrap';
                 } finally {
+                    clearInterval(timerInterval);
+                    const endTime = performance.now();
+                    timerDisplay.textContent = `${(endTime - startTime).toFixed(2)}ms`;
+                    
                     sendBtn.disabled = false;
                     sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }

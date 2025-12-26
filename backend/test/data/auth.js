@@ -38,12 +38,12 @@ const authData = {
     ],
     routes: {
         login: {
-            url: "http://localhost:5199/api/auth/login",
+            url: "/api/auth/login",
             method: "POST",
             bodyTemplate: "{\n  \"email\": \"%email\",\n  \"password\": \"%password\"\n}"
         },
         logout: {
-            url: "http://localhost:5199/api/auth/logout",
+            url: "/api/auth/logout",
             method: "POST"
         }
     },

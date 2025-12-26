@@ -56,7 +56,7 @@ export default async function category(req: Request, res: Response) {
                 const deleteSupa = await createSupabaseAdmin()
                     .from('category')
                     .delete()
-                    .eq('id', req.body.id);
+                    .eq('name', category);
 
                 if (deleteSupa.error) {
                     console.log(deleteSupa.error);

@@ -97,8 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace('%email', email)
             .replace('%password', password);
 
+        // Dynamic Base URL
+        const baseUrl = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
+        const finalUrl = url.startsWith('http') ? url : baseUrl + url;
+
         try {
-            const response = await fetch(url, {
+            const response = await fetch(finalUrl, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json'
@@ -137,14 +141,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             userEmailDisplay.classList.add('hidden');
                             userEmailDisplay.innerHTML = '';
 
+                            // 1. Clear Local Storage (Critical for API Tester fallback)
+                            localStorage.removeItem('authToken');
+
                             if (!authData?.routes?.logout) {
                                 console.error('Logout route configuration missing');
                                 return;
                             }
                             const { url: logoutUrl, method: logoutMethod } = authData.routes.logout;
                             
+                            let finalLogoutUrl = logoutUrl;
+                            if (!logoutUrl.startsWith('http')) {
+                                const baseUrl = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
+                                finalLogoutUrl = baseUrl + logoutUrl;
+                            }
+                            
                             try {
-                                const logoutRes = await fetch(logoutUrl, { 
+                                const logoutRes = await fetch(finalLogoutUrl, { 
                                     method: logoutMethod,
                                     credentials: 'include'
                                 });

@@ -87,7 +87,7 @@ export default async function AuthLogin(req: Request, res: Response) {
             code: 'LOGIN_SUCCESS',
             token: data.session.access_token,
             refresh_token: data.session.refresh_token,
-            user: data.user
+            //user: data.user
         });
 
     } catch (err: any) {

@@ -26,8 +26,15 @@ export default async function Logout(req: Request, res: Response) {
             return;
         }
 
-        res.clearCookie('access_token');
-        res.clearCookie('refresh_token');
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict' as 'strict',
+            path: '/'
+        };
+
+        res.clearCookie('access_token', cookieOptions);
+        res.clearCookie('refresh_token', cookieOptions);
         res.json({
             message: 'Logout successful',
             code: 'LOGOUT_SUCCESS'
