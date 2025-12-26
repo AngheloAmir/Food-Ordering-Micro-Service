@@ -17,10 +17,15 @@ import productsRoutes from './routes/products.routes';
 import ordersRoutes from './routes/orders.routes';
 import employeeRoutes from './routes/employee.routes';
 import workdayRoutes from './routes/workday.routes';
+import { isAllowedOutsideCookies, allowedOrigins } from './config/authConfig';
 
-if (true) {
+//CORS and allowing apps outside the server to access it
+if (isAllowedOutsideCookies) {
     app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "http://127.0.0.1:5500"); // Update to match your frontend URL
+        const origin = req.headers.origin;
+        if (origin && allowedOrigins.includes(origin)) {
+            res.header("Access-Control-Allow-Origin", origin);
+        }
         res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
         res.header("Access-Control-Allow-Credentials", "true");

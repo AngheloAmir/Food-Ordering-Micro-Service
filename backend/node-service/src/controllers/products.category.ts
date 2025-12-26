@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createSupabaseAdmin, createSupabase } from '../config/supabase';
 import stringSanitizer from '../utils/stringSanitizer';
+import { getToken } from '../utils/getToken';
 
 export default async function category(req: Request, res: Response) {
     try {
@@ -71,7 +72,8 @@ export default async function category(req: Request, res: Response) {
                 });
         }
 
-        const token        = req.cookies.access_token || req.headers.authorization;
+        const token        = getToken(req);
+        if (!token) return res.status(401).json({ error: 'Unauthorized' });
         const userSupabase = createSupabase(token);
         const getAllSupa = await userSupabase
             .from('category')

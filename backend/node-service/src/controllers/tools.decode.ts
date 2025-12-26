@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 import decodeToken from '../utils/tokenDecoder';
+import { getToken } from '../utils/getToken';
 
 export default function decodeTokenController(req: Request, res: Response) {
-    const token = req.cookies.access_token;
+    let token = getToken(req);
 
     if (!token) {
         res.status(401).json({

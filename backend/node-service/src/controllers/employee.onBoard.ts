@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import santizer from "../utils/stringSanitizer";
 import decodeToken from '../utils/tokenDecoder';
 import { createSupabaseAdmin } from '../config/supabase';
+import { getToken } from '../utils/getToken';
 
 export default async function OnBoardAnEmployee(req: Request, res: Response) {
     const { passkey } = req.body;
@@ -26,7 +27,14 @@ export default async function OnBoardAnEmployee(req: Request, res: Response) {
         emergency_contacts
     } = req.body;
     
-    const token        = req.cookies.access_token || req.headers.authorization;
+    const token        = getToken(req);
+
+    if (!token) {
+        return res.status(401).json({
+            message: 'Unauthorized: No token provided'
+        });
+    }
+
     const tokenData    = decodeToken(token);
     const { data, error } = await createSupabaseAdmin().from('employee').insert([
         {

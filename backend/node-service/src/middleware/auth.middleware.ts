@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-
 import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
-
-//Refrence for string sanitizer
-//https://www.npmjs.com/package/string-sanitizer
+import { getToken } from '../utils/getToken';
 
 declare global {
     namespace Express {
@@ -21,16 +18,7 @@ declare global {
  * This is ideal for protected routes.
  */
 export default async function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
-    // Check for token in cookies or Authorization header
-    let token = req.cookies.access_token;
-
-    if (!token) {
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            token = authHeader.split(' ')[1];
-        }
-    }
-
+    const token = getToken(req);
     if (!token) {
         res.status(401).json({
             error: ErrorMessages.NO_AUTH_TOKEN,

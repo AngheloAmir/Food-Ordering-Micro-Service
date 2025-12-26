@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
+import { getToken } from '../utils/getToken';
 
 export default async function Logout(req: Request, res: Response) {
-    const token = req.cookies.access_token;
+    const token = getToken(req);
 
     if (!token) {
         res.status(401).json({

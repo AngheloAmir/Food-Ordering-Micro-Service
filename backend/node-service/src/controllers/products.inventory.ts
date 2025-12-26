@@ -34,7 +34,7 @@ export default async function InventoryController(req: Request, res: Response) {
     //modify a ingredients==================================================================
         if( productRequest.modify ) {
             const modifyProduct = await supabaseAdmin.from('ingredients').update({
-                name:           sanitizer.sanitize(productRequest.name ?? ""),
+                name:           sanitizer.sanitize.keepSpace(productRequest.name ?? ""),
                 cost_per_unit:  productRequest.cost_per_unit,
                 available_quantity: productRequest.available_quantity
             })
@@ -69,7 +69,7 @@ export default async function InventoryController(req: Request, res: Response) {
     //Add a Ingredients==================================================================
         const { data, error } = await supabaseAdmin.from('ingredients').insert([
             {
-                name:               sanitizer.sanitize(productRequest.name),
+                name:               sanitizer.sanitize.keepSpace(productRequest.name ?? "unknown"),
                 cost_per_unit:      productRequest.cost_per_unit,
                 available_quantity: productRequest.available_quantity
             }

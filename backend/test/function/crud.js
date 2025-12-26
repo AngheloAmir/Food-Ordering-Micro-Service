@@ -117,70 +117,217 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Render Content Area for specific Operation (Placeholder for now)
     function renderCrudOperation(endpoint) {
         contentArea.innerHTML = `
-            <div class="max-w-4xl mx-auto h-full flex flex-col">
-                <!-- Header -->
-                <div class="mb-6 flex-none">
-                     <div class="flex items-center gap-3 mb-2">
-                        <span class="px-2 py-1 rounded bg-gray-800 text-xs font-mono text-gray-300 border border-gray-700 select-all">${endpoint.methods[0]}</span>
-                        <h2 class="text-xl font-bold text-gray-100">${endpoint.label}</h2>
-                        ${endpoint.isProtected ? '<span class="text-xs border border-amber-500/50 text-amber-500 px-2 py-0.5 rounded-full bg-amber-500/10">Protected</span>' : '<span class="text-xs border border-green-500/50 text-green-500 px-2 py-0.5 rounded-full bg-green-500/10">Public</span>'}
+            <div class="h-full flex flex-col p-6">
+                <!-- 1. Header (Left Aligned, Compact) -->
+                <div class="flex-none mb-4">
+                     <div class="flex items-center flex-wrap gap-3 mb-1">
+                        <!-- Label -->
+                        <h2 class="text-lg font-bold text-gray-100">${endpoint.label}</h2>
+                        
+                        <!-- Badge -->
+                        ${endpoint.isProtected ? 
+                            '<span class="text-[10px] border border-amber-500/50 text-amber-500 px-1.5 py-0.5 rounded bg-amber-500/10 font-medium">Private</span>' : 
+                            endpoint.isPublic ? 
+                            '<span class="text-[10px] border border-green-500/50 text-green-500 px-1.5 py-0.5 rounded bg-green-500/10 font-medium">Public</span>' : 
+                            '<span class="text-[10px] border border-blue-500/50 text-blue-500 px-1.5 py-0.5 rounded bg-blue-500/10 font-medium">Authenticated</span>'}
+                        
+                        <!-- Method & Route -->
+                        <div class="flex items-center gap-2 text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded border border-gray-800">
+                             <span class="${getMethodColor(endpoint.methods[0])} font-bold">${endpoint.methods[0]}</span>
+                             <span class="select-all text-gray-300">${endpoint.route}</span>
+                        </div>
                      </div>
-                     <div class="flex items-center gap-2 text-sm text-gray-400 font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-800">
-                        <span class="text-indigo-400">POST</span>
-                        <span class="select-all">${endpoint.route}</span>
-                     </div>
-                     <p class="text-gray-500 text-sm mt-3">${endpoint.description}</p>
+                     
+                     <!-- Description -->
+                     <p class="text-gray-500 text-xs">${endpoint.description}</p>
                 </div>
 
-                <!-- Input/Output Area (Grid) -->
-                <div class="grid grid-cols-2 gap-6 flex-1 min-h-0">
-                    <!-- Request -->
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-500 uppercase">Request Body</h3>
-                            <div class="flex gap-2">
-                                <!-- Suggested Presets -->
-                                ${endpoint.suggested ? `
-                                <div class="relative group/presets">
-                                    <button class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700 transition">Load Preset</button>
-                                    <div class="hidden group-hover/presets:block absolute right-0 top-full mt-1 w-48 bg-gray-900 border border-gray-700 rounded shadow-xl z-20 py-1">
-                                        ${endpoint.suggested.map(p => `
-                                            <button onclick="updateEditorContent('${btoa(p.content)}')" class="block w-full text-left px-4 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800">
-                                                ${p.name}
-                                            </button>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                                ` : ''}
-                                <button class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded font-medium transition shadow-lg shadow-indigo-500/20">Send Request</button>
-                            </div>
+                <!-- 2. Controls (Compact Toolbar) -->
+                <div class="flex-none flex items-center justify-start gap-2 mb-2">
+                     <!-- Send Button -->
+                     <button class="min-w-[140px] bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 px-4 rounded shadow-sm hover:shadow text-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 h-8" id="btn-send-request">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                            <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                        </svg>
+                        Send Request
+                     </button>
+                     
+                     <!-- Presets Dropdown (Click Toggle) -->
+                     ${endpoint.suggested && endpoint.suggested.length > 0 ? `
+                     <div class="relative h-8">
+                        <button id="preset-toggle-btn" class="h-full bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 border border-gray-700 rounded text-xs transition flex items-center gap-1 focus:outline-none focus:border-gray-500">
+                            <span>Presets</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 transition-transform duration-200" id="preset-arrow">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div id="preset-menu" class="hidden absolute left-0 top-full mt-1 w-48 bg-gray-900 border border-gray-700 rounded shadow-xl z-20 py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                            ${endpoint.suggested.map((p, index) => `
+                                <button type="button" data-index="${index}" class="preset-option-btn block w-full text-left px-4 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-b border-gray-800 last:border-0 focus:bg-gray-800 focus:outline-none">
+                                    ${p.name}
+                                </button>
+                            `).join('')}
                         </div>
-                        <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg p-0 relative overflow-hidden group-focus-within:border-gray-700 transition-colors">
-                            <textarea class="w-full h-full bg-gray-900 text-gray-300 font-mono text-sm p-4 resize-none focus:outline-none custom-scrollbar" spellcheck="false">${endpoint.sampleInput}</textarea>
+                     </div>
+                     ` : ''}
+
+                     <!-- URL Params Input -->
+                     <input type="text" id="url-params-input" class="w-64 bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-xs placeholder-gray-700 h-8" placeholder="URL Params (Optional)">
+                </div>
+
+                <!-- 3. Main Data Grid (3 Columns) -->
+                <div class="flex-1 min-h-0 grid grid-cols-3 gap-4 max-w-[1920px] mx-auto w-full">
+                    
+                    <!-- Col 1: Request Body -->
+                    <div class="flex flex-col h-full overflow-hidden">
+                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Request Body</h3>
+                        <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg relative overflow-hidden group-focus-within:border-gray-600 transition-colors">
+                            <textarea id="request-body-editor" class="w-full h-full bg-gray-900 text-gray-300 font-mono text-xs p-4 resize-none focus:outline-none custom-scrollbar leading-relaxed" spellcheck="false" placeholder="Enter JSON body here...">${endpoint.sampleInput}</textarea>
                         </div>
                     </div>
 
-                    <!-- Response -->
-                    <div class="flex flex-col h-full">
-                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-500 uppercase">Response</h3>
-                             <span class="text-xs text-gray-600">Status: <span class="text-gray-400">-</span></span>
+                    <!-- Col 2: Expected Output -->
+                    <div class="flex flex-col h-full overflow-hidden">
+                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Expected Output</h3>
+                        <div class="flex-1 bg-gray-900/50 border border-gray-800 border-dashed rounded-lg relative overflow-hidden">
+                            <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
+                                <pre class="text-gray-500 font-mono text-xs whitespace-pre-wrap">${endpoint.expectedOutcome}</pre>
+                            </div>
                         </div>
-                         <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg relative overflow-hidden">
-                              <pre class="w-full h-full text-gray-400 font-mono text-xs p-4 overflow-auto custom-scrollbar">No response yet.</pre>
-                         </div>
                     </div>
+
+                    <!-- Col 3: Actual Response (Terminal Style) -->
+                    <div class="flex flex-col h-full overflow-hidden">
+                         <div class="flex-none flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-gray-500 uppercase">Response Output</h3>
+                            <span id="response-status" class="text-xs font-mono text-gray-600">Status: -</span>
+                        </div>
+                        <div class="flex-1 bg-black border border-gray-800 rounded-lg relative overflow-hidden shadow-inner">
+                            <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
+                                <pre id="response-output" class="text-green-500 font-mono text-xs whitespace-pre-wrap">Waiting for request...</pre>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         `;
         
-        // Helper specifically for this render scope to handle the base64 update content
-        // This is a dirty way to handle onclick string injection, usually I'd use addEventListener
-        window.updateEditorContent = (b64) => {
-             const decoded = atob(b64);
-             const textarea = contentArea.querySelector('textarea');
-             if(textarea) textarea.value = decoded;
-        };
+        // --- Event Handlers within this scope ---
+
+        // 1. Preset Menu Handlers
+        const presetToggleBtn = contentArea.querySelector('#preset-toggle-btn');
+        const presetMenu = contentArea.querySelector('#preset-menu');
+        
+        if (presetToggleBtn && presetMenu) {
+            // Toggle
+            presetToggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = presetMenu.classList.contains('hidden');
+                if (isHidden) {
+                    presetMenu.classList.remove('hidden');
+                    presetToggleBtn.querySelector('#preset-arrow')?.classList.add('rotate-180');
+                } else {
+                    presetMenu.classList.add('hidden');
+                    presetToggleBtn.querySelector('#preset-arrow')?.classList.remove('rotate-180');
+                }
+            });
+
+            // Close on click outside
+            document.addEventListener('click', (e) => {
+                if (!presetToggleBtn.contains(e.target) && !presetMenu.contains(e.target)) {
+                    presetMenu.classList.add('hidden');
+                    presetToggleBtn.querySelector('#preset-arrow')?.classList.remove('rotate-180');
+                }
+            });
+
+            // Handle Selection
+             presetMenu.querySelectorAll('.preset-option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = parseInt(btn.getAttribute('data-index'));
+                    if (!isNaN(index) && endpoint.suggested && endpoint.suggested[index]) {
+                        const content = endpoint.suggested[index].content;
+                        const textarea = document.getElementById('request-body-editor');
+                        if(textarea) textarea.value = content;
+                    }
+                    presetMenu.classList.add('hidden');
+                    presetToggleBtn.querySelector('#preset-arrow')?.classList.remove('rotate-180');
+                });
+            });
+        }
+
+        // 2. Send Request Handler
+        const sendBtn = contentArea.querySelector('#btn-send-request');
+        if(sendBtn) {
+            sendBtn.addEventListener('click', async () => {
+                const responseOutput = document.getElementById('response-output');
+                const statusLabel = document.getElementById('response-status');
+                const urlParams = document.getElementById('url-params-input').value.trim();
+                const bodyContent = document.getElementById('request-body-editor').value;
+
+                // UI Loading State
+                responseOutput.textContent = 'Sending request...';
+                responseOutput.className = 'text-yellow-500 font-mono text-xs whitespace-pre-wrap'; // Yellow for loading
+                sendBtn.disabled = true;
+                sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                try {
+                    // Construct URL with params
+                    let finalUrl = endpoint.route; 
+                    // Using localhost as per previous context
+                    const baseUrl = 'http://localhost:5199'; 
+                    finalUrl = baseUrl + finalUrl + urlParams;
+
+                    // Parse Body safely
+                    let requestBody = null;
+                    if (endpoint.methods[0] !== 'GET' && bodyContent.trim()) {
+                         try {
+                            requestBody = JSON.parse(bodyContent);
+                         } catch (e) {
+                             throw new Error('Invalid JSON in Request Body');
+                         }
+                    }
+
+                    const options = {
+                        method: endpoint.methods[0],
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include' // <-- Ensure cookies are sent
+                    };
+                    
+                    // Fallback: Attach Token via Header if Cookies fail
+                    const token = localStorage.getItem('authToken');
+                    if (token) {
+                        options.headers['Authorization'] = `Bearer ${token}`;
+                    }
+                    
+                    if (requestBody) {
+                        options.body = JSON.stringify(requestBody);
+                    }
+
+                    // Execute Fetch
+                    const res = await fetch(finalUrl, options);
+                    const data = await res.json();
+
+                    // Update UI with Response
+                    statusLabel.textContent = `Status: ${res.status} ${res.statusText}`;
+                    statusLabel.className = res.ok ? 'text-xs font-mono text-green-500' : 'text-xs font-mono text-red-500';
+                    
+                    responseOutput.textContent = JSON.stringify(data, null, 2);
+                    responseOutput.className = 'text-green-400 font-mono text-xs whitespace-pre-wrap';
+
+                } catch (err) {
+                     statusLabel.textContent = 'Status: Error';
+                     statusLabel.className = 'text-xs font-mono text-red-500';
+                     responseOutput.textContent = err.message;
+                     responseOutput.className = 'text-red-500 font-mono text-xs whitespace-pre-wrap';
+                } finally {
+                    sendBtn.disabled = false;
+                    sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        }
     }
 
     function getMethodColor(method) {

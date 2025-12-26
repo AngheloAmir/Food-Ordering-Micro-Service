@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include', //  <-- IMPORTANT: Ensure cookies are saved
                 body: body
             });
 
@@ -143,7 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             const { url: logoutUrl, method: logoutMethod } = authData.routes.logout;
                             
                             try {
-                                const logoutRes = await fetch(logoutUrl, { method: logoutMethod });
+                                const logoutRes = await fetch(logoutUrl, { 
+                                    method: logoutMethod,
+                                    credentials: 'include'
+                                });
                                 if (logoutRes.ok) {
                                     console.log('Logged out successfully from API');
                                 } else {
@@ -167,8 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
 
                 // Optional: Store tokens if returned (e.g., data.token) - Implementing Basic LocalStorage for now
-                if (data.token || data.access_token) {
-                    localStorage.setItem('authToken', data.token || data.access_token);
+                const token = data.token || data.access_token || (data.session && data.session.access_token);
+                if (token) {
+                    localStorage.setItem('authToken', token);
                 }
 
             } else {

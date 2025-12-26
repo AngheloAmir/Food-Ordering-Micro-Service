@@ -4,33 +4,14 @@ import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
 import generateUserCookie from '../utils/generateUserCookie';
 import decodeToken, { JwtPayload } from '../utils/tokenDecoder';
-
-//Refrence for string sanitizer
-//https://www.npmjs.com/package/string-sanitizer
-
-declare global {
-    namespace Express {
-        interface Request {
-            user?: any;
-        }
-    }
-}
+import { getToken } from '../utils/getToken';
 
 /**
  * This middleware checks if the user has a valid JWT token before processing the request.
  * This is ideal for protected routes.
  */
 export default async function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
-    // Check for token in cookies or Authorization header
-    let token = req.cookies.access_token;
-
-    if (!token) {
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            token = authHeader.split(' ')[1];
-        }
-    }
-
+    const token = getToken(req);
     if (!token) {
         res.status(401).json({
             error: ErrorMessages.NO_AUTH_TOKEN,
