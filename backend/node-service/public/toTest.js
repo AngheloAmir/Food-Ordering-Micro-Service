@@ -71,10 +71,10 @@ const apiTests = [
                 isPublic: false
             },
             {
-                label: "create",
-                route: "/api/auth/create",
+                label: "register",
+                route: "/api/auth/register",
                 methods: ["POST"],
-                description: "Creates a new user with email and password.",
+                description: "Register a new user with email and password.",
                 sampleInput: '{\n  "email": "test@test.com",\n  "password": "test"\n}',
                 suggested: [
                     { name: "Admin", content:   '{\n  "email": "admin@admin.com",\n  "password": "Admin123"\n}' },
@@ -173,27 +173,30 @@ const apiTests = [
                 isProtected: false,
                 isPublic: true
             },
+                        {
+                label: "get all categories",
+                route: "/api/products/getcategory",
+                methods: ["GET"],
+                description: "Return all categories. No authentication required.",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}',
+                isProtected: false,
+                isPublic: true
+            },
             {
-                label: "add product",
-                route: "/api/products/add",
+                label: "product",
+                route: "/api/products/product",
                 methods: ["POST"],
-                description: "Note: This is a protected route, only admin can use this route. Add a product.",
-                sampleInput: "" +
-`{
-    "name": "test product",
-    "price": 10,
-    "discount": 0,
-    "description": "test product description",
-    "image": "test product image",
-    "price_per_unit": 10,
-    "est_cook_time": 10,
-    "category": "test category",
-    "ingredient_ids": [],
-    "tags": ["test"]
-}`,
+                description: "Note: This is a protected route, only admin can use this route. Add, Modify or Delete a product. Request available: add, modify, delete",
+                sampleInput: "{}",
                 suggested: [
                     {
-                        name: "Burger",
+                        name: "Get All",
+                        content: '{}'
+                    },
+                    {
+                        name: "Add Burger",
                         content: '' +
 `{
     "name": "Burger",
@@ -209,7 +212,7 @@ const apiTests = [
 }`
                 },
                  {
-                    name: "Foot Long",
+                    name: "Add Foot Long",
                     content: '' +
 `{
     "name": "Foot Long",
@@ -223,9 +226,33 @@ const apiTests = [
     "ingredient_ids": [1, 2],
     "tags": ["hotdog", "buns"]
 }`
+                 },
+                 {
+                    name: "Modify",
+                    content: '' +
+`{
+    "modify": "FootLong",
+    "name": "XFoot",
+    "price": 30,
+    "discount": 0,
+    "description": "Hotdog in a long bun",
+    "image": "default",
+    "price_per_unit": 26,
+    "est_cook_time": 10,
+    "category": "burger",
+    "ingredient_ids": [1, 2],
+    "tags": ["hotdog", "buns"]
+}`
+                 },
+                 {
+                    name: "Delete",
+                    content: '' +
+`{
+    "delete": "Foot Long"
+}`
                  }
             ],
-                expectedOutcome: '{\n  "message": "Product added successfully"\n}',
+                expectedOutcome: 'Depdending on the request. Note the "modify" and "delete" attributes will set the API actions{\n   message: .... successfull message ... \n }',
                 isProtected: true,
                 isPublic: false
             },
@@ -241,46 +268,25 @@ const apiTests = [
                     { name: "modify",     content: '{\n   "request": "modify",\n   "category": "test category",\n   "newname": "test category is modified"\n}' },
                     { name: "delete",     content: '{\n   "request": "delete",\n   "category": "test category"\n}' },
                 ],
-                expectedOutcome: '{\n  "message": "Category added successfully"\n}',
+                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Category added successfully"\n}',
                 isProtected: true,
                 isPublic: false
-            },
-            {
-                label: "get all categories",
-                route: "/api/products/getcategory",
-                methods: ["GET"],
-                description: "Return all categories. No authentication required.",
-                sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: '{\n  "message": "Categories fetched successfully"\n  "data": [ ... ]\n}',
-                isProtected: false,
-                isPublic: true
             },
                         {
-                label: "list all inventory",
-                route: "/api/inventory/list",
-                methods: ["GET"],
+                label: "inventory",
+                route: "/api/products/inventory",
+                methods: ["POST"],
                 description: "Note: This is a protected route, only admin can use this route. Return all inventory.",
                 sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: 'URL Params: search\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
-                isProtected: true,
-                isPublic: false
-            },
-            {
-                label: "add ingridents",
-                route: "/api/inventory/add",
-                methods: ["POST"],
-                description: "Note: This is a protected route, only admin can use this route. Add ingridents.",
-                sampleInput: "" +
-`{
-    "name": "test name",
-    "cost_per_unit": 10,
-    "available_quantity": 10
-}`,
-                suggested: [
-                    {
-                        name: "Buns",
+                suggested: [{
+                    name: "get all",
+                    content: '{}'
+                }, {
+                    name: "search",
+                    content: '{\n   "search": "bgr"\n}'
+                }, 
+                {
+                        name: "Add Buns",
                         content: `{
     "name": "Buns",
     "cost_per_unit": 10,
@@ -288,18 +294,72 @@ const apiTests = [
 }`
                     },
                     {
-                        name: "Patty",
+                        name: "Add Patty",
                         content: `{
     "name": "Patty",
     "cost_per_unit": 25,
     "available_quantity": 50
+}`,
+
+    
+                    },
+                    {
+                        name: "Add test",
+                        content: `{
+    "name": "Test",
+    "cost_per_unit": 9999,
+    "available_quantity": 9999
+}`,
+                    },
+                {
+                    name: "Delete",
+                    content: '{\n   "delete": "Test"\n}'
+                }, {
+                    name: "Modify",
+                    content: `{
+    "modify": "Test",
+    "name": "Test Modified",
+    "cost_per_unit": 0,
+    "available_quantity": 0
 }`
-                    }
-                ],
-                expectedOutcome: '{\n  "message": "Inventory added successfully"\n}',
+                }],
+                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
                 isProtected: true,
                 isPublic: false
             },
+//             {
+//                 label: "add ingridents",
+//                 route: "/api/inventory/add",
+//                 methods: ["POST"],
+//                 description: "Note: This is a protected route, only admin can use this route. Add ingridents.",
+//                 sampleInput: "" +
+// `{
+//     "name": "test name",
+//     "cost_per_unit": 10,
+//     "available_quantity": 10
+// }`,
+//                 suggested: [
+//                     {
+//                         name: "Buns",
+//                         content: `{
+//     "name": "Buns",
+//     "cost_per_unit": 10,
+//     "available_quantity": 100
+// }`
+//                     },
+//                     {
+//                         name: "Patty",
+//                         content: `{
+//     "name": "Patty",
+//     "cost_per_unit": 25,
+//     "available_quantity": 50
+// }`
+//                     }
+//                 ],
+//                 expectedOutcome: '{\n  "message": "Inventory added successfully"\n}',
+//                 isProtected: true,
+//                 isPublic: false
+//             },
         ]
     },
 

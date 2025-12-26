@@ -153,6 +153,10 @@ function loadTestHelper(test, element) {
         badge.textContent = 'require admin account to access';
         badge.className = 'absolute -top-5 left-0 text-[10px] font-bold tracking-widest uppercase text-green-400';
         badge.classList.remove('hidden');
+    } else if (test.isPublic) {
+        badge.textContent = 'No authentication required.';
+        badge.className = 'absolute -top-5 left-0 text-[10px] font-bold tracking-widest uppercase text-blue-400';
+        badge.classList.remove('hidden');
     } else {
         badge.classList.add('hidden');
     }

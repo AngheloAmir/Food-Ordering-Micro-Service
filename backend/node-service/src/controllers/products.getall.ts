@@ -38,8 +38,23 @@ export default async function GetAllProducts(req: Request, res: Response) {
         });
     }
 
+    /** Return an filtered output removing any internal data to the public */
+    const filterOutput = databaseResult.data.map((product: any) => {
+        return {
+            name:               product.name,
+            price:              product.price,
+            discount:           product.discount,
+            description:        product.description,
+            image:              product.image,
+            price_per_unit:     product.price_per_unit,
+            est_cook_time:      product.est_cook_time,
+            category:           product.category,
+            tags:               product.tags,
+        };
+    });
+
     res.json({
         message: 'Products fetched successfully',
-        data: databaseResult.data
+        data: filterOutput
     });
 }
