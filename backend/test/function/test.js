@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const successCountEl = document.getElementById('test-count-success');
     const failedCountEl = document.getElementById('test-count-failed');
     const failedListContainer = document.getElementById('test-failed-list-container');
-    const failedList = document.getElementById('test-failed-list');
-    const statusText = document.getElementById('test-status-text');
+    const failedList  = document.getElementById('test-failed-list');
+    const statusText  = document.getElementById('test-status-text');
     const progressBar = document.getElementById('test-progress-bar');
 
     let isRunning = false;
