@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Store loaded modules
     const modules = {};
+    // Session-persisted layout state (resets on refresh)
+    let isExpectedOutputMinimized = false;
 
     // 1. Dynamic Loader for CRUD Data Files
     async function loadCrudModules() {
@@ -130,8 +132,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. Render Content Area for specific Operation
     function renderCrudOperation(endpoint) {
-        // Load Layout Preference
-        const isMinimized = localStorage.getItem('crudExpectedOutputMinimized') === 'true';
+        // Layout Default: Use Session State
+        const isMinimized = isExpectedOutputMinimized;
 
         contentArea.innerHTML = `
             <div class="h-full flex flex-col p-6">
@@ -309,21 +311,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 colExpectedMin.classList.add('col-span-1');
                 
-                // Persist
-                localStorage.setItem('crudExpectedOutputMinimized', 'true');
+                isExpectedOutputMinimized = true;
             });
 
             btnRestoreExp.addEventListener('click', () => {
                 // Restore
                 colExpectedMin.classList.remove('col-span-1');
                 colExpectedMin.classList.add('hidden');
+                
                 colExpected.classList.remove('hidden');
+                colExpected.classList.add('col-span-4'); // Ensure span is added if missing
 
                 colResponse.classList.remove('col-span-7');
                 colResponse.classList.add('col-span-4');
                 
-                // Persist
-                localStorage.setItem('crudExpectedOutputMinimized', 'false');
+                isExpectedOutputMinimized = false;
             });
         }
 

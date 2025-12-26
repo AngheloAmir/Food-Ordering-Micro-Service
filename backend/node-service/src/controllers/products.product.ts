@@ -76,7 +76,7 @@ export default async function ProductController(req: Request, res: Response) {
                 name:           sanitizer.sanitize.keepSpace(productRequest.name ?? "unknown"),
                 price:          productRequest.price,
                 discount:       productRequest.discount,
-                description:    sanitizer.sanitize(productRequest.description ?? ""),
+                description:    sanitizer.sanitize.keepSpace(productRequest.description ?? ""),
                 image:          productRequest.image,
                 price_per_unit: productRequest.price_per_unit,
                 est_cook_time:  productRequest.est_cook_time,
