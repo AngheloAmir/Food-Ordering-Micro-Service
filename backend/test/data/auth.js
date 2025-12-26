@@ -10,28 +10,28 @@ const authData = {
         {
             label: "RaRa",
             email: "cusRaRa@customer.com",
-            password: "password123",
+            password: "CusRaRa526",
             role: "Customer",
             color: "green"
         },
         {
             label: "Tage",
             email: "cusTage@customer.com",
-            password: "password123",
+            password: "CusTaGe789",
             role: "Customer",
             color: "green"
         },
         {
             label: "Chef",
             email: "chef@chef.com",
-            password: "password123",
+            password: "Chef123",
             role: "Chef",
             color: "orange"
         },
         {
             label: "Delivery",
             email: "delivery@delivery.com",
-            password: "password123",
+            password: "Delivery123",
             role: "Delivery",
             color: "orange"
         }

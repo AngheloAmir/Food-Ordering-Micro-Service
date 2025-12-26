@@ -149,10 +149,29 @@
                 </div>
              </div>
 
-             <!-- Other Views (Hidden by default) -->
-             <div id="view-crud" class="view-section hidden">
-                <h2 class="text-2xl font-bold text-gray-100 mb-4">CRUD Operations</h2>
-                <p class="text-gray-400">Manage your database records here.</p>
+             <!-- CRUD Operations View -->
+             <div id="view-crud" class="view-section hidden h-full flex">
+                <!-- Secondary Sidebar: CRUD Modules List -->
+                <aside class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col flex-none">
+                    <div class="px-4 py-3 border-b border-gray-800 bg-gray-900 sticky top-0 z-10">
+                        <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Available Modules</h2>
+                    </div>
+                    <div id="crud-modules-nav" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+                        <!-- Module items will be injected here via JS -->
+                        <div class="text-xs text-center text-gray-600 italic py-4">Loading modules...</div>
+                    </div>
+                </aside>
+
+                <!-- CRUD Content Area -->
+                <div id="crud-content-area" class="flex-1 bg-gray-950 p-0 overflow-y-auto relative">
+                     <!-- Content will be injected here -->
+                     <div class="h-full flex flex-col items-center justify-center text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-4 opacity-50">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                        </svg>
+                        <p>Select a module from the sidebar to view operations.</p>
+                     </div>
+                </div>
              </div>
 
              <div id="view-test" class="view-section hidden">
@@ -179,6 +198,9 @@
 
     <script src="data/auth.js"></script>
     <script src="function/auth.js"></script>
+    <script src="data/crud_index.js"></script>
+    <script src="function/crud.js"></script>
+
     <script>
         // Simple Tab Switching Logic
         document.querySelectorAll('.nav-item').forEach(button => {

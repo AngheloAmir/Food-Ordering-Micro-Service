@@ -327,39 +327,6 @@ const apiTests = [
                 isProtected: true,
                 isPublic: false
             },
-//             {
-//                 label: "add ingridents",
-//                 route: "/api/inventory/add",
-//                 methods: ["POST"],
-//                 description: "Note: This is a protected route, only admin can use this route. Add ingridents.",
-//                 sampleInput: "" +
-// `{
-//     "name": "test name",
-//     "cost_per_unit": 10,
-//     "available_quantity": 10
-// }`,
-//                 suggested: [
-//                     {
-//                         name: "Buns",
-//                         content: `{
-//     "name": "Buns",
-//     "cost_per_unit": 10,
-//     "available_quantity": 100
-// }`
-//                     },
-//                     {
-//                         name: "Patty",
-//                         content: `{
-//     "name": "Patty",
-//     "cost_per_unit": 25,
-//     "available_quantity": 50
-// }`
-//                     }
-//                 ],
-//                 expectedOutcome: '{\n  "message": "Inventory added successfully"\n}',
-//                 isProtected: true,
-//                 isPublic: false
-//             },
         ]
     },
 
