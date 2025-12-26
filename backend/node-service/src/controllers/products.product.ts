@@ -73,7 +73,7 @@ export default async function ProductController(req: Request, res: Response) {
         const sanitizeTags           = productRequest.tags ? productRequest.tags.map((tag) => sanitizer.sanitize(tag)) : [];
         const { data, error } = await supabaseAdmin.from('products').insert([
             {
-                name:           sanitizer.sanitize(productRequest.name),
+                name:           sanitizer.sanitize.keepSpace(productRequest.name ?? "unknown"),
                 price:          productRequest.price,
                 discount:       productRequest.discount,
                 description:    sanitizer.sanitize(productRequest.description ?? ""),
