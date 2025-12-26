@@ -128,8 +128,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         modulesNav.appendChild(navItem);
     }
 
-    // 3. Render Content Area for specific Operation (Placeholder for now)
+    // 3. Render Content Area for specific Operation
     function renderCrudOperation(endpoint) {
+        // Load Layout Preference
+        const isMinimized = localStorage.getItem('crudExpectedOutputMinimized') === 'true';
+
         contentArea.innerHTML = `
             <div class="h-full flex flex-col p-6">
                 <!-- 1. Header (Left Aligned, Compact) -->
@@ -190,19 +193,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                      <input type="text" id="url-params-input" class="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-xs placeholder-gray-700 h-8" placeholder="URL Params (Optional)">
                 </div>
 
-                <!-- 3. Main Data Grid (3 Columns) -->
-                <div class="flex-1 min-h-0 grid grid-cols-3 gap-4 max-w-[1920px] mx-auto w-full">
+                <!-- 3. Main Data Grid (3 Columns) with Collapsible Logic -->
+                <div class="flex-1 min-h-0 grid grid-cols-12 gap-4 max-w-[1920px] mx-auto w-full transition-all" id="main-grid-layout">
                     
-                    <!-- Col 1: Request Body -->
-                    <div class="flex flex-col h-full overflow-hidden">
+                    <!-- Col 1: Request Body (Fixed 4 cols normally) -->
+                    <div class="col-span-4 flex flex-col h-full overflow-hidden" id="col-request">
                         <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Request Body</h3>
                         <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg relative overflow-hidden group-focus-within:border-gray-600 transition-colors">
                             <textarea id="request-body-editor" class="w-full h-full bg-gray-900 text-gray-300 font-mono text-xs p-4 resize-none focus:outline-none custom-scrollbar leading-relaxed" spellcheck="false" placeholder="Enter JSON body here...">${endpoint.sampleInput}</textarea>
                         </div>
                     </div>
 
-                    <!-- Col 2: Actual Response (MOVED TO MIDDLE) -->
-                    <div class="flex flex-col h-full overflow-hidden">
+                    <!-- Col 2: Actual Response -->
+                    <div class="${isMinimized ? 'col-span-7' : 'col-span-4'} flex flex-col h-full overflow-hidden transition-all duration-300" id="col-response">
                          <div class="flex-none flex items-center justify-between mb-2">
                             <h3 class="text-xs font-bold text-gray-500 uppercase">Response Output</h3>
                             <span id="response-status" class="text-xs font-mono text-gray-600">Status: -</span>
@@ -214,14 +217,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
 
-                    <!-- Col 3: Expected Output (MOVED TO RIGHT) -->
-                    <div class="flex flex-col h-full overflow-hidden">
-                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Expected Output</h3>
+                    <!-- Col 3: Expected Output -->
+                    <div class="${isMinimized ? 'hidden' : 'col-span-4'} flex flex-col h-full overflow-hidden transition-all duration-300 relative" id="col-expected">
+                        <div class="flex-none flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-gray-500 uppercase">Expected Output</h3>
+                            <!-- Toggle Button (Enhanced) -->
+                            <button id="btn-toggle-expected" class="flex items-center justify-center w-6 h-6 rounded bg-gray-800 border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 hover:bg-gray-700 transition-all shadow-sm focus:outline-none" title="Minimize Expected Output">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                    <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
                         <div class="flex-1 bg-gray-900/50 border border-gray-800 border-dashed rounded-lg relative overflow-hidden">
                             <div class="absolute inset-0 overflow-auto custom-scrollbar p-4">
                                 <pre class="text-gray-500 font-mono text-xs whitespace-pre-wrap">${endpoint.expectedOutcome}</pre>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Minimized Expected Indicator -->
+                    <div class="${isMinimized ? 'col-span-1' : 'hidden'} flex flex-col h-full items-center pt-8 transition-all" id="col-expected-minimized">
+                         <button id="btn-restore-expected" class="bg-gray-800 hover:bg-gray-700 text-gray-400 p-2 rounded-lg border border-gray-700 shadow-lg transition-colors hover:text-white" title="Expand Expected Output">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm4.75 6.75a.75.75 0 0 1 1.5 0v2.546l.943-1.048a.75.75 0 0 1 1.114 1.004l-2.25 2.5a.75.75 0 0 1-1.114 0l-2.25-2.5a.75.75 0 1 1 1.114-1.004l.943 1.048V8.75Z" clip-rule="evenodd" />
+                            </svg>
+                         </button>
                     </div>
 
                 </div>
@@ -268,6 +288,42 @@ document.addEventListener('DOMContentLoaded', async () => {
                     presetMenu.classList.add('hidden');
                     presetToggleBtn.querySelector('#preset-arrow')?.classList.remove('rotate-180');
                 });
+            });
+        }
+
+        // 4. Columns Toggle Handler
+        const btnToggleExp = contentArea.querySelector('#btn-toggle-expected');
+        const btnRestoreExp = contentArea.querySelector('#btn-restore-expected');
+        const colResponse = contentArea.querySelector('#col-response');
+        const colExpected = contentArea.querySelector('#col-expected');
+        const colExpectedMin = contentArea.querySelector('#col-expected-minimized');
+
+        if(btnToggleExp && btnRestoreExp) {
+            btnToggleExp.addEventListener('click', () => {
+                // Minimize
+                colExpected.classList.add('hidden');
+                colExpectedMin.classList.remove('hidden');
+                
+                colResponse.classList.remove('col-span-4');
+                colResponse.classList.add('col-span-7');
+                
+                colExpectedMin.classList.add('col-span-1');
+                
+                // Persist
+                localStorage.setItem('crudExpectedOutputMinimized', 'true');
+            });
+
+            btnRestoreExp.addEventListener('click', () => {
+                // Restore
+                colExpectedMin.classList.remove('col-span-1');
+                colExpectedMin.classList.add('hidden');
+                colExpected.classList.remove('hidden');
+
+                colResponse.classList.remove('col-span-7');
+                colResponse.classList.add('col-span-4');
+                
+                // Persist
+                localStorage.setItem('crudExpectedOutputMinimized', 'false');
             });
         }
 
