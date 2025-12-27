@@ -1,14 +1,7 @@
-const dataStream = [
-    {
-        label: "Test Stream",
-        route: "/api/stream",
-        methods: "POST",
-        connectionmode: "stream",
-        description: "This is a test stream",
-        sampleInput: "",
-        suggested: [],
-        isProtected: false,
-        isPublic: true
-    }
+const STREAM_CATALOG = [
+    { path: 'data/datastream/stream_test.js', varName: 'streamTest' }
+];
 
-]
+if (typeof window !== 'undefined') {
+    window.STREAM_CATALOG = STREAM_CATALOG;
+}
