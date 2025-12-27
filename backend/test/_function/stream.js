@@ -111,27 +111,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         contentArea.innerHTML = `
             <div class="h-full flex flex-col p-6">
                  <!-- 1. Header (Left Aligned, Compact) -->
-                <div class="flex-none mb-4">
-                     <div class="flex items-center flex-wrap gap-3 mb-1">
-                        <!-- Label -->
-                        <h2 class="text-lg font-bold text-gray-100">${endpoint.label}</h2>
-                        
-                        <!-- Badge -->
-                        ${endpoint.isProtected ? 
-                            '<span class="text-[10px] border border-amber-500/50 text-amber-500 px-1.5 py-0.5 rounded bg-amber-500/10 font-medium">Private</span>' : 
-                            endpoint.isPublic ? 
-                            '<span class="text-[10px] border border-green-500/50 text-green-500 px-1.5 py-0.5 rounded bg-green-500/10 font-medium">Public</span>' : 
-                            '<span class="text-[10px] border border-blue-500/50 text-blue-500 px-1.5 py-0.5 rounded bg-blue-500/10 font-medium">Authenticated</span>'}
-                        
-                        <!-- Method & Route -->
-                        <div class="flex items-center gap-2 text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                             <span class="font-bold text-violet-500">${endpoint.methods[0]}</span>
-                             <span class="select-all text-gray-300 mr-2">${endpoint.route}</span>
+                <div class="flex-none mb-4 flex justify-between items-start">
+                     <div class="flex-1"> <!-- Left side content -->
+                        <div class="flex items-center flex-wrap gap-3 mb-1">
+                            <!-- Label -->
+                            <h2 class="text-lg font-bold text-gray-100">${endpoint.label}</h2>
+                            
+                            <!-- Badge -->
+                            ${endpoint.isProtected ? 
+                                '<span class="text-[10px] border border-amber-500/50 text-amber-500 px-1.5 py-0.5 rounded bg-amber-500/10 font-medium">Private</span>' : 
+                                endpoint.isPublic ? 
+                                '<span class="text-[10px] border border-green-500/50 text-green-500 px-1.5 py-0.5 rounded bg-green-500/10 font-medium">Public</span>' : 
+                                '<span class="text-[10px] border border-blue-500/50 text-blue-500 px-1.5 py-0.5 rounded bg-blue-500/10 font-medium">Authenticated</span>'}
+                            
+                            <!-- Method & Route -->
+                            <div class="flex items-center gap-2 text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded border border-gray-800">
+                                 <span class="font-bold text-violet-500">${endpoint.methods[0]}</span>
+                                 <span class="select-all text-gray-300 mr-2">${endpoint.route}</span>
+                            </div>
                         </div>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-500 text-xs">${endpoint.description}</p>
                      </div>
-                     
-                     <!-- Description -->
-                     <p class="text-gray-500 text-xs">${endpoint.description}</p>
+
+                     <!-- Right side: Code Button -->
+                     <button id="btn-show-code" class="flex-none ml-4 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded border border-gray-700 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                        </svg>
+                        Example Code
+                     </button>
                 </div>
 
                 <!-- 2. Controls -->
@@ -169,6 +179,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
 
                 </div>
+
+                <!-- Modal (Hidden by default) -->
+                <div id="code-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-200">
+                    <div class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-[800px] max-w-[90vw] flex flex-col overflow-hidden transform scale-95 transition-transform duration-200" style="height: 60vh;">
+                        
+                        <!-- Modal Header -->
+                        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-[#252526]">
+                            <h3 class="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-blue-400">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                                </svg>
+                                Example Fetch Implementation
+                            </h3>
+                            <div class="flex items-center gap-2">
+                                <button id="btn-copy-code" class="text-xs text-gray-400 hover:text-white px-2 py-1 hover:bg-gray-700 rounded transition-colors flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                        <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
+                                        <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
+                                    </svg>
+                                    Copy
+                                </button>
+                                <button id="btn-close-modal" class="text-gray-400 hover:text-white hover:bg-red-500/20 hover:text-red-400 p-1 rounded transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Code Content -->
+                        <div class="flex-1 overflow-auto custom-scrollbar p-0 bg-[#1e1e1e]">
+                             <pre class="font-mono text-xs leading-relaxed p-6 h-full text-gray-300"><code id="code-display"></code></pre>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
 
@@ -179,6 +224,129 @@ document.addEventListener('DOMContentLoaded', async () => {
         const statusLabel = document.getElementById('stream-status');
         const timerLabel = document.getElementById('stream-timer');
         const clearBtn = document.getElementById('btn-clear-stream');
+
+        // Modal Elements
+        const modal = document.getElementById('code-modal');
+        const showCodeBtn = document.getElementById('btn-show-code');
+        const closeModalBtn = document.getElementById('btn-close-modal');
+        const copyCodeBtn = document.getElementById('btn-copy-code');
+        const codeDisplay = document.getElementById('code-display');
+
+        const rawCode = `//prepare the request
+const url = "http://localhost:5199${endpoint.route}";
+const options = {
+        method: "${endpoint.methods[0]}",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'text/plain'
+        }
+    };
+    const token = localStorage.getItem('authToken');
+    // Is Public Endpoint: ${endpoint.isPublic}
+    if (!${endpoint.isPublic} && token) {
+        options.headers['Authorization'] = \`Bearer \${token}\`;
+    }
+
+//make the request
+const response = await fetch(url, options);
+if (!response.ok) throw new Error(\`HTTP Error: \${response.status}\`);
+
+//prepare the reader
+const reader    = response.body.getReader();
+const decoder   = new TextDecoder();
+const chunks    = []; //For Buffer Arrays
+let   chunktext = ''; //For Decoded Text
+
+//perform the reading
+while (true) {
+    const { value, done } = await reader.read()
+    if (done) break
+    chunks.push(value);
+    const chunk = decoder.decode(value, { stream: true })
+    chunktext  += chunk
+}
+
+//Display the text
+console.log(chunktext); 
+
+//For Buffer Arrays
+const totalLength = chunks.reduce((sum, c) => sum + c.length, 0)
+const combined = new Uint8Array(totalLength)
+let offset = 0
+for (const c of chunks) {
+  combined.set(c, offset)
+  offset += c.length
+}
+console.log(combined);`;
+
+        // Syntax Highlighting
+        if (codeDisplay) {
+            const tokens = [];
+            // 1. Escape HTML
+            let safeCode = rawCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // 2. Extract Comments and Strings to placeholders
+            safeCode = safeCode.replace(/(\/\/.*)|(".*?"|'.*?'|`.*?`)/g, (match, comment, string) => {
+                const tokenIndex = tokens.length;
+                if (comment) {
+                    tokens.push(`<span class="text-emerald-500 italic">${comment}</span>`);
+                } else {
+                    tokens.push(`<span class="text-orange-400">${string}</span>`);
+                }
+                return `___TOKEN${tokenIndex}___`;
+            });
+
+            // 3. Highlight Keywords & Built-ins
+            safeCode = safeCode
+                .replace(/\b(const|let|var|if|else|while|for|await|async|function|return|break|new|try|catch|throw)\b/g, '<span class="text-blue-400 font-bold">$1</span>')
+                .replace(/\b(fetch|console|localStorage|JSON|TextDecoder|Uint8Array|Error)\b/g, '<span class="text-yellow-200">$1</span>');
+
+            // 4. Restore tokens
+            safeCode = safeCode.replace(/___TOKEN(\d+)___/g, (match, index) => {
+                return tokens[parseInt(index, 10)];
+            });
+
+            codeDisplay.innerHTML = safeCode;
+        }
+
+        // Modal Actions
+        if (showCodeBtn && modal) {
+            showCodeBtn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.querySelector('div').classList.remove('scale-95');
+                    modal.querySelector('div').classList.add('scale-100');
+                });
+            });
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (modal) modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        if (copyCodeBtn) {
+            copyCodeBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(rawCode).then(() => {
+                    const originalHTML = copyCodeBtn.innerHTML;
+                    copyCodeBtn.innerHTML = '<span class="text-green-400">Copied!</span>';
+                    setTimeout(() => {
+                        copyCodeBtn.innerHTML = originalHTML;
+                    }, 2000);
+                });
+            });
+        }
 
         if(clearBtn) {
             clearBtn.addEventListener('click', () => {
@@ -263,6 +431,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         document.getElementById('stream-output-container').innerText += chunk;
                         outputContainer.scrollTop = outputContainer.scrollHeight;
                     }
+                    
                     statusLabel.textContent = 'Status: Completed';
                     statusLabel.className = 'text-xs text-green-500 font-mono';
                 } catch (err) {
