@@ -8,10 +8,10 @@ import Product from '../controllers/products.product';
 import InventoryController from '../controllers/products.inventory';
 
 const router = Router();
-router.get('/products/getall',      AuthMiddleware, GetAllProducts);
-router.post('/products/category',   AuthMiddlewareAdmin, Category);
+router.get('/products/getall',      GetAllProducts);
 router.get('/products/getcategory', GetAllCategories);
+router.post('/products/category',   AuthMiddlewareAdmin, Category);
 router.post('/products/product',    AuthMiddlewareAdmin, Product);
-router.post('/products/inventory', AuthMiddlewareAdmin, InventoryController);
+router.post('/products/inventory',  AuthMiddlewareAdmin, InventoryController);
 
 export default router;
