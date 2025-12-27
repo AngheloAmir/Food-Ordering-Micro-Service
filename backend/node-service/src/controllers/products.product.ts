@@ -39,10 +39,10 @@ export default async function ProductController(req: Request, res: Response) {
     //Modify product========================================================================
         if( productRequest.modify ) {
             const modifyProduct = await supabaseAdmin.from('products').update({
-                name:           sanitizer.sanitize(productRequest.name ?? ""),
+                name:           sanitizer.sanitize.keepSpace(productRequest.name ?? ""),
                 price:          productRequest.price,
                 discount:       productRequest.discount,
-                description:    sanitizer.sanitize(productRequest.description ?? ""),
+                description:    sanitizer.sanitize.keepSpace(productRequest.description ?? ""),
                 image:          productRequest.image,
                 price_per_unit: productRequest.price_per_unit,
                 est_cook_time:  productRequest.est_cook_time,
