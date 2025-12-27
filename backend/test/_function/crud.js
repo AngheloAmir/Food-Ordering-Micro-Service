@@ -201,7 +201,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <!-- Col 1: Request Body (Fixed 4 cols normally) -->
                     <div class="col-span-4 flex flex-col h-full overflow-hidden" id="col-request">
-                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-1">Request Body</h3>
+                        <div class="flex-none flex items-center justify-between mb-1">
+                            <h3 class="text-xs font-bold text-gray-500 uppercase">Request Body</h3>
+                            <button id="btn-show-code" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 rounded px-2 py-0.5 transition-colors focus:outline-none focus:border-indigo-500" title="Generate frontend fetch code">
+                                Show Frontend Code
+                            </button>
+                        </div>
                         <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg relative overflow-hidden group-focus-within:border-gray-600 transition-colors">
                             <textarea id="request-body-editor" class="w-full h-full bg-gray-900 text-gray-300 font-mono text-xs p-4 resize-none focus:outline-none custom-scrollbar leading-relaxed" spellcheck="false" placeholder="Enter JSON body here...">${endpoint.sampleInput}</textarea>
                         </div>
@@ -257,6 +262,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                          </button>
                     </div>
 
+                </div>
+            </div>
+
+            <!-- Frontend Code Modal -->
+            <div id="code-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-[2px] p-4 transition-opacity duration-200 opacity-0">
+                <div class="bg-[#1e1e1e] border border-[#333] rounded-lg shadow-2xl w-[600px] max-w-full flex flex-col overflow-hidden transform transition-all scale-95 duration-200" id="code-modal-content">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-[#333] bg-[#252526]">
+                        <h3 class="text-xs font-bold text-[#cccccc] uppercase tracking-wide">Frontend Fetch Code</h3>
+                        <button id="btn-close-modal" class="text-[#858585] hover:text-[#cccccc] transition-colors focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Editor Area -->
+                    <div class="p-0 bg-[#1e1e1e] overflow-auto custom-scrollbar relative group max-h-[60vh]">
+                        <pre id="generated-code" class="font-mono text-[13px] leading-relaxed text-[#d4d4d4] whitespace-pre-wrap p-4 select-all outline-none"></pre>
+                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <button id="btn-copy-code-icon" class="bg-[#333] hover:bg-[#444] text-[#cccccc] p-1.5 rounded-md border border-[#444] shadow-lg" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 is-copy-icon">
+                                    <path fill-rule="evenodd" d="M17.663 3.118c.225.015.45.032.673.05C19.876 3.298 21 4.604 21 6.109v9.642a3 3 0 0 1-3 3V16.5c0-3.579-2.92-6.48-6.476-6.48H6.445a6.473 6.473 0 0 0-3.328.913 6.476 6.476 0 0 1 3.219-5.772 6.556 6.556 0 0 1 5.378-.088L12.5 4.36l.245.545c.42.934 1.156 1.765 2.115 2.228a6.52 6.52 0 0 1 1.96-1.92 6.49 6.49 0 0 1 .843-2.095ZM6.446 19.5h5.078a4.502 4.502 0 0 0 4.476-4.5V13.5h-5.078a4.476 4.476 0 0 0-4.476 4.476v1.524Z" clip-rule="evenodd" /></svg>
+                             </button>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <div class="flex items-center justify-end px-4 py-3 border-t border-[#333] gap-2 bg-[#252526]">
+                        <button id="btn-copy-code" class="bg-[#3c3c3c] hover:bg-[#4c4c4c] text-[#cccccc] font-medium py-1.5 px-3 rounded text-xs border border-[#333] transition-colors">
+                            Copy Code
+                        </button>
+                        <button id="btn-close-modal-footer" class="bg-[#0e639c] hover:bg-[#1177bb] text-white font-medium py-1.5 px-3 rounded text-xs transition-colors shadow-md">
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -389,6 +428,133 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 } else {
                     alert('No saved output found for this request.');
+                }
+            });
+        }
+
+        // 6. Show Frontend Code Modal Logic
+        const btnShowCode = contentArea.querySelector('#btn-show-code');
+        const modal = contentArea.querySelector('#code-modal');
+        const modalContent = contentArea.querySelector('#code-modal-content');
+        const btnCloseModal = contentArea.querySelector('#btn-close-modal');
+        const btnCloseModalFooter = contentArea.querySelector('#btn-close-modal-footer');
+        const btnCopyCode = contentArea.querySelector('#btn-copy-code');
+        const btnCopyCodeIcon = contentArea.querySelector('#btn-copy-code-icon');
+        const codePre = contentArea.querySelector('#generated-code');
+
+        function toggleModal(show) {
+            if (show) {
+                modal.classList.remove('hidden');
+                // Small delay for transition
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                });
+            } else {
+                modal.classList.add('opacity-0');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        if (btnShowCode && modal) {
+            btnShowCode.addEventListener('click', () => {
+                const method = endpoint.methods[0];
+                const baseUrl = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
+                const urlParams = document.getElementById('url-params-input')?.value.trim() || '';
+                const route = endpoint.route; // Assuming route already has leading slash
+                const fullUrl = `${baseUrl}${route}${urlParams}`;
+                const bodyContent = document.getElementById('request-body-editor')?.value;
+
+                let jsCode = ``;
+                // jsCode += `const endpoint = '${fullUrl}';\n`; // Removed per request
+                
+                // Simplified Fetch Statement
+                jsCode += `const response = await fetch('${fullUrl}', {\n`;
+                jsCode += `    <span class="text-orange-400">method</span>: '${method}',\n`;
+                jsCode += `    <span class="text-orange-400">headers</span>: {\n`;
+                jsCode += `        '<span class="text-orange-400">Content-Type</span>': 'application/json'`;
+                if (!endpoint.isPublic) {
+                    jsCode += `,\n        '<span class="text-orange-400">Authorization</span>': \`Bearer \${accessToken}\``;
+                }
+                jsCode += `\n    }`;
+
+                if (method !== 'GET' && method !== 'HEAD' && bodyContent.trim()) {
+                    try {
+                        const jsonBody = JSON.parse(bodyContent);
+                        // Helper to color keys in JSON body
+                        const colorizeJsonKeys = (obj, indentLevel = 2) => {
+                             const indent = '    '.repeat(indentLevel);
+                             const innerIndent = '    '.repeat(indentLevel + 1);
+                             let str = '{\n';
+                             const keys = Object.keys(obj);
+                             keys.forEach((key, index) => {
+                                 const val = obj[key];
+                                 let valStr;
+                                 if (typeof val === 'object' && val !== null) {
+                                     valStr = colorizeJsonKeys(val, indentLevel + 1);
+                                 } else if (typeof val === 'string') {
+                                     valStr = `'${val}'`;
+                                 } else {
+                                     valStr = val;
+                                 }
+                                 str += `${innerIndent}<span class="text-orange-400">${key}</span>: ${valStr}`;
+                                 if (index < keys.length - 1) str += ',';
+                                 str += '\n';
+                             });
+                             str += `${indent}}`;
+                             return str;
+                        };
+                        
+                        // We need to insert this into the string template properly
+                        // This simplistic approach might break if not careful with formatting
+                        // Reverting to standard JSON.stringify for complex objects but attempting to color main keys if simple
+                         const indentedJson = JSON.stringify(jsonBody, null, 4).replace(/\n/g, '\n    ');
+                         // Regex replace keys to add color span
+                         const coloredJson = indentedJson.replace(/"([^"]+)":/g, '<span class="text-orange-400">$1</span>:');
+                         
+                        jsCode += `,\n    <span class="text-orange-400">body</span>: JSON.stringify(${coloredJson})`;
+                    } catch (e) {
+                        jsCode += `,\n    <span class="text-orange-400">body</span>: JSON.stringify(${bodyContent.trim()})`; 
+                    }
+                }
+
+                jsCode += `\n});`;
+
+                // Set HTML content instead of textContent to render spans
+                codePre.innerHTML = jsCode;
+                toggleModal(true);
+            });
+
+            // Close Handlers
+            [btnCloseModal, btnCloseModalFooter].forEach(btn => {
+                if(btn) btn.addEventListener('click', () => toggleModal(false));
+            });
+            
+            // Click outside to close
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) toggleModal(false);
+            });
+            
+            // Copy Handlers
+            [btnCopyCode, btnCopyCodeIcon].forEach(btn => {
+                if(btn) {
+                    btn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(codePre.textContent).then(() => {
+                            const originalText = btn.innerText;
+                            if(btn.id === 'btn-copy-code') btn.textContent = 'Copied!';
+                            else btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-green-500"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>';
+                            
+                            setTimeout(() => {
+                                if(btn.id === 'btn-copy-code') btn.textContent = 'Copy Code';
+                                else btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 is-copy-icon"><path fill-rule="evenodd" d="M17.663 3.118c.225.015.45.032.673.05C19.876 3.298 21 4.604 21 6.109v9.642a3 3 0 0 1-3 3V16.5c0-3.579-2.92-6.48-6.476-6.48H6.445a6.473 6.473 0 0 0-3.328.913 6.476 6.476 0 0 1 3.219-5.772 6.556 6.556 0 0 1 5.378-.088L12.5 4.36l.245.545c.42.934 1.156 1.765 2.115 2.228a6.52 6.52 0 0 1 1.96-1.92 6.49 6.49 0 0 1 .843-2.095ZM6.446 19.5h5.078a4.502 4.502 0 0 0 4.476-4.5V13.5h-5.078a4.476 4.476 0 0 0-4.476 4.476v1.524Z" clip-rule="evenodd" /></svg>';
+                            }, 1500);
+                        });
+                    });
                 }
             });
         }
