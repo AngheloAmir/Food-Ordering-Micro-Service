@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isMinimized = isExpectedOutputMinimized;
 
         contentArea.innerHTML = `
-            <div class="h-full flex flex-col p-6">
+            <div class="h-full flex flex-col p-3">
                 <!-- 1. Header (Left Aligned, Compact) -->
-                <div class="flex-none mb-4">
+                <div class="flex-none mb-1">
                      <div class="flex items-center flex-wrap gap-3 mb-1">
                         <!-- Label -->
                         <h2 class="text-lg font-bold text-gray-100">${endpoint.label}</h2>
@@ -155,6 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                              <span class="${getMethodColor(endpoint.methods[0])} font-bold">${endpoint.methods[0]}</span>
                              <span id="route-display" class="select-all text-gray-300 mr-2">${endpoint.route}</span>
                              <span id="request-timer" class="text-gray-500 font-mono text-[10px] hidden">0ms</span>
+                             <span id="request-size" class="text-gray-500 font-mono text-[10px] hidden border-l border-gray-700 pl-2 ml-2"></span>
                         </div>
                      </div>
                      
@@ -163,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
 
                 <!-- 2. Controls (Compact Toolbar) -->
-                <div class="flex-none flex items-center justify-start gap-2 mb-2">
+                <div class="flex-none flex items-center justify-start gap-2 mb-1">
                      <!-- Send Button -->
                      <button class="min-w-[140px] bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 px-4 rounded shadow-sm hover:shadow text-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 h-8" id="btn-send-request">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
@@ -200,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <!-- Col 1: Request Body (Fixed 4 cols normally) -->
                     <div class="col-span-4 flex flex-col h-full overflow-hidden" id="col-request">
-                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-2">Request Body</h3>
+                        <h3 class="flex-none text-xs font-bold text-gray-500 uppercase mb-1">Request Body</h3>
                         <div class="flex-1 bg-gray-900 border border-gray-800 rounded-lg relative overflow-hidden group-focus-within:border-gray-600 transition-colors">
                             <textarea id="request-body-editor" class="w-full h-full bg-gray-900 text-gray-300 font-mono text-xs p-4 resize-none focus:outline-none custom-scrollbar leading-relaxed" spellcheck="false" placeholder="Enter JSON body here...">${endpoint.sampleInput}</textarea>
                         </div>
@@ -208,8 +209,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <!-- Col 2: Actual Response -->
                     <div class="${isMinimized ? 'col-span-7' : 'col-span-4'} flex flex-col h-full overflow-hidden transition-all duration-300" id="col-response">
-                         <div class="flex-none flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-500 uppercase">Response Output</h3>
+                         <div class="flex-none flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-xs font-bold text-gray-500 uppercase">Response Output</h3>
+                                <button id="btn-save-output" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 rounded px-2 py-0.5 transition-colors focus:outline-none focus:border-indigo-500" title="Save this response to local storage">
+                                    Save Output
+                                </button>
+                            </div>
                             <span id="response-status" class="text-xs font-mono text-gray-600">Status: -</span>
                         </div>
                         <div class="flex-1 bg-black border border-gray-800 rounded-lg relative overflow-hidden shadow-inner">
@@ -221,8 +227,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <!-- Col 3: Expected Output -->
                     <div class="${isMinimized ? 'hidden' : 'col-span-4'} flex flex-col h-full overflow-hidden transition-all duration-300 relative" id="col-expected">
-                        <div class="flex-none flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-500 uppercase">Expected Output</h3>
+                        <div class="flex-none flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-xs font-bold text-gray-500 uppercase">Expected Output</h3>
+                                <button id="btn-load-output" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 rounded px-2 py-0.5 transition-colors focus:outline-none focus:border-indigo-500" title="Load saved output from local storage">
+                                    Load Output
+                                </button>
+                            </div>
                             <!-- Toggle Button (Enhanced) -->
                             <button id="btn-toggle-expected" class="flex items-center justify-center w-6 h-6 rounded bg-gray-800 border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 hover:bg-gray-700 transition-all shadow-sm focus:outline-none" title="Minimize Expected Output">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
@@ -329,6 +340,59 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // 5. Save/Load Output Handlers
+        const btnSaveOutput = contentArea.querySelector('#btn-save-output');
+        const btnLoadOutput = contentArea.querySelector('#btn-load-output');
+        // Global key for shared clipboard-style output across all modules
+        const storageKey = 'crud_global_saved_output';
+
+        if (btnSaveOutput) {
+            btnSaveOutput.addEventListener('click', () => {
+                const responseEl = document.getElementById('response-output');
+                const currentContent = responseEl ? responseEl.innerText : '';
+                
+                if (currentContent && currentContent !== 'Waiting for request...') {
+                    localStorage.setItem(storageKey, currentContent);
+                    
+                    // Visual Feedback
+                    const originalText = btnSaveOutput.innerHTML;
+                    btnSaveOutput.textContent = 'Saved!';
+                    btnSaveOutput.classList.add('text-green-400', 'border-green-500/50');
+                    
+                    setTimeout(() => {
+                        btnSaveOutput.innerHTML = originalText;
+                        btnSaveOutput.classList.remove('text-green-400', 'border-green-500/50');
+                    }, 1000);
+                } else {
+                     // Error Feedback?
+                }
+            });
+        }
+
+        if (btnLoadOutput) {
+            btnLoadOutput.addEventListener('click', () => {
+                const savedContent = localStorage.getItem(storageKey);
+                if (savedContent) {
+                    const expectedEl = colExpected.querySelector('pre');
+                    if (expectedEl) {
+                        expectedEl.textContent = savedContent;
+                        
+                        // Visual Feedback
+                        const originalText = btnLoadOutput.innerHTML;
+                        btnLoadOutput.textContent = 'Loaded!';
+                        btnLoadOutput.classList.add('text-green-400', 'border-green-500/50');
+                        
+                        setTimeout(() => {
+                            btnLoadOutput.innerHTML = originalText;
+                            btnLoadOutput.classList.remove('text-green-400', 'border-green-500/50');
+                        }, 1000);
+                    }
+                } else {
+                    alert('No saved output found for this request.');
+                }
+            });
+        }
+
         // 3. Dynamic Route Display Logic
         const paramsInput = contentArea.querySelector('#url-params-input');
         const routeDisplay = contentArea.querySelector('#route-display');
@@ -357,7 +421,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Timer Logic
                 const timerDisplay = document.getElementById('request-timer');
+                const sizeDisplay = document.getElementById('request-size');
                 timerDisplay.classList.remove('hidden');
+                if (sizeDisplay) sizeDisplay.classList.add('hidden');
+                
                 const startTime = performance.now();
                 const timerInterval = setInterval(() => {
                     const current = performance.now();
@@ -407,6 +474,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     statusLabel.textContent = `Status: ${res.status} ${res.statusText}`;
                     statusLabel.className = res.ok ? 'text-xs font-mono text-green-500' : 'text-xs font-mono text-red-500';
                     
+                    if (sizeDisplay) {
+                        const size = JSON.stringify(data).length;
+                        sizeDisplay.textContent = `${size.toLocaleString()} Bytes`;
+                        sizeDisplay.classList.remove('hidden');
+                    }
+
                     responseOutput.innerHTML = syntaxHighlight(data);
                     responseOutput.className = 'text-green-400 font-mono text-xs whitespace-pre-wrap';
 
