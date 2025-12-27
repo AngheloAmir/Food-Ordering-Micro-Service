@@ -3,14 +3,14 @@ var streamTest = window.streamTest = {
     api: [
         {
             label: "Test Stream",
-            route: "/api/stream",
+            route: "/api/stream/test",
             methods: ["POST"],
             connectionmode: "stream",
             description: "This is a test stream",
-            sampleInput: "",
+            sampleInput: "{}",
             suggested: [],
             isProtected: false,
-            isPublic: true
+            isPublic: false
         },
         {
             label: "Test Stream 2" ,
