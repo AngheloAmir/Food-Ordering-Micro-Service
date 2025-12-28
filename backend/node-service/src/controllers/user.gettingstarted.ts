@@ -2,21 +2,11 @@ import { createSupabase } from "../config/supabase";
 import { Request, Response } from 'express';
 import { ErrorMessages, ErrorCodes } from "../utils/errorCodes";
 import decodeToken from "../utils/tokenDecoder";
-import { getToken } from "../utils/getToken";
 
 export default async function UserGettingStarted(req: Request, res: Response) {
     const string       = require("string-sanitizer");
-    const token        = getToken(req);
-    
-    if (!token) {
-        return res.status(401).json({
-            error: ErrorMessages.NO_AUTH_TOKEN,
-            code: ErrorCodes.NO_AUTH_TOKEN
-        });
-    }
-
-    const userSupabase = createSupabase(token);
-    const tokenData    = decodeToken(token);
+    const userSupabase = createSupabase(req.token);
+    const tokenData    = decodeToken(req.token);
 
     if(!req.body.name || req.body.name.trim() === "") 
         return res.status(400).json({

@@ -8,7 +8,10 @@ import { getToken } from '../utils/getToken';
 declare global {
     namespace Express {
         interface Request {
-            user?: any;
+            user?:  any;
+
+            /** DO NOTE! make sure the controller uses a middleware to set this token */
+            token: string;
         }
     }
 }
@@ -37,9 +40,10 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
     try {
         const decoded: JwtPayload = decodeToken(token);
         req.user = {
-            id: decoded.sub,
+            id:   decoded.sub,
             role: decoded.role,
         };
+        req.token = token;
 
     } catch (err: any) {
         if (err.name === 'TokenExpiredError') {

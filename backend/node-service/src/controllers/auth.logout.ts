@@ -1,21 +1,10 @@
 import { Request, Response } from 'express';
 import { createSupabaseAdmin } from '../config/supabase';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
-import { getToken } from '../utils/getToken';
 
 export default async function Logout(req: Request, res: Response) {
-    const token = getToken(req);
-
-    if (!token) {
-        res.status(401).json({
-            error: ErrorMessages.NO_AUTH_TOKEN,
-            code: ErrorCodes.NO_AUTH_TOKEN
-        });
-        return;
-    }
-
     try {
-        const { error } = await createSupabaseAdmin().auth.admin.signOut(token);
+        const { error } = await createSupabaseAdmin().auth.admin.signOut( req.token );
 
         if (error) {
             console.error('Logout error:', error);

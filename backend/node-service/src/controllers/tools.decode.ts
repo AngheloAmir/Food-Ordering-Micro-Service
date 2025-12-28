@@ -1,19 +1,8 @@
 import { Request, Response } from 'express';
 import { ErrorMessages, ErrorCodes } from '../utils/errorCodes';
 import decodeToken from '../utils/tokenDecoder';
-import { getToken } from '../utils/getToken';
 
 export default function decodeTokenController(req: Request, res: Response) {
-    let token = getToken(req);
-
-    if (!token) {
-        res.status(401).json({
-            error: ErrorMessages.NO_AUTH_TOKEN,
-            code: ErrorCodes.NO_AUTH_TOKEN
-        });
-        return;
-    }
-
     if (req.body.code !== "En8aZ5y1Al7a" || req.body.pass !== "9cm4hHMetlb8") {
         res.status(401).json({
             code: "You are not allowed to use this tool"
@@ -22,7 +11,7 @@ export default function decodeTokenController(req: Request, res: Response) {
     }
 
     try {
-        const decoded = decodeToken(token);
+        const decoded = decodeToken( req.token );
         res.json(decoded);
     } catch (err: any) {
         console.error('Token decoding failed:', err);

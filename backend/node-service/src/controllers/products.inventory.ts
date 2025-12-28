@@ -2,10 +2,6 @@ import { Request, Response } from 'express';
 import { createSupabaseAdmin } from '../config/supabase';
 import sanitizer from '../utils/stringSanitizer';
 
-//     "name": "Buns",
-//     "cost_per_unit": 10,
-//     "available_quantity": 100
-
 interface InventoryRequest {
     name?: string;
     cost_per_unit?: number;

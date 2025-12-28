@@ -8,7 +8,7 @@ import { getToken } from '../utils/getToken';
 
 /**
  * This middleware checks if the user has a valid JWT token before processing the request.
- * This is ideal for protected routes.
+ * This also if the user is registered as an admin in the employee table.
  */
 export default async function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = getToken(req);
@@ -46,9 +46,10 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
         }
 
         req.user = {
-            id: decoded.sub,
-            role: decoded.role,
+            id:    decoded.sub,
+            role:  decoded.role,
         };
+        req.token = token;
 
     } catch (err: any) {
         if (err.name === 'TokenExpiredError') {
@@ -95,8 +96,9 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
 
                 // Attach user and proceed
                 req.user = {
-                    id: data.session.user.id,
-                    role: data.session.user.role,
+                    id:    data.session.user.id,
+                    role:  data.session.user.role,
+                    token: token
                 };
 
                 next();
