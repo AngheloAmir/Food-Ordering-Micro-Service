@@ -16,6 +16,7 @@ interface AddProductRequest {
 
     modify? :string;
     delete? :string;
+    search? :string;
 }
 
 export default async function ProductController(req: Request, res: Response) {
@@ -76,6 +77,27 @@ export default async function ProductController(req: Request, res: Response) {
             });
         }
     
+    //Search product========================================================================
+        if( productRequest.search ) {
+            const searchProduct = await 
+                supabaseAdmin
+                .from('products')
+                .select("*")
+                .ilike('name', `%${productRequest.search}%`);
+
+            if( searchProduct.error )
+                return res.status(500).json({ error: "Failed to search product" });
+            return res.json({ data: searchProduct.data,
+                auth: req.newToken && req.newRefreshToken ? 
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
+        }
+    
     //Get all products========================================================================
         if( !productRequest.name ) {
             const producstList = await supabaseAdmin.from('products').select("*");
@@ -91,7 +113,7 @@ export default async function ProductController(req: Request, res: Response) {
                 null
             });
         }
-
+    
     //Add product========================================================================
         const sanitizeIngredient_ids = productRequest.ingredient_ids ? productRequest.ingredient_ids.map((id) => Number(id)) : [];
         const sanitizeTags           = productRequest.tags ? productRequest.tags.map((tag) => sanitizer.sanitize(tag)) : [];

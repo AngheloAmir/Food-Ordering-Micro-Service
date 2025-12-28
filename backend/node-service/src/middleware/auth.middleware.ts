@@ -13,7 +13,10 @@ declare global {
             /** DO NOTE! make sure the controller uses a middleware to set this token */
             token:         string;
 
+            /** When has a value, the token got refreshed */
             newToken?:        string;
+
+            /** When has a value, the refresh token got refreshed */
             newRefreshToken?: string;
         }
     }

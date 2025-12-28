@@ -35,6 +35,10 @@ var crudProducts = {
                         content: '{}'
                     },
                     {
+                    name: "search",
+                    content: '{\n   "search": "bur"\n}'
+                }, 
+                    {
                         name: "Add Burger",
                         content: '' +
 `{
@@ -122,7 +126,7 @@ var crudProducts = {
                     content: '{}'
                 }, {
                     name: "search",
-                    content: '{\n   "search": "bgr"\n}'
+                    content: '{\n   "search": "bn"\n}'
                 }, 
                 {
                         name: "Add Buns",

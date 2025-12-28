@@ -42,6 +42,17 @@ var crudTools = {
                 expectedOutcome: '[ ... ]',
                 isProtected: false,
                 isPublic: false
+            },
+            {
+                label: "list all carts",
+                route: "/api/tools/listcarts",
+                methods: ["POST"],
+                description: "Lists all carts",
+                sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
+                suggested: [],
+                expectedOutcome: '[ ... ]',
+                isProtected: false,
+                isPublic: false
             }
         ]
 };

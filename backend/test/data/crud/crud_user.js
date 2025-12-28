@@ -2,7 +2,19 @@ var crudUser = {
     label: "User",
     api: [
             {
-                label: 'getting-started',
+                label: "User info",
+                route: "/api/user/info",
+                methods: ["GET"],
+                description: "Get the user information. NOTE: This will use the current cookie token / send the auth token",
+                sampleInput: '{}',
+                suggested: [],
+                expectedOutcome: 'This filterout some data from the user information. \n\n{\n   "message": "User Info",\n   "data": {...}\n\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
+                isProtected: false,
+                isPublic: false
+            },
+//===================================================================
+            {
+                label: 'On Board User',
                 route: '/api/user/gettingstarted',
                 methods: ["POST"],
                 description: "Setting the user information after registration. NOTE: This will use the current cookie token",
@@ -62,16 +74,27 @@ var crudUser = {
                 isProtected: false,
                 isPublic: false
             },
+//===================================================================
             {
-                label: "User info",
-                route: "/api/user/info",
-                methods: ["GET"],
-                description: "Get the user information. NOTE: This will use the current cookie token / send the auth token",
+                label: "Cart",
+                route: "/api/user/cart",
+                methods: ["POST"],
+                description: "Get, Add or Update a product to the cart. NOTE: This will use the current cookie token / send the auth token",
                 sampleInput: '{}',
-                suggested: [],
-                expectedOutcome: 'This filterout some data from the user information. \n\n{\n   "message": "User Info",\n   "data": {...}\n\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
+                suggested: [
+                    { name: "Get User Cart", content: '{}' },
+                    {
+                        name: "Add to Cart", content: '{\n   "update": false,\n   "product_id": "1",\n   "quantity": 1 \n}'
+                    },
+                    {
+                        name: "Update Cart", content: '{\n   "update": true,\n   "products": [\n   {\n   "product_id": "1",\n   "quantity": 1000,\n    "checked": false\n}\n]}'
+                    }
+                ],
+                expectedOutcome: 'Insert or completely update the cart. \n\n{\n  "message": " ... "\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
-            },
+            }
+//===================================================================
+
         ]
 };

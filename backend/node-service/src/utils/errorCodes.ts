@@ -24,6 +24,7 @@ export const enum ErrorCodes {
 
     //others
     ALREADY_EXISTS = 'ALREADY_EXISTS',
+    INVALID_INPUT = 'INVALID_INPUT',
 
 }
 
@@ -52,5 +53,6 @@ export const enum ErrorMessages {
 
     //others
     ALREADY_EXISTS = 'Already exists',
+    INVALID_INPUT = 'Invalid input',
 
 }
