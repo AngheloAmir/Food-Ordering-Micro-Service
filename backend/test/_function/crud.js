@@ -480,6 +480,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 jsCode += `        '<span class="text-orange-400">Content-Type</span>': 'application/json'`;
                 if (!endpoint.isPublic) {
                     jsCode += `,\n        '<span class="text-orange-400">Authorization</span>': \`Bearer \${accessToken}\``;
+                    jsCode += `,\n        '<span class="text-orange-400">x-refresh-token</span>': refreshToken`;
                 }
                 jsCode += `\n    }`;
 
@@ -626,6 +627,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const token = localStorage.getItem('authToken');
                     if (token) {
                         options.headers['Authorization'] = `Bearer ${token}`;
+                    }
+                    const refreshToken = localStorage.getItem('refreshToken');
+                    if (refreshToken) {
+                        options.headers['x-refresh-token'] = refreshToken;
                     }
                     
                     if (requestBody) {

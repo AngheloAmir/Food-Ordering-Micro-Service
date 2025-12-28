@@ -53,7 +53,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
 
     } catch (err: any) {
         if (err.name === 'TokenExpiredError') {
-            const refreshToken = req.cookies.refresh_token;
+            const refreshToken = req.cookies.refresh_token || (req.headers['x-refresh-token'] as string);
 
             if (!refreshToken) {
                 res.status(401).json({
@@ -98,8 +98,8 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
                 req.user = {
                     id:    data.session.user.id,
                     role:  data.session.user.role,
-                    token: token
                 };
+                req.token = data.session.access_token;
 
                 next();
                 return;

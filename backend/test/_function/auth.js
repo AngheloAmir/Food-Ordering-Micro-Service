@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Form Submission Handler
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = emailInput.value;
+        const email    = emailInput.value;
         const password = passwordInput.value;
 
         // Reset Error State
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace('%password', password);
 
         // Dynamic Base URL
-        const baseUrl = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
+        const baseUrl  = document.getElementById('base-url-input')?.value.replace(/\/$/, '') || 'http://localhost:5199';
         const finalUrl = url.startsWith('http') ? url : baseUrl + url;
 
         try {
@@ -112,8 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            console.log('Login Response:', data);
-
             if (response.ok) {
                 // Success: Update Header UI
                 const userEmailDisplay = document.getElementById('user-email-display');
@@ -183,10 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
                 submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
 
-                // Optional: Store tokens if returned (e.g., data.token) - Implementing Basic LocalStorage for now
-                const token = data.token || data.access_token || (data.session && data.session.access_token);
+                const token        = data.token || data.access_token || (data.session && data.session.access_token);
+                const refreshToken = data.refresh_token;
                 if (token) {
                     localStorage.setItem('authToken', token);
+                }
+                if (refreshToken) {
+                    localStorage.setItem('refreshToken', refreshToken);
                 }
 
             } else {
