@@ -9,6 +9,7 @@ export default async function category(req: Request, res: Response) {
         const newname      = req.body.newname  ? stringSanitizer.sanitize.keepSpace(req.body.newname) : "";
 
         switch( requestType ) {
+            //============================================================================
             case 'insert':
                 console.log(category);
                 const insertSupa = await createSupabaseAdmin()
@@ -27,9 +28,17 @@ export default async function category(req: Request, res: Response) {
 
                 return res.json({
                     message: 'Category inserted successfully',
-                    data: insertSupa.data
+                    data:    insertSupa.data,
+                    auth:    req.newToken && req.newRefreshToken ?
+                        {
+                            token:        req.newToken,
+                            refreshToken: req.newRefreshToken
+                        }
+                        :
+                        null
                 });
 
+            //============================================================================
             case 'modify':
                 const modifySupa = await createSupabaseAdmin()
                     .from('category')
@@ -48,9 +57,17 @@ export default async function category(req: Request, res: Response) {
 
                 return res.json({
                     message: 'Category modified successfully',
-                    data: modifySupa.data
+                    data: modifySupa.data,
+                    auth: req.newToken && req.newRefreshToken ?
+                        {
+                            token:        req.newToken,
+                            refreshToken: req.newRefreshToken
+                        }
+                        :
+                        null
                 });
 
+            //============================================================================
             case 'delete':
                 const deleteSupa = await createSupabaseAdmin()
                     .from('category')
@@ -67,10 +84,18 @@ export default async function category(req: Request, res: Response) {
 
                 return res.json({
                     message: 'Category deleted successfully',
-                    data: deleteSupa.data
+                    data: deleteSupa.data,
+                    auth: req.newToken && req.newRefreshToken ?
+                        {
+                            token:        req.newToken,
+                            refreshToken: req.newRefreshToken
+                        }
+                        :
+                        null
                 });
         }
 
+        //========================================================================
         const userSupabase = createSupabase(req.token);
         const getAllSupa = await userSupabase
             .from('category')
@@ -86,7 +111,14 @@ export default async function category(req: Request, res: Response) {
 
         return res.json({
             message: 'categories fetched successfully',
-            data: getAllSupa.data
+            data: getAllSupa.data,
+            auth: req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
         })        
     }
     catch (error) {

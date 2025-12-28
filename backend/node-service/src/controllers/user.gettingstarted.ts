@@ -44,6 +44,13 @@ export default async function UserGettingStarted(req: Request, res: Response) {
 
     res.json({
         message: 'User Getting Started',
-        data: data
+        data: data,
+        auth: req.newToken && req.newRefreshToken ? 
+        {
+            token:        req.newToken,
+            refreshToken: req.newRefreshToken
+        }
+        :
+        null
     });
 }

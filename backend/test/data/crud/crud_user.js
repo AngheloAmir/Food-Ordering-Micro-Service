@@ -58,7 +58,7 @@ var crudUser = {
 }`
                     },
                 ],
-                expectedOutcome: '{\n  "message": "User information updated successfully"\n}',
+                expectedOutcome: '{\n  "message": "User information updated successfully"\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
             },
@@ -69,21 +69,9 @@ var crudUser = {
                 description: "Get the user information. NOTE: This will use the current cookie token / send the auth token",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: 'This filterout some data from the user information. \n\n{\n   "message": "User Info",\n   "data": {...}\n}',
+                expectedOutcome: 'This filterout some data from the user information. \n\n{\n   "message": "User Info",\n   "data": {...}\n\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
             },
         ]
 };
-
-// {
-//                 label: "cookie token decode",
-//                 route: "/api/tools/decode",
-//                 methods: ["POST"],
-//                 description: "Decodes the current cookie token. Dont change the code and pass to use this tool. MUST NOT BE USED IN THE FRONTEND!",
-//                 sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
-//                 suggested: [],
-//                 expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }',
-//                 isProtected: false,
-//                 isPublic: false
-//             },

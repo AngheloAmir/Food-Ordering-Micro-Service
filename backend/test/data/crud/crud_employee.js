@@ -8,7 +8,7 @@ var crudEmployee = {
                 description: "Get my employee data. This uses RLS policy so make sure to login first the employee account.",
                 sampleInput: '{}',
                 suggested: [],
-                expectedOutcome: 'Note: This use RLS policy so make sure to login first the employee account.\n\n[ { ...the employee information in the database... } ]',
+                expectedOutcome: 'Note: This use RLS policy so make sure to login first the employee account.\n\n{\n    data: { ...the employee information... },\n    auth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
             },
@@ -97,7 +97,7 @@ var crudEmployee = {
                 }
 
             ],
-                expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n}',
+                expectedOutcome: 'NOTE: Please sign in first the account that will be onboarding \nWARNING: This route modify the database without any restrictions. \nThe Passkey must not be disclosed to anyone. \n\n{\n    "message": "Employee created successfully", \n    "data": null \n\n    auth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
             }

@@ -33,7 +33,15 @@ export default async function ProductController(req: Request, res: Response) {
                 return res.status(500).json({ error: "Failed to delete product" });
             if( deleteProduct.data.length === 0 )
                 return res.json({ message: "Product not found" });
-            return res.json({ message: "Product deleted successfully" });
+            return res.json({ message: "Product deleted successfully", 
+                auth: req.newToken && req.newRefreshToken ? 
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //Modify product========================================================================
@@ -57,7 +65,15 @@ export default async function ProductController(req: Request, res: Response) {
                 return res.status(500).json({ error: "Failed to modify product" });
             if( modifyProduct.data.length === 0 )
                 return res.json({ message: "Product not found" });
-            return res.json({ message: "Product modified successfully" });
+            return res.json({ message: "Product modified successfully", 
+                auth: req.newToken && req.newRefreshToken ? 
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
     
     //Get all products========================================================================
@@ -65,7 +81,15 @@ export default async function ProductController(req: Request, res: Response) {
             const producstList = await supabaseAdmin.from('products').select("*");
             if( producstList.error )
                 return res.status(500).json({ error: "Failed to get products" });
-            return res.json({ data: producstList.data });
+            return res.json({ data: producstList.data,
+                auth: req.newToken && req.newRefreshToken ? 
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //Add product========================================================================
@@ -89,7 +113,15 @@ export default async function ProductController(req: Request, res: Response) {
         if( error ) 
             return res.status(500).json({ error: "Failed to add product" });
 
-        return res.json({ message: "Product added successfully" });
+        return res.json({ message: "Product added successfully",
+            auth: req.newToken && req.newRefreshToken ? 
+            {
+                token:        req.newToken,
+                refreshToken: req.newRefreshToken
+            }
+            :
+            null
+        });
 
     } catch (error) {
         console.error(error);

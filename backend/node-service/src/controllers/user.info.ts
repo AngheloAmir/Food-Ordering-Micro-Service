@@ -38,7 +38,14 @@ export default async function userInfo (req: Request, res: Response) {
 
         res.json({
             message: 'User Info',
-            data: filteredData
+            data: filteredData,
+            auth: req.newToken && req.newRefreshToken ?
+            {
+                token:        req.newToken,
+                refreshToken: req.newRefreshToken
+            }
+            :
+            null
         })
         
     }

@@ -54,6 +54,13 @@ export default async function OnBoardAnEmployee(req: Request, res: Response) {
 
     res.json({
         message: 'Employee created successfully',
-        data
-    });
+        data: null,
+        auth:    req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+        });
 }

@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import AuthMiddleware from '../middleware/auth.middleware';
-import GetAllProducts from '../controllers/products.getall';
+import GetAllProducts from '../controllers/products.public.getall';
 import Category from '../controllers/products.category';
 import AuthMiddlewareAdmin from '../middleware/auth.middlewareadmin';
-import GetAllCategories from '../controllers/products.getcategory';
+import GetAllCategories from '../controllers/products.public.getcategory';
 import Product from '../controllers/products.product';
 import InventoryController from '../controllers/products.inventory';
 

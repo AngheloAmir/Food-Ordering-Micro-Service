@@ -91,7 +91,7 @@ var crudProducts = {
 }`
                  }
             ],
-                expectedOutcome: 'Depdending on the request. Note the "modify" and "delete" attributes will set the API actions{\n   message: .... successfull message ... \n }',
+                expectedOutcome: 'Depdending on the request. Note the "modify" and "delete" attributes will set the API actions{\n   message: .... successfull message ... \n   auth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: true,
                 isPublic: false
             },
@@ -107,7 +107,7 @@ var crudProducts = {
                     { name: "modify",     content: '{\n   "request": "modify",\n   "category": "test category",\n   "newname": "test category is modified"\n}' },
                     { name: "delete",     content: '{\n   "request": "delete",\n   "category": "test category"\n}' },
                 ],
-                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Category added successfully"\n}',
+                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Category added successfully"\n    auth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: true,
                 isPublic: false
             },
@@ -162,7 +162,7 @@ var crudProducts = {
     "available_quantity": 0
 }`
                 }],
-                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}',
+                expectedOutcome: 'Depdending on the request\n\n{\n  "message": "Inventory fetched successfully"\n  "data": [ ... ]\n}\n    auth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: true,
                 isPublic: false
             },

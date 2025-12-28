@@ -55,6 +55,6 @@ export default async function GetAllProducts(req: Request, res: Response) {
 
     res.json({
         message: 'Products fetched successfully',
-        data: filterOutput
+        data: filterOutput,
     });
 }

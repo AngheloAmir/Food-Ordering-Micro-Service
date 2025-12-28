@@ -12,6 +12,9 @@ declare global {
 
             /** DO NOTE! make sure the controller uses a middleware to set this token */
             token:         string;
+
+            newToken?:        string;
+            newRefreshToken?: string;
         }
     }
 }
@@ -78,7 +81,9 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
                     id:   data.session.user.id,
                     role: data.session.user.role,
                 };
-                req.token = data.session.access_token;
+                req.token           = data.session.access_token;
+                req.newToken        = data.session.access_token;
+                req.newRefreshToken = data.session.refresh_token;
 
                 next();
                 return;

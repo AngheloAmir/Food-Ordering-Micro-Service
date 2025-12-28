@@ -16,6 +16,6 @@ export default async function GetAllCategories(req: Request, res: Response) {
 
     return res.json({
         message: 'categories fetched successfully',
-        data: getAllSupa.data
+        data: getAllSupa.data,
     })        
 }

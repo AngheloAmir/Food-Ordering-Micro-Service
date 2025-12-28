@@ -24,7 +24,16 @@ export default async function InventoryController(req: Request, res: Response) {
 
             if( deleteProduct.error )
                 return res.status(500).json({ error: "Failed to delete product" });
-            return res.json({ message: "Product deleted successfully" });
+            return res.json({
+                message: "Product deleted successfully",
+                auth:    req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //modify a ingredients==================================================================
@@ -41,7 +50,17 @@ export default async function InventoryController(req: Request, res: Response) {
                 return res.status(500).json({ error: "Failed to modify product" });
             if( modifyProduct.data.length === 0 )
                 return res.json({ message: "Product not found" });
-            return res.json({ message: "Product modified successfully" });
+            
+            return res.json({
+                message: "Product modified successfully",
+                auth:    req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //search a Ingredients==================================================================
@@ -51,7 +70,16 @@ export default async function InventoryController(req: Request, res: Response) {
             const searchProduct = await supabaseAdmin.from('ingredients').select("*").ilike('name', `%${searchPattern}%`);
             if( searchProduct.error )
                 return res.status(500).json({ error: "Failed to search product" });
-            return res.json({ data: searchProduct.data });
+            return res.json({
+                data: searchProduct.data,
+                auth: req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //Get all Ingredients==================================================================
@@ -59,7 +87,16 @@ export default async function InventoryController(req: Request, res: Response) {
             const productRequestList = await supabaseAdmin.from('ingredients').select("*");
             if( productRequestList.error )
                 return res.status(500).json({ error: "Failed to get products" });
-            return res.json({ data: productRequestList.data });
+            return res.json({
+                data: productRequestList.data,
+                auth: req.newToken && req.newRefreshToken ?
+                {
+                    token:        req.newToken,
+                    refreshToken: req.newRefreshToken
+                }
+                :
+                null
+            });
         }
 
     //Add a Ingredients==================================================================
@@ -73,7 +110,16 @@ export default async function InventoryController(req: Request, res: Response) {
 
         if( error ) 
             return res.status(500).json( error );
-        return res.json({ message: "Ingredients added successfully" });
+        return res.json({
+            message: "Ingredients added successfully",
+            auth:    req.newToken && req.newRefreshToken ?
+            {
+                token:        req.newToken,
+                refreshToken: req.newRefreshToken
+            }
+            :
+            null
+        });
 
     } catch (error :any) {
         return res.status(500).json({ error });
