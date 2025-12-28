@@ -17,6 +17,7 @@ export const enum ErrorCodes {
     USER_CREATION_ERROR = 'USER_CREATION_ERROR',
     USER_CREATED_LOGIN_FAILED = 'USER_CREATED_LOGIN_FAILED',
     USER_BOARDING_FAILED = 'USER_BOARDING_FAILED',
+    USER_NOTFOUND = 'USER_NOTFOUND',    
 
     //SQL
     SQL_ERROR = 'SQL_ERROR',
@@ -44,6 +45,7 @@ export const enum ErrorMessages {
     USER_CREATION_ERROR = 'Unable to create a new user',
     USER_CREATED_LOGIN_FAILED = 'User created but auto-login failed. Please log in manually.',
     USER_BOARDING_FAILED = 'User boarding failed. Invalid data provided',
+    USER_NOTFOUND = 'User not found or unregistered in the system',
 
     //SQL
     SQL_ERROR = 'Database query error',
