@@ -28,3 +28,6 @@ ADD COLUMN prefix TEXT DEFAULT '';
 
 ALTER TABLE public.products
 ADD COLUMN special TEXT DEFAULT '';
+
+ALTER TABLE public.products
+ADD COLUMN is_available BOOLEAN DEFAULT true;
