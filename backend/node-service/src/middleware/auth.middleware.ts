@@ -8,7 +8,10 @@ import { getToken } from '../utils/getToken';
 declare global {
     namespace Express {
         interface Request {
-            user?:  any;
+            user: {
+                id?:   string;
+                role?: string;
+            };
 
             /** DO NOTE! make sure the controller uses a middleware to set this token */
             token:         string;

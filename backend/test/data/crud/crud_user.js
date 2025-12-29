@@ -125,6 +125,7 @@ var crudUser = {
     "email":   "myemail@gmail.com",
     "address": "random 101 black green, orange state",
     "delivery_notes": "Just deliver it fast",
+    "notes": "notes"
 }
 `
                     },

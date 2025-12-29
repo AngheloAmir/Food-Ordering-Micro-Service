@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createSupabase } from '../config/supabase';
 import { ErrorCodes, ErrorMessages } from '../utils/errorCodes';
+import { ValidateUserCartRequest } from '../utils/objectValidation';
 
 interface CartUserData {
     product_id: string;
@@ -32,7 +33,7 @@ export default async function userCarts (req: Request, res: Response) {
                 .single();
 
             //skip invalid item
-            if (error) 
+            if (error || !data) 
                 continue;
 
             productInUserCart.push({
@@ -72,6 +73,14 @@ export default async function userCarts (req: Request, res: Response) {
 
     //=========================================================================================
     if(req.body.update) {
+        const products = req.body.products;
+        if (! ValidateUserCartRequest(products) || !products) {
+            return res.status(400).json({
+                error: ErrorMessages.INVALID_INPUT,
+                code:  ErrorCodes.INVALID_INPUT,
+            })
+        }
+
         const updateResult = await supabase
             .from('usercart')
             .update({

@@ -18,6 +18,8 @@ export const enum ErrorCodes {
     USER_CREATED_LOGIN_FAILED = 'USER_CREATED_LOGIN_FAILED',
     USER_BOARDING_FAILED = 'USER_BOARDING_FAILED',
     USER_NOTFOUND = 'USER_NOTFOUND',    
+    USER_CHECKOUT_NOT_FOUND = 'USER_CHECKOUT_NOT_FOUND',
+    USER_CHECKOUT_ERROR = 'USER_CHECKOUT_ERROR',
 
     //SQL
     SQL_ERROR = 'SQL_ERROR',
@@ -47,6 +49,8 @@ export const enum ErrorMessages {
     USER_CREATED_LOGIN_FAILED = 'User created but auto-login failed. Please log in manually.',
     USER_BOARDING_FAILED = 'User boarding failed. Invalid data provided',
     USER_NOTFOUND = 'User not found or unregistered in the system',
+    USER_CHECKOUT_NOT_FOUND="User checkout not found",
+    USER_CHECKOUT_ERROR="Problem exist during checkout",
 
     //SQL
     SQL_ERROR = 'Database query error',

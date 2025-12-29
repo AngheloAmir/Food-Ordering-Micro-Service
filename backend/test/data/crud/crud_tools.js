@@ -10,7 +10,7 @@ var crudTools = {
                 suggested: [],
                 expectedOutcome: '{ ... the JSON representation of the Token from supabase ... }',
                 isProtected: false,
-                isPublic: false
+                isPublic: true
             },
             {
                 label: "list all users",
@@ -30,7 +30,7 @@ var crudTools = {
                 ],
                 expectedOutcome: '[ all of the users info if email is not specified ]',
                 isProtected: false,
-                isPublic: false
+                isPublic: true
             },
             {
                 label: "list all employees",
@@ -41,7 +41,7 @@ var crudTools = {
                 suggested: [],
                 expectedOutcome: '[ ... ]',
                 isProtected: false,
-                isPublic: false
+                isPublic: true
             },
             {
                 label: "list all carts",
@@ -52,7 +52,18 @@ var crudTools = {
                 suggested: [],
                 expectedOutcome: '[ ... ]',
                 isProtected: false,
-                isPublic: false
+                isPublic: true
+            },
+             {
+                label: "list all checkouts",
+                route: "/api/tools/listcheckout",
+                methods: ["POST"],
+                description: "Lists all checkouts",
+                sampleInput: '{\n   "code": "En8aZ5y1Al7a",\n   "pass": "9cm4hHMetlb8"\n}',
+                suggested: [],
+                expectedOutcome: '[ ... ]',
+                isProtected: false,
+                isPublic: true
             }
         ]
 };
