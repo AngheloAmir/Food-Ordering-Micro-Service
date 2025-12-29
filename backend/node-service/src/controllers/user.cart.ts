@@ -14,7 +14,7 @@ export default async function userCarts (req: Request, res: Response) {
 
     //return the user cart=====================================================================
     if( !req.body.update && !req.body.product_id && !req.body.quantity ) {
-        const userCartInfo = await supabase.from('usercart').select('*');
+        const userCartInfo = await supabase.from('usercart').select('*').single();
         if (userCartInfo.error) {
             res.status(500).json({
                 error: ErrorMessages.SERVER_ERROR,
@@ -22,9 +22,44 @@ export default async function userCarts (req: Request, res: Response) {
             })
         }
 
+        //populate the user cart
+        const productInUserCart = [];
+        for(let i = 0; i < userCartInfo.data.products.length; i++) {
+            const { error, data } = await supabase
+                .from('products')
+                .select('*')
+                .eq('product_id', userCartInfo.data.products[i].product_id)
+                .single();
+
+            //skip invalid item
+            if (error) 
+                continue;
+
+            productInUserCart.push({
+                product_id: userCartInfo.data.products[i].product_id,
+                quantity:   userCartInfo.data.products[i].quantity,
+                checked:    userCartInfo.data.products[i].checked,
+                info: {
+                    name:           data.name,
+                    price:          data.price,
+                    discount:       data.discount,
+                    description:    data.description,
+                    image:          data.image,
+                    price_per_unit: data.price_per_unit,
+                    est_cook_time:  data.est_cook_time,
+                    category:       data.category,
+                    prefix:         data.prefix,
+                    special:        data.special,
+                },
+                totalprice: userCartInfo.data.products[i].quantity * data.price_per_unit,
+                newprice:   userCartInfo.data.products[i].quantity * data.price_per_unit * (1 - data.discount / 100),
+                discount:   userCartInfo.data.products[i].quantity * data.price_per_unit * (data.discount / 100),
+            })
+        }
+
         res.json({
             message: 'User cart information',
-            data: userCartInfo.data,
+            data: productInUserCart,
             auth: req.newToken && req.newRefreshToken ?
             {
                 token:        req.newToken,

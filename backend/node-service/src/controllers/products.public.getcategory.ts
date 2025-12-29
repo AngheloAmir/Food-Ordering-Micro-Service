@@ -4,7 +4,8 @@ import { createSupabaseAdmin } from '../config/supabase';
 export default async function GetAllCategories(req: Request, res: Response) {
     const getAllSupa = await createSupabaseAdmin()
         .from('category')
-        .select('*');
+        .select('*')
+        .order('name', { ascending: true });
 
     if (getAllSupa.error) {
         console.log(getAllSupa.error);

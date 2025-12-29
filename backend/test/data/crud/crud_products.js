@@ -42,7 +42,9 @@ var crudProducts = {
                         name: "Add Burger",
                         content: '' +
 `{
-    "name": "Burger",
+    "name":    "Burger",
+    "prefix":  "",
+    "special": "",
     "price": 20,
     "discount": 0,
     "description": "The best burger in world",
@@ -59,6 +61,8 @@ var crudProducts = {
                     content: '' +
 `{
     "name": "Foot Long",
+    "prefix":  "",
+    "special": "",
     "price": 30,
     "discount": 0,
     "description": "Hotdog in a long bun",
@@ -76,6 +80,8 @@ var crudProducts = {
 `{
     "modify": "FootLong",
     "name": "XFoot",
+    "prefix":  "",
+    "special": "",
     "price": 30,
     "discount": 0,
     "description": "Hotdog in a long bun",
@@ -91,7 +97,7 @@ var crudProducts = {
                     name: "Delete",
                     content: '' +
 `{
-    "delete": "Foot Long"
+    "delete": "5"
 }`
                  }
             ],

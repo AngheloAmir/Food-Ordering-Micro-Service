@@ -2,7 +2,7 @@ var crudUser = {
     label: "User",
     api: [
             {
-                label: "User info",
+                label: "user info",
                 route: "/api/user/info",
                 methods: ["GET"],
                 description: "Get the user information. NOTE: This will use the current cookie token / send the auth token",
@@ -14,7 +14,7 @@ var crudUser = {
             },
 //===================================================================
             {
-                label: 'On Board User',
+                label: 'on board user',
                 route: '/api/user/gettingstarted',
                 methods: ["POST"],
                 description: "Setting the user information after registration. NOTE: This will use the current cookie token",
@@ -76,7 +76,7 @@ var crudUser = {
             },
 //===================================================================
             {
-                label: "Cart",
+                label: "cart",
                 route: "/api/user/cart",
                 methods: ["POST"],
                 description: "Get, Add or Update a product to the cart. NOTE: This will use the current cookie token / send the auth token",
@@ -87,14 +87,66 @@ var crudUser = {
                         name: "Add to Cart", content: '{\n   "update": false,\n   "product_id": "1",\n   "quantity": 1 \n}'
                     },
                     {
-                        name: "Update Cart", content: '{\n   "update": true,\n   "products": [\n   {\n   "product_id": "1",\n   "quantity": 1000,\n    "checked": false\n}\n]}'
+                        name: "Update Cart", content: "" +
+`{
+    "update": true,
+    "products": [
+    {
+        "checked": true,
+        "quantity": 10,
+        "product_id": "1"
+    },
+    {
+        "checked": true,
+        "quantity": 5,
+        "product_id": "2"
+    }
+]}`
                     }
                 ],
                 expectedOutcome: 'Insert or completely update the cart. \n\n{\n  "message": " ... "\nauth: { token: "...", refreshToken: "..." } or auth: null\n}',
                 isProtected: false,
                 isPublic: false
-            }
+            },
 //===================================================================
+            {
+                label: "checkout",
+                route: "/api/user/checkout",
+                methods: ["POST"],
+                description: "Create or get all checkout orders. NOTE: This will use the current cookie token / send the auth token",
+                sampleInput: '{}',
+                suggested: [
+                    { name: "Get User Checkout Orders", content: '{}' },
+                    { name: "Checkout", content: "" +
+`{
+    "checkout": true,
+    "name":    "my name",
+    "contact": "1234567890",
+    "email":   "myemail@gmail.com",
+    "address": "random 101 black green, orange state",
+    "delivery_notes": "Just deliver it fast",
+}
+`
+                    },
+                ],
+                expectedOutcome: "" +
+`Get or Checkout cart items that flag. It will use user Token to get its user id.
+Note: the name, email, contact and address should be automatically populated by the user however, the user is allowed to do an edit when maoking an order.
+{
+    "message": " ... "
+    auth: { token: "...", refreshToken: "..." } or auth: null
+}
+..if checking out:
+{
+    "message": "order being process",
+    "
+}    
+
+`,
+                isProtected: false,
+                isPublic: false
+
+            }
 
         ]
 };

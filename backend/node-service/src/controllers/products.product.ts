@@ -13,6 +13,8 @@ interface AddProductRequest {
     category?: string;
     ingredient_ids?: number[];
     tags?: string[];
+    prefix?: string;
+    special?: string;
 
     modify? :string;
     delete? :string;
@@ -27,11 +29,11 @@ export default async function ProductController(req: Request, res: Response) {
     //Delete a product========================================================================
         if( productRequest.delete ) {
             const deleteProduct = await supabaseAdmin.from('products').delete()
-            .eq('name', productRequest.delete)
+            .eq('product_id', productRequest.delete)
             .select();
 
             if( deleteProduct.error )
-                return res.status(500).json({ error: "Failed to delete product" });
+                return res.status(500).json({ error: "Failed to delete product", reson: deleteProduct.error });
             if( deleteProduct.data.length === 0 )
                 return res.json({ message: "Product not found" });
             return res.json({ message: "Product deleted successfully", 
@@ -57,13 +59,15 @@ export default async function ProductController(req: Request, res: Response) {
                 est_cook_time:  productRequest.est_cook_time,
                 category:       productRequest.category,
                 ingredient_ids: productRequest.ingredient_ids,
-                tags:           productRequest.tags
+                tags:           productRequest.tags,
+                prefix:         productRequest.prefix,
+                special:        productRequest.special
             })
             .eq('name', productRequest.modify)
             .select();
 
             if( modifyProduct.error )
-                return res.status(500).json({ error: "Failed to modify product" });
+                return res.status(500).json({ error: "Failed to modify product", reson: modifyProduct.error });
             if( modifyProduct.data.length === 0 )
                 return res.json({ message: "Product not found" });
             return res.json({ message: "Product modified successfully", 
@@ -86,7 +90,7 @@ export default async function ProductController(req: Request, res: Response) {
                 .ilike('name', `%${productRequest.search}%`);
 
             if( searchProduct.error )
-                return res.status(500).json({ error: "Failed to search product" });
+                return res.status(500).json({ error: "Failed to search product", reson: searchProduct.error });
             return res.json({ data: searchProduct.data,
                 auth: req.newToken && req.newRefreshToken ? 
                 {
@@ -102,7 +106,7 @@ export default async function ProductController(req: Request, res: Response) {
         if( !productRequest.name ) {
             const producstList = await supabaseAdmin.from('products').select("*");
             if( producstList.error )
-                return res.status(500).json({ error: "Failed to get products" });
+                return res.status(500).json({ error: "Failed to get products", reson: producstList.error });
             return res.json({ data: producstList.data,
                 auth: req.newToken && req.newRefreshToken ? 
                 {
@@ -133,7 +137,7 @@ export default async function ProductController(req: Request, res: Response) {
         ]);
 
         if( error ) 
-            return res.status(500).json({ error: "Failed to add product" });
+            return res.status(500).json({ error: "Failed to add product", reson: error });
 
         return res.json({ message: "Product added successfully",
             auth: req.newToken && req.newRefreshToken ? 
@@ -147,6 +151,6 @@ export default async function ProductController(req: Request, res: Response) {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Failed to add product" });
+        return res.status(500).json({ error: "Failed to add product", reson: error });
     }
 }

@@ -23,3 +23,8 @@ FOR SELECT
 TO public
 USING (true);
 
+ALTER TABLE public.products
+ADD COLUMN prefix TEXT DEFAULT '';
+
+ALTER TABLE public.products
+ADD COLUMN special TEXT DEFAULT '';

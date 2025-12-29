@@ -6,7 +6,7 @@
     "start": "supabase start",
     "stop": "supabase stop",
     "stats": "supabase status",
-    "migration:new": "supabase migration new usercart",
+    "migration:new": "supabase migration new payment",
     "migration:up": "supabase migration up",
     "reset": "supabase db reset"
   },
