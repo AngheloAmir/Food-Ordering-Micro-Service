@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- Terminal Management Functions ---
 
-function createTerminal(id, title, colorClass, stopRoute = '', buttonId = '') {
+function createTerminal(id, title, colorClass, stopRoute = '', buttonId = '', meta = {}) {
     const container = document.getElementById('terminals-container');
     const emptyState = container.querySelector('.empty-state');
     if(emptyState) emptyState.style.display = 'none';
@@ -104,6 +104,10 @@ function createTerminal(id, title, colorClass, stopRoute = '', buttonId = '') {
     const termEl = document.createElement('div');
     termEl.className = 'w-full bg-slate-900 rounded-xl border border-slate-800 shadow-xl overflow-hidden flex flex-col transition-all duration-300 animate-fade-in';
     termEl.id = id;
+    
+    // Store metadata for POST requests
+    if (meta.dir) termEl.dataset.dir = meta.dir;
+    if (meta.stopCmd) termEl.dataset.stopCmd = meta.stopCmd;
     
     // Accordion Header
     termEl.innerHTML = `
@@ -149,23 +153,55 @@ function toggleTerminal(id) {
 
 async function closeTerminal(id, stopRoute, buttonId) {
     // 1. If stopRoute is present, call it to stop the process
-    if (stopRoute) {
+    console.log(`[closeTerminal] ID: ${id}, StopRoute: '${stopRoute}'`); // Debugging: Check if empty
+
+    const term = document.getElementById(id);
+    
+    // 1. Abort the connection (triggers req.on('close') in backend)
+    if (term && term.abortController) {
+        console.log("Aborting connection...");
+        term.abortController.abort();   
+    }
+
+    // 2. Execute Stop Command
+    // Priority: POST request with metadata if available
+    let postSent = false;
+    if (term && term.dataset.dir && term.dataset.stopCmd) {
         try {
-            logToTerminal(id, '>>> Stopping process...', 'warning');
-            await fetch(stopRoute); // Fire and forget mostly, or wait?
+            console.log("Executing Stop Command via POST...");
+            const pid = term.dataset.serverProcessId || null;
+            await fetch('/terminal-stop', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    dir: term.dataset.dir,
+                    command: term.dataset.stopCmd,
+                    pid: pid
+                })
+            });
+            console.log("POST Stop request sent.");
+            postSent = true;
         } catch (e) {
-            console.error("Failed to call stop route", e);
+             console.error("Failed POST stop:", e);
         }
     }
 
-    // 2. Remove the terminal UI
-    const term = document.getElementById(id);
-    if (term) {
-        // Abort any ongoing fetch request
-        if (term.abortController) {
-            term.abortController.abort();
+    // Fallback: GET request if 'stopRoute' argument is present AND we didn't just send a POST (or we want double tap?)
+    // Let's rely on POST if metadata exists. If not, use stopRoute (legacy).
+    if (!postSent && stopRoute) {
+        try {
+            console.log(`Fetching Stop Route: ${stopRoute}`);
+            await fetch(stopRoute); 
+            console.log("Stop route request sent.");
+        } catch (e) {
+            console.error("Failed to call stop route", e);
         }
-
+    } else if (!postSent && !stopRoute) {
+        console.warn("No stopRoute or metadata provided. Skipping explicit stop command.");
+    }
+    
+    // 3. Remove the terminal UI
+    if (term) {
         term.remove();
         const container = document.getElementById('terminals-container');
         if (container.children.length <= 1) { 
@@ -447,15 +483,14 @@ async function executeTerminal(dir, cmd, stopCmd, title, color, runTillStop = fa
     button.innerHTML = '<span class="animate-pulse">[ Running Terminal ]</span>';
     button.disabled = true;
 
-    // Construct the stop route for the close button to use
-    let stopRoute = '';
-    if (stopCmd) {
-        // We'll call /terminal-stop with query params
-        stopRoute = `/terminal-stop?dir=${encodeURIComponent(dir)}&command=${encodeURIComponent(stopCmd)}`;
-    }
-
+    // Stop Route is now legacy for terminals, we pass metadata for POST
+    // But we keep the variable for createTerminal signature if needed, or pass empty.
+    
+    // We pass dir and stopCmd in the meta object
+    const meta = { dir: dir, stopCmd: stopCmd };
+    
     const terminalId = 'term-' + Date.now();
-    createTerminal(terminalId, title, color, stopRoute, button.id);
+    createTerminal(terminalId, title, color, '', button.id, meta);
     
     // Create AbortController for this terminal session
     const controller = new AbortController();

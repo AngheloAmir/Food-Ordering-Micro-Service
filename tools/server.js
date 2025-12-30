@@ -13,7 +13,10 @@ const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  switch( req.url ) {
+  // Extract pathname to ignore query parameters for routing
+  const pathname = req.url.split('?')[0];
+
+  switch( pathname ) {
     case '/':               return returnGui(req, res);
     case '/gui/data.js':    return returnGuiStatic(req, res);
     case '/gui/script.js':  return returnGuiStatic(req, res);
@@ -30,7 +33,7 @@ const server = http.createServer((req, res) => {
     //====================================================================================
 
     default: 
-      if (req.url.startsWith('/test/')) {
+      if (pathname.startsWith('/test/')) {
         return returnApiTestGui(req, res);
       }
       res.writeHead(404, { 'Content-Type': 'text/plain' });

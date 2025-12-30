@@ -1,6 +1,8 @@
 const path = require('path');
 const { spawn } = require('child_process');
 
+const activeProcesses = new Map();
+
 module.exports = {
     launchTerminal: (req, res) => {
         let body = '';
@@ -43,6 +45,10 @@ module.exports = {
                     env:        { ...process.env, FORCE_COLOR: '1' } 
                 });
 
+                const processId = Date.now().toString();
+                activeProcesses.set(parseInt(processId), child);
+                res.write(`\n[Process ID]: ${processId}\n`);
+
                 child.stdout.on('data', (data) => {
                     res.write(data);
                 });
@@ -59,6 +65,7 @@ module.exports = {
 
                 child.on('close', (code, signal) => {
                     if (heartbeatInterval) clearInterval(heartbeatInterval);
+                    activeProcesses.delete(parseInt(processId)); // Remove from active processes
                     res.write(`\n[Close]: Process exited with code ${code} (Signal: ${signal})\n`);
                     res.end();
                 });
@@ -75,6 +82,7 @@ module.exports = {
                              console.error('Failed to kill process:', e);
                         }
                     }
+                    activeProcesses.delete(parseInt(processId)); // Ensure it's removed on client disconnect
                 });
 
             } catch (e) {
@@ -86,33 +94,77 @@ module.exports = {
     },
 
     stopTerminal: (req, res) => {
-        const url = new URL(req.url, `http://${req.headers.host}`);
-        const command = url.searchParams.get('command');
-        const directory = url.searchParams.get('dir');
-
-        if (!command || !directory) {
-             res.writeHead(400, { 'Content-Type': 'application/json' });
-             res.end(JSON.stringify({ message: 'Missing command or dir' }));
-             return;
-        }
-
-        const workingDir = path.join(__dirname, '../../', directory);
-        console.log(`Running Stop Command: "${command}" in ${workingDir}`);
-
-        const child = spawn(command, {
-            cwd: workingDir,
-            shell: true,
-            stdio: 'ignore' // We don't really care about output for stop command usually
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
         });
 
-        child.on('close', (code) => {
-             res.writeHead(200, { 'Content-Type': 'application/json' });
-             res.end(JSON.stringify({ message: `Stop command executed. Code: ${code}` }));
-        });
-        
-        child.on('error', (err) => {
-             res.writeHead(500, { 'Content-Type': 'application/json' });
-             res.end(JSON.stringify({ message: `Failed to execute stop command: ${err.message}` }));
+        req.on('end', () => {
+            try {
+                // Support both body (POST) and query (GET fallback if needed, but we switch to POST)
+                // Actually user requested POST, so let's check body mainly.
+                let { command, dir, pid } = JSON.parse(body || '{}');
+                
+                // Fallback to query params if body is empty (for backward compat if needed during transition)
+                if (!command && !dir && !pid) {
+                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    command = url.searchParams.get('command');
+                    dir = url.searchParams.get('dir');
+                    pid = url.searchParams.get('pid');
+                }
+
+                if (pid && activeProcesses.has(parseInt(pid))) {
+                    const child = activeProcesses.get(parseInt(pid));
+                    console.log(`Killing process by ID: ${pid} (OS PID: ${child.pid})`);
+                    try {
+                        // On non-Windows, kill the process group to ensure all spawned children are killed
+                        if (process.platform !== 'win32') {
+                            try { process.kill(-child.pid, 'SIGKILL'); } catch(e) { child.kill(); }
+                        } else {
+                            child.kill();
+                        }
+                    } catch(e) {
+                         try { child.kill(); } catch(err) { console.error('Failed to kill process:', err); }
+                    }
+                    activeProcesses.delete(parseInt(pid));
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: `Process ${pid} stopped.` }));
+                    return;
+                }
+
+                if (!command || !dir) {
+                     res.writeHead(400, { 'Content-Type': 'application/json' });
+                     res.end(JSON.stringify({ message: 'Missing command or dir' }));
+                     return;
+                }
+
+                const workingDir = path.join(__dirname, '../../', dir);
+                console.log(`Running Stop Command: "${command}" in ${workingDir}`);
+
+                const child = spawn(command, {
+                    cwd: workingDir,
+                    shell: true,
+                    stdio: ['pipe', 'pipe', 'pipe'] 
+                });
+
+                child.stdout.on('data', (d) => console.log(`[StopCmd Output]: ${d}`));
+                child.stderr.on('data', (d) => console.error(`[StopCmd Error]: ${d}`));
+
+                child.on('close', (code) => {
+                     res.writeHead(200, { 'Content-Type': 'application/json' });
+                     res.end(JSON.stringify({ message: `Stop command executed. Code: ${code}` }));
+                });
+                
+                child.on('error', (err) => {
+                     res.writeHead(500, { 'Content-Type': 'application/json' });
+                     res.end(JSON.stringify({ message: `Failed to execute stop command: ${err.message}` }));
+                });
+
+            } catch (e) {
+                console.error(e);
+                res.writeHead(400, { 'Content-Type': 'text/plain' });
+                res.end('Invalid JSON');
+            }
         });
     }
 };

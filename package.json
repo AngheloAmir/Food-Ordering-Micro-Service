@@ -4,6 +4,7 @@
   "description": "Node.js backend service with TypeScript",
   "scripts": {
     "tools": "cd tools && yarn run start",
+    "stop": "npx -y kill-port 3000",
 
     "install:all": "yarn install && concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"DB,NODE,LARA,ACC,ADMIN,CSR,CUST,DEL,EMP,POS,REST\" \"cd database && yarn install\" \"cd backend/node-service && yarn install\" \"cd backend/laravel && yarn install\" \"cd frontend/accounting && yarn install\" \"cd frontend/admin && yarn install\" \"cd frontend/csr && yarn install\" \"cd frontend/customer && yarn install\" \"cd frontend/delivery && yarn install\" \"cd frontend/employee && yarn install\" \"cd frontend/pos && yarn install\" \"cd frontend/restaurant && yarn install\"",
     "init": "yarn run install:all && cd database && yarn run start --debug",
