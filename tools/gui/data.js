@@ -74,7 +74,13 @@ window.data = [
                         terminalCommand:     'yarn run dev',
                         terminalOnStop:      'yarn run stop',
                         terminalRunTillStop: true,
-                        terminalOpenLink:    "http://localhost:5206/",
+                        //terminalOpenLink:    "http://localhost:5206/",
+                    },
+                    {
+                        title:       "Open Customer App",
+                        action:      "http://localhost:5206/",
+                        color:       "bg-green-500",
+                        openlink:    true
                     },
                 ]
             },
@@ -82,31 +88,25 @@ window.data = [
     },
 
 
-    // {
-    //     title: "Development Server",
-    //     color: "bg-yellow-500",
-    //     cards: [
-    //         {
-    //             title:       "Launch Database",
-    //             icon:        "fa-solid fa-database",
-    //             description: "Start the PostgreSQL database service locally via Docker containers.",
-    //             buttons:     [
-    //                 {
-    //                     title:       "Run Supabase Docker",
-    //                     color:       "bg-blue-500",
-    //                     runCustomTerminal: true,
-    //                     action:      "/lunch-supabase",
-    //                     onStop:      "/stop-supabase"  
-    //                 },
-    //                 {
-    //                     title:       "Open Studio",
-    //                     color:       "bg-green-500",
-    //                     action:      "http://127.0.0.1:54323",
-    //                     openlink:    true
-    //                 },
-    //             ]
-    //         },
-    //     ]
-    // },
+    {
+        title: "Tools",
+        color: "bg-blue-500",
+        cards: [
+            {
+                title:       "Install Packages",
+                icon:        "fa-solid fa-download",
+                description: "Install all required packages for the project.",
+                buttons:     [
+                    {
+                        title:       "Install Packages",
+                        color:       "bg-blue-500",
+                        runCustomTerminal: true,
+                        action:      "/install",
+                        onStop:      "/?"
+                    },
+                ]
+            },
+        ]
+    },
     
 ]
