@@ -8,9 +8,9 @@ module.exports = {
             'Transfer-Encoding': 'chunked'
         });
 
-        const rootDir = path.resolve(__dirname, '../../');
-        const appDir = path.join(rootDir, 'app');
-        const backendDir = path.join(rootDir, 'backend/node-service');
+        const rootDir     = path.resolve(__dirname, '../../');
+        const appDir      = path.join(rootDir, 'app');
+        const backendDir  = path.join(rootDir, 'backend/node-service');
         const frontendDir = path.join(rootDir, 'frontend');
 
         const log = (msg) => res.write(`${msg}\n`);
@@ -64,6 +64,20 @@ module.exports = {
                  if (fs.existsSync(envFile)) {
                      log(`Copying .env file...`);
                      fs.copyFileSync(envFile, path.join(appDir, '.env'));
+                 }
+
+                 // Copy .gitignore if exists (crucial for deployment)
+                 const gitignoreFile = path.join(backendDir, '.gitignore');
+                 if (fs.existsSync(gitignoreFile)) {
+                     log(`Copying .gitignore file...`);
+                     fs.copyFileSync(gitignoreFile, path.join(appDir, '.gitignore')); 
+                 } else {
+                     // Fallback: copy root .gitignore if backend specific one doesn't exist
+                     const rootGitignore = path.join(rootDir, '.gitignore');
+                     if (fs.existsSync(rootGitignore)) {
+                         log(`Copying root .gitignore file...`);
+                         fs.copyFileSync(rootGitignore, path.join(appDir, '.gitignore'));
+                     }
                  }
                  
                  // Copy backend public folder if exists (assets, etc)

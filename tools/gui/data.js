@@ -107,9 +107,9 @@ window.data = [
                 ]
             },
             {
-                title:       "Build",
+                title:       "[STEP 1] Build",
                 icon:        "fa-solid fa-gears",
-                description: "Build all projects",
+                description: "Build all projects. This will run npm run build for all projects.",
                 buttons:     [
                     {
                         title:       "Build",
@@ -121,15 +121,29 @@ window.data = [
                 ]
             },
             {
-                title:       "Package Node",
+                title:       "[STEP 2] Package Node",
                 icon:        "fa-solid fa-box-open",
-                description: "Package all node projects",
+                description: "Copies all of build projects and place it to app folder",
                 buttons:     [
                     {
                         title:       "Package",
                         color:       "bg-blue-500",
                         runCustomTerminal: true,
                         action:      "/package-node",
+                        onStop:      "/?"
+                    },
+                ]
+            },
+            {
+                title:       "[STEP 3] Deployment",
+                icon:        "fa-solid fa-cloud-arrow-up",
+                description: "Process Deployment",
+                buttons:     [
+                    {
+                        title:       "Deploy",
+                        color:       "bg-blue-500",
+                        runCustomTerminal: true,
+                        action:      "/deploy",
                         onStop:      "/?"
                     },
                 ]

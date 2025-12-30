@@ -10,6 +10,7 @@ const { runBuild }                     = require('./toolfunction/runBuild');
 //the custom process tools
 const { runSupabase, stopSupabase } = require('./toolfunction/runSupabase');
 const { runPackageNode }            = require('./toolfunction/runPackageNode');
+const { runDeploy }                 = require('./toolfunction/runDeploy');
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,8 +34,8 @@ const server = http.createServer((req, res) => {
     case '/lunch-supabase': return runSupabase(req, res);
     case '/stop-supabase':  return stopSupabase(req, res);
     case '/package-node':   return runPackageNode(req, res);
+    case '/deploy':         return runDeploy(req, res);
     
-
     default: 
       if (pathname.startsWith('/test/')) {
         return returnApiTestGui(req, res);
