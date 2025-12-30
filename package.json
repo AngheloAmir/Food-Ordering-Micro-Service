@@ -4,46 +4,6 @@
   "description": "Node.js backend service with TypeScript",
   "scripts": {
     "tools": "cd tools && yarn run start",
-    "stop": "npx -y kill-port 3000",
-
-    "install:all": "yarn install && concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"DB,NODE,LARA,ACC,ADMIN,CSR,CUST,DEL,EMP,POS,REST\" \"cd database && yarn install\" \"cd backend/node-service && yarn install\" \"cd backend/laravel && yarn install\" \"cd frontend/accounting && yarn install\" \"cd frontend/admin && yarn install\" \"cd frontend/csr && yarn install\" \"cd frontend/customer && yarn install\" \"cd frontend/delivery && yarn install\" \"cd frontend/employee && yarn install\" \"cd frontend/pos && yarn install\" \"cd frontend/restaurant && yarn install\"",
-    "init": "yarn run install:all && cd database && yarn run start --debug",
-    "db:start": "cd database && yarn run start",
-    "db:stop": "cd database && yarn run stop",
-    ".": "========================================================================",
-    "node:local": "cd backend/node-service && yarn run dev",
-    "node:docker": "docker compose -f backend/node-service/docker-compose.yml up -d",
-    "laravel:local": "cd backend/laravel && php artisan serve",
-    "laravel:docker": "docker compose -f backend/laravel/docker-compose.yml up -d",
-    "..": "========================================================================",
-    "admin:dev": "cd frontend/admin && yarn run dev",
-    "admin:docker": "docker compose -f frontend/admin/docker-compose.yml up -d",
-    "restaurant:dev": "cd frontend/restaurant && yarn run dev",
-    "restaurant:docker": "docker compose -f frontend/restaurant/docker-compose.yml up -d",
-    "csr:dev": "cd frontend/csr && yarn run dev",
-    "csr:docker": "docker compose -f frontend/csr/docker-compose.yml up -d",
-    "delivery:dev": "cd frontend/delivery && yarn run dev",
-    "delivery:docker": "docker compose -f frontend/delivery/docker-compose.yml up -d",
-    "employee:dev": "cd frontend/employee && yarn run dev",
-    "employee:docker": "docker compose -f frontend/employee/docker-compose.yml up -d",
-    "pos:dev": "cd frontend/pos && yarn run dev",
-    "pos:docker": "docker compose -f frontend/pos/docker-compose.yml up -d",
-    "customer:dev": "cd frontend/customer && yarn run dev",
-    "customer:docker": "docker compose -f frontend/customer/docker-compose.yml up -d",
-    "accounting:dev": "cd frontend/accounting && yarn run dev",
-    "accounting:docker": "docker compose -f frontend/accounting/docker-compose.yml up -d",
-    "...": "=======================================================================",
-    "open": "node open-ports.mjs",
-    "....": "======================================================================",
-    "dev:local": "concurrently \"yarn run node:local\" \"yarn run admin:dev\" \"yarn run restaurant:dev\" \"yarn run csr:dev\" \"yarn run delivery:dev\" \"yarn run employee:dev\" \"yarn run pos:dev\" \"yarn run customer:dev\" \"yarn run accounting:dev\"",
-    "dev:docker": "yarn run db:start && yarn run node:docker && yarn run admin:docker && yarn run restaurant:docker && yarn run csr:docker && yarn run delivery:docker && yarn run employee:docker && yarn run pos:docker && yarn run customer:docker && yarn run accounting:docker",
-    "dev:docker-nodb": "yarn run node:docker && yarn run admin:docker && yarn run restaurant:docker && yarn run csr:docker && yarn run delivery:docker && yarn run employee:docker && yarn run pos:docker && yarn run customer:docker && yarn run accounting:docker"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1",
-    "open": "^11.0.0"
-  },
-  "dependencies": {
-    "string-sanitizer": "^2.0.2"
+    "stop": "npx -y kill-port 3000"
   }
 }
