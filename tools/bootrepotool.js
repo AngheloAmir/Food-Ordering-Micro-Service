@@ -1,27 +1,65 @@
 import { spawn } from "child_process";
+import net from "net";
 
+const PORT = 3000;
 const URL = "http://localhost:3000";
 
-// Start your tools server
+/**
+ * Wait until the port is actually accepting connections
+ */
+function waitForPort(port) {
+  return new Promise((resolve) => {
+    const tryConnect = () => {
+      const socket = new net.Socket();
+      socket
+        .once("connect", () => {
+          socket.destroy();
+          resolve();
+        })
+        .once("error", () => {
+          setTimeout(tryConnect, 300);
+        })
+        .connect(port, "127.0.0.1");
+    };
+    tryConnect();
+  });
+}
+
+/**
+ * Open browser cross-platform without shell
+ */
+function openBrowser(url) {
+  const platform = process.platform;
+
+  let cmd, args;
+
+  if (platform === "win32") {
+    cmd = "cmd";
+    args = ["/c", "start", "", url];
+  } else if (platform === "darwin") {
+    cmd = "open";
+    args = [url];
+  } else {
+    cmd = "xdg-open";
+    args = [url];
+  }
+
+  spawn(cmd, args, { stdio: "ignore", detached: true }).unref();
+}
+
+console.log("Starting tools server…");
+
 const server = spawn("yarn", ["run", "start"], {
-  cwd: "tools",
   stdio: "inherit",
-  shell: true
+  cwd: process.cwd()
 });
 
-// Wait a bit for the server to boot, then open browser
-setTimeout(() => {
-  const command =
-    process.platform === "win32"
-      ? `start ${URL}`
-      : process.platform === "darwin"
-      ? `open ${URL}`
-      : `xdg-open ${URL}`;
+waitForPort(PORT).then(() => {
+  console.log("Tools ready → opening browser");
+  openBrowser(URL);
+});
 
-  spawn(command, { shell: true });
-}, 2000);
-
-// Forward Ctrl+C so it shuts down cleanly
+// Allow Ctrl+C to kill child process
 process.on("SIGINT", () => {
   server.kill("SIGINT");
   process.exit();

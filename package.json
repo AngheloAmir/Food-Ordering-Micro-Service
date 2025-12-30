@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js backend service with TypeScript",
   "scripts": {
-    "dev": "cd tools && yarn run bootrepo"
+    "dev":  "cd tools && yarn run bootrepo",
+    "stop": "npx -y kill-port 3000"
   }
 }

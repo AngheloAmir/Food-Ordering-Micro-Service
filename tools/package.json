@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "start":    "node server.js",
-    "stop":     "npx -y kill-port 3000",
     "bootrepo": "node bootrepotool.js"
   },
   "keywords": [],
