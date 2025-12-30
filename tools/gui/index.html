@@ -92,7 +92,7 @@
                         </div>
                         <h3 class="text-lg font-semibold text-white mb-2">Launch Node Server</h3>
                         <p class="text-slate-400 text-sm">Spin up the main Node.js backend service with hot-reloading enabled.</p>
-                         <button class="w-full mt-4 flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition-colors">
+                         <button onclick="fetch('/lunch-node')" class="w-full mt-4 flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition-colors">
                             <span>Execute</span>
                             <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                         </button>
@@ -110,10 +110,10 @@
                         </div>
                         <h3 class="text-lg font-semibold text-white mb-2">Launch API Tester</h3>
                         <p class="text-slate-400 text-sm">Open the visual API interface to test endpoints and validate responses.</p>
-                         <button class="w-full mt-4 flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium rounded-lg transition-colors">
+                         <a href="/test" target="_blank" class="w-full mt-4 flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium rounded-lg transition-colors">
                             <span>Execute</span>
                             <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </button>
+                        </a>
                     </div>
 
                 </div>
@@ -221,6 +221,39 @@
                     // To be safe, let's just reload page or keep it simple.
                     // Actually, let's just restore the text.
                      const btn = document.querySelector('button[onclick="launchDatabase()"]');
+                     if(btn) {
+                        btn.innerHTML = `<span>Execute</span><i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>`;
+                        btn.disabled = false;
+                     }
+                }, 1000);
+            }
+        }
+
+        async function launchNodeServer() {
+            try {
+                const button = event.currentTarget;
+                
+                button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Starting...';
+                button.disabled = true;
+
+                const response = await fetch('/api/launch-node-server', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data.message);
+                } else {
+                    console.error('Failed to launch node server');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                 setTimeout(() => {
+                     const btn = document.querySelector('button[onclick="launchNodeServer()"]');
                      if(btn) {
                         btn.innerHTML = `<span>Execute</span><i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>`;
                         btn.disabled = false;
