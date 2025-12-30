@@ -27,6 +27,7 @@ module.exports = {
             cwd: nodeServicePath,
             shell: true,
             detached: true, // Detach to allow killing process group
+            stdio: ['ignore', 'pipe', 'pipe'],
             env: { ...process.env, FORCE_COLOR: '1' } 
         });
 
