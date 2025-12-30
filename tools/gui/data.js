@@ -115,7 +115,7 @@ window.data = [
                         title:       "Build",
                         color:       "bg-blue-500",
                         runCustomTerminal: true,
-                        action:      "/install",
+                        action:      "/build",
                         onStop:      "/?"
                     },
                 ]
