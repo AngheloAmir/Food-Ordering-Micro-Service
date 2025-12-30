@@ -39,10 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Escape quotes for the function call parameters
                     const termCmd = btn.terminalCommand ? btn.terminalCommand.replace(/'/g, "\\'") : '';
                     const termStop = btn.terminalOnStop ? btn.terminalOnStop.replace(/'/g, "\\'") : '';
+                    const termRunTillStop = btn.terminalRunTillStop ? 'true' : 'false';
 
                     return `
                         <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
-                                onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}')" 
+                                onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}', ${termRunTillStop})" 
                                 class="w-full mt-1.5 flex items-center justify-center px-3 py-1.5 ${btn.color} hover:opacity-90 text-white text-xs font-medium rounded-lg transition-colors">
                             <span>${btn.title}</span>
                             <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -160,6 +161,11 @@ async function closeTerminal(id, stopRoute, buttonId) {
     // 2. Remove the terminal UI
     const term = document.getElementById(id);
     if (term) {
+        // Abort any ongoing fetch request
+        if (term.abortController) {
+            term.abortController.abort();
+        }
+
         term.remove();
         const container = document.getElementById('terminals-container');
         if (container.children.length <= 1) { 
@@ -199,6 +205,9 @@ function logToTerminal(id, text, type = 'info') {
     const term = document.getElementById(id);
     if (!term) return;
     
+    // Ignore heartbeat signals
+    if (text === '-') return;
+
     const body = term.querySelector('.terminal-body');
 
     // Special handling for heartbeat dots (append to last line instead of new line)
@@ -217,24 +226,110 @@ function logToTerminal(id, text, type = 'info') {
         if (!line.trim()) return; 
         
         const lineEl = document.createElement('div');
-        lineEl.className = 'break-words active-log';
+        lineEl.className = 'break-words active-log font-mono';
         
-        if (type === 'error' || line.toLowerCase().includes('error')) {
-            lineEl.className += ' text-red-400';
-        } else if (line.toLowerCase().includes('warning')) {
-             lineEl.className += ' text-yellow-400';
-        } else if (line.toLowerCase().includes('success')) {
-             lineEl.className += ' text-green-400';
-        } else {
-            lineEl.className += ' text-slate-300';
+        // Basic line-level styling fallback
+        let baseClass = 'text-slate-300';
+        if (type === 'error' ) {
+            baseClass = 'text-red-400';
+        } else if (type === 'warning') { // Only apply if explicit type passed, otherwise let ANSI handle it
+             baseClass = 'text-yellow-400';
+        } else if (type === 'success') {
+             baseClass = 'text-green-400';
         }
         
+        // Parse ANSI codes
+        const htmlContent = parseAnsi(line);
+        
         const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        lineEl.innerHTML = `<span class="text-slate-600 mr-2 opacity-50 font-sans tracking-tight text-[10px]">[${time}]</span>${line}`;
+        
+        // wrapper for the content to apply base color if no ANSI color provided for parts of it
+        lineEl.innerHTML = `<span class="text-slate-600 mr-2 opacity-50 font-sans tracking-tight text-[10px] select-none">[${time}]</span><span class="${baseClass}">${htmlContent}</span>`;
+        
         body.appendChild(lineEl);
     });
 
     body.scrollTop = body.scrollHeight;
+}
+
+function parseAnsi(text) {
+    // Basic ANSI to HTML converter
+    // Supports 30-37 (foreground), 39 (reset fg), 1 (bold), 22 (no bold), 2 (dim), 22 (no dim)
+    // Also strips common cursor movements [2K, [1G, etc.
+    
+    if (!text) return '';
+
+    // 1. Strip cursor controls (Clear Line, Move cursor, etc.)
+    // \x1B[2K (Clear Line), \x1B[1G (Move to column 1), \x1B[?25l (Hide cursor), \x1B[?25h (Show cursor)
+    let processed = text.replace(/\x1B\[[0-9;]*[KJG]/g, ''); 
+    processed = processed.replace(/\x1B\[\?[0-9]*[hl]/g, '');
+
+    // 2. Tokenize by CSI (Control Sequence Introducer)
+    const parts = processed.split(/(\x1B\[[0-9;]*m)/);
+    
+    let html = '';
+    let styleStack = []; 
+    // We'll treat this simple: just wrapping in spans with classes.
+    // Real terminal emulators maintain state. We will try to map common codes to tailwind classes.
+
+    const colorMap = {
+        '30': 'text-black',
+        '31': 'text-red-500',
+        '32': 'text-green-500', 
+        '33': 'text-yellow-500',
+        '34': 'text-blue-500',
+        '35': 'text-purple-500',
+        '36': 'text-cyan-500',
+        '37': 'text-white',
+        '90': 'text-gray-500', // Bright Black
+        '91': 'text-red-400',
+        '92': 'text-green-400',
+        '93': 'text-yellow-400',
+        '94': 'text-blue-400',
+        '95': 'text-purple-400',
+        '96': 'text-cyan-400',
+        '97': 'text-white',
+    };
+
+    parts.forEach(part => {
+        if (part.startsWith('\x1B[')) {
+            // It's a code
+            const content = part.slice(2, -1); // remove \x1B[ and m
+            const codes = content.split(';');
+            
+            codes.forEach(code => {
+                if (code === '0' || code === '39' || code === '') {
+                    // Reset
+                    if (styleStack.length > 0) {
+                        html += '</span>'.repeat(styleStack.length);
+                        styleStack = [];
+                    }
+                } else if (colorMap[code]) {
+                    // It's a color
+                    const cls = colorMap[code];
+                    html += `<span class="${cls}">`;
+                    styleStack.push('span');
+                } else if (code === '1') {
+                     html += `<span class="font-bold">`;
+                     styleStack.push('span');
+                } else if (code === '2') {
+                     html += `<span class="opacity-75">`; // dim
+                     styleStack.push('span');
+                }
+                // Ignore others for now
+            });
+        } else {
+            // It's text
+            html += part;
+        }
+    });
+
+    // Close remaining tags
+    if (styleStack.length > 0) {
+        html += '</span>'.repeat(styleStack.length);
+    }
+
+    return html;
 }
 
 
@@ -341,7 +436,7 @@ async function executeAction(actionRoute, openLink = false, runCustomTerminal = 
     }
 }
 
-async function executeTerminal(dir, cmd, stopCmd, title, color) {
+async function executeTerminal(dir, cmd, stopCmd, title, color, runTillStop = false) {
     const button = event.currentTarget;
     const originalContent = button.innerHTML;
 
@@ -362,14 +457,23 @@ async function executeTerminal(dir, cmd, stopCmd, title, color) {
     const terminalId = 'term-' + Date.now();
     createTerminal(terminalId, title, color, stopRoute, button.id);
     
+    // Create AbortController for this terminal session
+    const controller = new AbortController();
+    const termEl = document.getElementById(terminalId);
+    if (termEl) {
+        termEl.abortController = controller;
+    }
+
     try {
         const response = await fetch('/terminal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 terminalDirectory: dir,
-                terminalCommand: cmd
-            })
+                terminalCommand: cmd,
+                terminalRunTillStop: runTillStop
+            }),
+            signal: controller.signal
         });
 
         const reader = response.body.getReader();

@@ -33,10 +33,11 @@ window.data = [
                     {
                         title:       "Run Node Server",
                         color:       "bg-blue-500",
-                        runTerminal: true,
-                        terminalDirectory: 'backend/node-service',
-                        terminalCommand:   'yarn run dev',
-                        terminalOnStop:    'yarn run stop'
+                        runTerminal:         true,
+                        terminalDirectory:   'backend/node-service',
+                        terminalCommand:     'yarn run dev',
+                        terminalOnStop:      'yarn run stop',
+                        terminalRunTillStop: true
                     },
                     {
                         title:       "Check Node Server Status",

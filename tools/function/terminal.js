@@ -3,12 +3,6 @@ const { spawn } = require('child_process');
 
 module.exports = {
     launchTerminal: (req, res) => {
-        if (req.method !== 'POST') {
-            res.writeHead(405, { 'Content-Type': 'text/plain' });
-            res.end('Method Not Allowed');
-            return;
-        }
-
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
@@ -16,7 +10,7 @@ module.exports = {
 
         req.on('end', () => {
             try {
-                const { terminalDirectory, terminalCommand } = JSON.parse(body);
+                const { terminalDirectory, terminalCommand, terminalRunTillStop } = JSON.parse(body);
 
                 if (!terminalDirectory || !terminalCommand) {
                     res.writeHead(400, { 'Content-Type': 'text/plain' });
@@ -34,11 +28,19 @@ module.exports = {
 
                 res.write(`${terminalDirectory}$ ${terminalCommand}`);
 
+                // Heartbeat setup if requested
+                let heartbeatInterval = null;
+                if (terminalRunTillStop) {
+                    heartbeatInterval = setInterval(() => {
+                        res.write('-'); // Send hyphen as invisible heartbeat
+                    }, 3000);
+                }
+
                 const child = spawn(terminalCommand, {
                     cwd: workingDir,
-                    shell: true,
-                    stdio: ['ignore', 'pipe', 'pipe'],
-                    env: { ...process.env, FORCE_COLOR: '1' }
+                    shell:      true,
+                    stdio:      ['pipe', 'pipe', 'pipe'], 
+                    env:        { ...process.env, FORCE_COLOR: '1' } 
                 });
 
                 child.stdout.on('data', (data) => {
@@ -50,32 +52,33 @@ module.exports = {
                 });
 
                 child.on('error', (err) => {
+                    if (heartbeatInterval) clearInterval(heartbeatInterval);
                     res.write(`\n[Error]: ${err.message}\n`);
                     res.end();
                 });
 
-                child.on('close', (code) => {
-                    res.write(`\n[Close]: Process exited with code ${code}\n`);
+                child.on('close', (code, signal) => {
+                    if (heartbeatInterval) clearInterval(heartbeatInterval);
+                    res.write(`\n[Close]: Process exited with code ${code} (Signal: ${signal})\n`);
                     res.end();
                 });
 
                 // If the client disconnects, we should probably kill the process
                 req.on('close', () => {
+                    if (heartbeatInterval) clearInterval(heartbeatInterval);
+                    console.log('Request connection closed by client.');
                     if (!child.killed) {
-                        // console.log('Client disconnected, killing process...');
-                        // In a real terminal, we might want to keep it running?
-                        // But for this use-case (like dev server), we usually want to kill it.
-                        // However, the existing lunchnodeserver kills it.
-                        // Let's try to kill the process group to be safe.
                         try {
-                            process.kill(-child.pid);
+                            console.log('Killing process ' + child.pid);
+                            child.kill();
                         } catch (e) {
-                             try { child.kill(); } catch(e2) {}
+                             console.error('Failed to kill process:', e);
                         }
                     }
                 });
 
             } catch (e) {
+                console.error(e);
                 res.writeHead(400, { 'Content-Type': 'text/plain' });
                 res.end('Invalid JSON');
             }

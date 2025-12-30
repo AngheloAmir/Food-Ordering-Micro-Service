@@ -19,7 +19,7 @@ module.exports = {
                     shell:      true,
                     stdio:      ['pipe', 'pipe', 'pipe'], // Using pipe for stdin/stdout/stderr
                     env:        { ...process.env, FORCE_COLOR: '1' } 
-                });
+                }); 
 
                 // Heartbeat interval to prevent timeouts during long periods of silence
                 const heartbeat = setInterval(() => {
