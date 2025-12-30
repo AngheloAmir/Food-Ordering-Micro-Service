@@ -40,10 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const termCmd = btn.terminalCommand ? btn.terminalCommand.replace(/'/g, "\\'") : '';
                     const termStop = btn.terminalOnStop ? btn.terminalOnStop.replace(/'/g, "\\'") : '';
                     const termRunTillStop = btn.terminalRunTillStop ? 'true' : 'false';
+                    const termOpenLink = btn.terminalOpenLink ? btn.terminalOpenLink : '';
 
                     return `
                         <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
-                                onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}', ${termRunTillStop})" 
+                                onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}', ${termRunTillStop}, '${termOpenLink}')" 
                                 class="w-full mt-1.5 flex items-center justify-center px-3 py-1.5 ${btn.color} hover:opacity-90 text-white text-xs font-medium rounded-lg transition-colors">
                             <span>${btn.title}</span>
                             <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -472,12 +473,18 @@ async function executeAction(actionRoute, openLink = false, runCustomTerminal = 
     }
 }
 
-async function executeTerminal(dir, cmd, stopCmd, title, color, runTillStop = false) {
+async function executeTerminal(dir, cmd, stopCmd, title, color, runTillStop = false, openLink = '') {
     const button = event.currentTarget;
     const originalContent = button.innerHTML;
 
     if (!button.hasAttribute('data-original-title')) {
         button.setAttribute('data-original-title', title);
+    }
+
+    if (openLink) {
+        setTimeout(() => {
+            window.open(openLink, '_blank');
+        }, 3000);
     }
     
     button.innerHTML = '<span class="animate-pulse">[ Running Terminal ]</span>';

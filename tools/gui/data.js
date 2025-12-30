@@ -2,7 +2,7 @@
 
 window.data = [
     {
-        title: "Development Server",
+        title: "Local Development",
         color: "bg-yellow-500",
         cards: [
             {
@@ -59,9 +59,54 @@ window.data = [
                         openlink:    true
                     },
                 ]
-            }
+            },
+
+            {
+                title:       "React - Customer App",
+                icon:        "fa-solid fa-store",
+                description: "Run the React customer app locally.",
+                buttons:     [
+                    {
+                        title:               "Run Customer App",
+                        color:               "bg-blue-500",
+                        runTerminal:         true,
+                        terminalDirectory:   'frontend/customer',
+                        terminalCommand:     'yarn run dev',
+                        terminalOnStop:      'yarn run stop',
+                        terminalRunTillStop: true,
+                        terminalOpenLink:    "http://localhost:5206/",
+                    },
+                ]
+            },
         ]
     },
 
+
+    // {
+    //     title: "Development Server",
+    //     color: "bg-yellow-500",
+    //     cards: [
+    //         {
+    //             title:       "Launch Database",
+    //             icon:        "fa-solid fa-database",
+    //             description: "Start the PostgreSQL database service locally via Docker containers.",
+    //             buttons:     [
+    //                 {
+    //                     title:       "Run Supabase Docker",
+    //                     color:       "bg-blue-500",
+    //                     runCustomTerminal: true,
+    //                     action:      "/lunch-supabase",
+    //                     onStop:      "/stop-supabase"  
+    //                 },
+    //                 {
+    //                     title:       "Open Studio",
+    //                     color:       "bg-green-500",
+    //                     action:      "http://127.0.0.1:54323",
+    //                     openlink:    true
+    //                 },
+    //             ]
+    //         },
+    //     ]
+    // },
     
 ]

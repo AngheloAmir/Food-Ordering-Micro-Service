@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite && npm run open",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "stop": "npx -y kill-port 5206",
+    "open": "npx -y open-cli http://localhost:5206"
   },
   "dependencies": {
     "@mantine/core": "^8.3.10",

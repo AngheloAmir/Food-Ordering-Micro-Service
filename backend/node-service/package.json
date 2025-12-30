@@ -10,7 +10,7 @@
     "build": "tsc",
     "test": "jest",
     "docker": "docker build -t node-service . && docker run -p 8000:8000 node-service",
-    "stop": "node src/stop.js"
+    "stop":   "npx -y kill-port 5199"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
