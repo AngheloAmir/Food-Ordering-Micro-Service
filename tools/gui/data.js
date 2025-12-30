@@ -120,6 +120,20 @@ window.data = [
                     },
                 ]
             },
+            {
+                title:       "Package Node",
+                icon:        "fa-solid fa-box-open",
+                description: "Package all node projects",
+                buttons:     [
+                    {
+                        title:       "Package",
+                        color:       "bg-blue-500",
+                        runCustomTerminal: true,
+                        action:      "/package-node",
+                        onStop:      "/?"
+                    },
+                ]
+            },
         ]
     },
     

@@ -51,11 +51,15 @@ app.use('/api', workdayRoutes);
 app.use('/api', streamRoutes);
 
 // Serve static files from 'public' directory===============================
-app.use(express.static(path.join(__dirname, '../public')));
+const localPublic = path.join(__dirname, 'public');
+const parentPublic = path.join(__dirname, '../public');
+const publicDir = require('fs').existsSync(localPublic) ? localPublic : parentPublic;
+
+app.use(express.static(publicDir));
 
 // Fallback for root to ensure index.html is served=========================
 app.get('/', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 app.listen(port, () => {

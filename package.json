@@ -2,8 +2,12 @@
   "name": "modular-micro-service",
   "version": "1.0.0",
   "description": "Node.js backend service with TypeScript",
-  "scripts": {
+  "scripts": {  
     "dev":  "cd tools && yarn run bootrepo",
-    "stop": "npx -y kill-port 3000"
+    "stop": "npx -y kill-port 3000",
+
+    "startapp":   "cd app && yarn run start",
+    "installapp": "cd app && yarn install"
+
   }
 }

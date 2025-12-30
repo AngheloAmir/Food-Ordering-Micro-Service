@@ -15,8 +15,11 @@ export default function App() {
   const isLoginOpen = useModalStore.use.isLoginOpen();
   const hideLogin = useModalStore.use.closeAll();
 
+  // Determine the basename dynamically based on where the app is served
+  const basename = window.location.pathname.startsWith('/customer') ? '/customer' : '/';
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <div className='relative w-full min-h-screen bg-stone-50 dark:bg-neutral-950 text-stone-900 dark:text-white'>
         <Header />
         <Routes>

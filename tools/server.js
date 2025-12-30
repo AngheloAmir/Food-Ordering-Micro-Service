@@ -4,11 +4,12 @@ const PORT = process.env.PORT || 3000;
 const { returnGui, returnGuiStatic }   = require('./function/gui');
 const { returnApiTestGui }             = require('./function/apitestergui');
 const { launchTerminal, stopTerminal } = require('./function/terminal');
+const { runInstall }                   = require('./toolfunction/runInstall');
+const { runBuild }                     = require('./toolfunction/runBuild');
 
 //the custom process tools
 const { runSupabase, stopSupabase } = require('./toolfunction/runSupabase');
-const { runInstall }                = require('./toolfunction/runInstall');
-const { runBuild }                  = require('./toolfunction/runBuild');
+const { runPackageNode }            = require('./toolfunction/runPackageNode');
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,6 +32,7 @@ const server = http.createServer((req, res) => {
     //these are the custom process========================================================
     case '/lunch-supabase': return runSupabase(req, res);
     case '/stop-supabase':  return stopSupabase(req, res);
+    case '/package-node':   return runPackageNode(req, res);
     
 
     default: 
