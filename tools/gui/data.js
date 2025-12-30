@@ -46,8 +46,9 @@ window.data = [
                 buttons:     [
                     {
                         title:       "Run API Tester",
-                        action:      "/api-test",
-                        color:       "bg-blue-500"
+                        action:      "/test",
+                        color:       "bg-blue-500",
+                        openlink:    true
                     },
                 ]
             }
