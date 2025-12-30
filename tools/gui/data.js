@@ -106,6 +106,20 @@ window.data = [
                     },
                 ]
             },
+            {
+                title:       "Build",
+                icon:        "fa-solid fa-gears",
+                description: "Build all projects",
+                buttons:     [
+                    {
+                        title:       "Build",
+                        color:       "bg-blue-500",
+                        runCustomTerminal: true,
+                        action:      "/install",
+                        onStop:      "/?"
+                    },
+                ]
+            },
         ]
     },
     
