@@ -7,22 +7,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Generate Section Header
         const headerHTML = `
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-8 w-1 ${section.color} rounded-full"></div>
-                <h2 class="text-2xl font-bold text-gray-100">${section.title}</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="h-6 w-1 ${section.color} rounded-full"></div>
+                <h2 class="text-xl font-bold text-gray-100">${section.title}</h2>
             </div>
         `;
 
         // Generate Cards Grid
         const cardsGrid = document.createElement('div');
-        cardsGrid.className = 'bg-slate-900/50 rounded-2xl p-6 border border-slate-800/50 backdrop-blur-sm';
+        cardsGrid.className = 'bg-slate-900/50 rounded-2xl p-4 border border-slate-800/50 backdrop-blur-sm';
         
         const gridInner = document.createElement('div');
-        gridInner.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+        gridInner.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
 
         section.cards.forEach(card => {
             const cardEl = document.createElement('div');
-            cardEl.className = 'group bg-slate-800 rounded-xl p-6 card-hover cursor-pointer relative overflow-hidden';
+            cardEl.className = 'group bg-slate-800 rounded-xl p-4 card-hover cursor-pointer relative overflow-hidden';
             
             const textColorClass = section.color.replace('bg-', 'text-');
             const bgOpacityClass = section.color.replace('bg-', 'bg-') + '/10';
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `
                         <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
                                 onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}')" 
-                                class="w-full mt-2 flex items-center justify-center px-4 py-2 ${btn.color} hover:opacity-90 text-white text-sm font-medium rounded-lg transition-colors">
+                                class="w-full mt-1.5 flex items-center justify-center px-3 py-1.5 ${btn.color} hover:opacity-90 text-white text-xs font-medium rounded-lg transition-colors">
                             <span>${btn.title}</span>
                             <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                         </button>
@@ -58,25 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `
                     <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
                             onclick="executeAction('${btn.action}', ${openLink}, ${runCustomTerminal}, '${safeTitle}', '${btn.color}', '${stopRoute}')" 
-                            class="w-full mt-2 flex items-center justify-center px-4 py-2 ${btn.color} hover:opacity-90 text-white text-sm font-medium rounded-lg transition-colors">
+                            class="w-full mt-1.5 flex items-center justify-center px-3 py-1.5 ${btn.color} hover:opacity-90 text-white text-xs font-medium rounded-lg transition-colors">
                         <span>${btn.title}</span>
-                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </button>
                 `;
             }).join('');
 
             cardEl.innerHTML = `
-                <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i class="${card.icon} text-6xl"></i>
+                <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="${card.icon} text-5xl"></i>
                 </div>
-                <div class="flex items-start justify-between mb-4">
-                    <div class="p-3 ${bgOpacityClass} ${textColorClass} rounded-lg">
-                        <i class="${card.icon} text-xl"></i>
+                <div class="flex items-start justify-between mb-3">
+                    <div class="p-2 ${bgOpacityClass} ${textColorClass} rounded-lg">
+                        <i class="${card.icon} text-lg"></i>
                     </div>
                 </div>
-                <h3 class="text-lg font-semibold text-white mb-2">${card.title}</h3>
-                <p class="text-slate-400 text-sm mb-4 min-h-[40px]">${card.description}</p>
-                <div class="flex flex-col gap-2">
+                <h3 class="text-base font-semibold text-white mb-1.5">${card.title}</h3>
+                <p class="text-slate-400 text-xs mb-3 min-h-[32px] leading-relaxed">${card.description}</p>
+                <div class="flex flex-col gap-1.5">
                     ${buttonsHTML}
                 </div>
             `;
@@ -201,6 +200,17 @@ function logToTerminal(id, text, type = 'info') {
     if (!term) return;
     
     const body = term.querySelector('.terminal-body');
+
+    // Special handling for heartbeat dots (append to last line instead of new line)
+    if (text === '.' || /^\.+$/.test(text)) {
+        const lastLine = body.lastElementChild;
+        if (lastLine) {
+            lastLine.insertAdjacentText('beforeend', text);
+            body.scrollTop = body.scrollHeight;
+            return;
+        }
+    }
+
     const lines = text.split('\n');
     
     lines.forEach(line => {
@@ -261,15 +271,27 @@ async function executeAction(actionRoute, openLink = false, runCustomTerminal = 
                  const decoder = new TextDecoder();
 
                  while(true) {
-                     const {value, done} = await reader.read();
+                     let result;
+                     try {
+                         result = await reader.read();
+                     } catch (err) {
+                         console.error("Stream read error:", err);
+                         // If it's a TypeError from the stream, break
+                         break;
+                     }
+                     
+                     const {value, done} = result;
                      if (done) break;
-                     const text = decoder.decode(value, {stream: true});
-                     logToTerminal(terminalId, text);
+                     
+                     if (value) {
+                         const text = decoder.decode(value, {stream: true});
+                         logToTerminal(terminalId, text);
+                     }
                  }
                  logToTerminal(terminalId, '>>> Process Finished', 'success');
                  
              } catch (e) {
-                 logToTerminal(terminalId, `Error: ${e.message}`, 'error');
+                 logToTerminal(terminalId, `Error: ${e}`, 'error');
              } finally {
                  // Revert button state after process finishes (or request finishes)
                  // NOTE: If we want the button to stay "Running" until manually closed, skip this.
@@ -354,15 +376,26 @@ async function executeTerminal(dir, cmd, stopCmd, title, color) {
         const decoder = new TextDecoder();
 
         while(true) {
-            const {value, done} = await reader.read();
+            let result;
+            try {
+                result = await reader.read();
+            } catch (err) {
+                 console.error("Stream read error:", err);
+                 break;
+            }
+            
+            const {value, done} = result;
             if (done) break;
-            const text = decoder.decode(value, {stream: true});
-            logToTerminal(terminalId, text);
+            
+            if (value) {
+                const text = decoder.decode(value, {stream: true});
+                logToTerminal(terminalId, text);
+            }
         }
         logToTerminal(terminalId, '>>> Process Finished', 'success');
         
     } catch (e) {
-        logToTerminal(terminalId, `Error: ${e.message}`, 'error');
+        logToTerminal(terminalId, `Error: ${e}`, 'error');
     } finally {
         button.innerHTML = originalContent;
         button.disabled = false;

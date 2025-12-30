@@ -2,7 +2,7 @@
 
 window.data = [
     {
-        title: "Development",
+        title: "Development Server",
         color: "bg-yellow-500",
         cards: [
             {
@@ -12,18 +12,16 @@ window.data = [
                 buttons:     [
                     {
                         title:       "Run Supabase Docker",
-                        action:      "/database",
-                        color:       "bg-blue-500"
-                    },
-                    {
-                        title:       "Stop Supabase Docker",
-                        action:      "/database-stop",
-                        color:       "bg-red-500"
+                        color:       "bg-blue-500",
+                        runCustomTerminal: true,
+                        action:      "/lunch-supabase",
+                        onStop:      "/stop-supabase"  
                     },
                     {
                         title:       "Open Studio",
-                        action:      "/database-studio",
-                        color:       "bg-green-500"
+                        color:       "bg-green-500",
+                        action:      "http://127.0.0.1:54323",
+                        openlink:    true
                     },
                 ]
             },
@@ -32,13 +30,6 @@ window.data = [
                 icon:        "fa-brands fa-node",
                 description: "Spin up the main Node.js backend service with hot-reloading enabled.",
                 buttons:     [
-                    // {
-                    //     title:       "Run Node Server",  
-                    //     color:       "bg-blue-500",
-                    //     runCustomTerminal: true,
-                    //     action:      "/lunch-node",
-                    //     onStop:      "/stop-node"
-                    // },
                     {
                         title:       "Run Node Server",
                         color:       "bg-blue-500",

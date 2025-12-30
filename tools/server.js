@@ -5,6 +5,9 @@ const { returnGui, returnGuiStatic } = require('./function/gui');
 const { returnApiTestGui } = require('./function/apitestergui');
 const { launchTerminal, stopTerminal } = require('./function/terminal');
 
+//the custom process tools
+const { runSupabase, stopSupabase } = require('./toolfunction/runSupabase');
+
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -14,11 +17,17 @@ const server = http.createServer((req, res) => {
     case '/':               return returnGui(req, res);
     case '/gui/data.js':    return returnGuiStatic(req, res);
     case '/gui/script.js':  return returnGuiStatic(req, res);
-   
     case '/terminal':       return launchTerminal(req, res);
     case '/terminal-stop':  return stopTerminal(req, res);
-    
     case '/test':           return returnApiTestGui(req, res);
+
+    //these are the custom process========================================================
+    case '/lunch-supabase': return runSupabase(req, res);
+    case '/stop-supabase':  return stopSupabase(req, res);
+
+    
+
+    //====================================================================================
 
     default: 
       if (req.url.startsWith('/test/')) {
