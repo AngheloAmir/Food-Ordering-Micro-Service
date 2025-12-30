@@ -3,7 +3,7 @@ const PORT = process.env.PORT || 3000;
 
 const { returnGui, returnGuiStatic } = require('./function/gui');
 const { returnApiTestGui } = require('./function/apitestergui');
-const { launchNodeServer } = require('./function/lunchnodeserver');
+const { launchNodeServer, stopNodeServer } = require('./function/lunchnodeserver');
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,6 +16,8 @@ const server = http.createServer((req, res) => {
     case '/gui/script.js':  return returnGuiStatic(req, res);
    
     case '/lunch-node':     return launchNodeServer(req, res);
+    case '/stop-node':      return stopNodeServer(req, res);
+    
     case '/test':           return returnApiTestGui(req, res);
 
     default: 

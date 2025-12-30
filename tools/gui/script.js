@@ -1,7 +1,6 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    const mainContainer = document.getElementById('main-container');
-    if (!window.data || !mainContainer) return;
+    const dashboardContainer = document.getElementById('dashboard-container');
+    if (!window.data || !dashboardContainer) return;
 
     window.data.forEach(section => {
         const sectionEl = document.createElement('section');
@@ -19,25 +18,26 @@ document.addEventListener('DOMContentLoaded', () => {
         cardsGrid.className = 'bg-slate-900/50 rounded-2xl p-6 border border-slate-800/50 backdrop-blur-sm';
         
         const gridInner = document.createElement('div');
-        gridInner.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        gridInner.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
 
         section.cards.forEach(card => {
             const cardEl = document.createElement('div');
             cardEl.className = 'group bg-slate-800 rounded-xl p-6 card-hover cursor-pointer relative overflow-hidden';
             
-            // Extract the base text color from the button color or default to something visible
-            // We use the first button's color to theme the mini-icon background if possible, or just default slate
-            // The original used specific muted colors (yellow-500/10) matching the section or card theme.
-            // We'll try to derive a text color class from the section color for the icon.
-            // Section color is like "bg-yellow-500". We want "text-yellow-500".
             const textColorClass = section.color.replace('bg-', 'text-');
             const bgOpacityClass = section.color.replace('bg-', 'bg-') + '/10';
 
             // Generate Buttons HTML
             const buttonsHTML = card.buttons.map(btn => {
                 const openLink = btn.openlink ? 'true' : 'false';
+                const spawnTerminal = btn.spawnTerminal ? 'true' : 'false';
+                // Escape single quotes in title just in case
+                const safeTitle = btn.title.replace(/'/g, "\\'");
+                const stopRoute = btn.onStop ? btn.onStop : '';
+                
                 return `
-                    <button onclick="executeAction('${btn.action}', ${openLink})" 
+                    <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
+                            onclick="executeAction('${btn.action}', ${openLink}, ${spawnTerminal}, '${safeTitle}', '${btn.color}', '${stopRoute}')" 
                             class="w-full mt-2 flex items-center justify-center px-4 py-2 ${btn.color} hover:opacity-90 text-white text-sm font-medium rounded-lg transition-colors">
                         <span>${btn.title}</span>
                         <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -67,47 +67,217 @@ document.addEventListener('DOMContentLoaded', () => {
         cardsGrid.appendChild(gridInner);
         sectionEl.innerHTML = headerHTML;
         sectionEl.appendChild(cardsGrid);
-        mainContainer.appendChild(sectionEl);
+        dashboardContainer.appendChild(sectionEl);
     });
 });
 
-async function executeAction(actionRoute, openLink = false) {
+// --- Terminal Management Functions ---
+
+function createTerminal(id, title, colorClass, stopRoute = '', buttonId = '') {
+    const container = document.getElementById('terminals-container');
+    const emptyState = container.querySelector('.empty-state');
+    if(emptyState) emptyState.style.display = 'none';
+
+    // Ensure we have a valid bg color for the header
+    const headerColor = colorClass.startsWith('bg-') ? colorClass : 'bg-slate-700';
+
+    const termEl = document.createElement('div');
+    termEl.className = 'w-full bg-slate-900 rounded-xl border border-slate-800 shadow-xl overflow-hidden flex flex-col transition-all duration-300 animate-fade-in';
+    termEl.id = id;
+    
+    // Accordion Header
+    termEl.innerHTML = `
+        <div class="${headerColor} px-4 py-3 flex items-center justify-between cursor-pointer group" onclick="toggleTerminal('${id}')">
+            <div class="flex items-center gap-2 text-white font-medium">
+                <i class="fa-solid fa-terminal text-white/80"></i>
+                <span class="text-sm font-bold text-shadow-sm">${title}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                 <button onclick="clearTerminal('${id}'); event.stopPropagation();" class="text-white/60 hover:text-white transition-colors p-1 rounded hover:bg-white/10" title="Clear">
+                    <i class="fa-solid fa-eraser text-xs"></i>
+                </button>
+                 <button onclick="closeTerminal('${id}', '${stopRoute}', '${buttonId}'); event.stopPropagation();" class="text-white/60 hover:text-white transition-colors p-1 rounded hover:bg-white/10" title="Close & Stop">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+                <i class="fa-solid fa-chevron-down text-white/60 transition-transform duration-300 chevron transform rotate-180"></i>
+            </div>
+        </div>
+        <div class="terminal-body bg-slate-950 p-4 font-mono text-xs overflow-y-auto max-h-80 min-h-[100px] space-y-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent border-t border-slate-800 transition-all duration-300">
+             <div class="text-slate-500 italic pb-2 border-b border-slate-800/50 mb-2">Initializing active session...</div>
+        </div>
+    `;
+    
+    container.prepend(termEl); 
+    return termEl.querySelector('.terminal-body');
+}
+
+function toggleTerminal(id) {
+    const term = document.getElementById(id);
+    if (!term) return;
+    
+    const body = term.querySelector('.terminal-body');
+    const chevron = term.querySelector('.chevron');
+    
+    if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+    } else {
+        body.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+    }
+}
+
+async function closeTerminal(id, stopRoute, buttonId) {
+    // 1. If stopRoute is present, call it to stop the process
+    if (stopRoute) {
+        try {
+            logToTerminal(id, '>>> Stopping process...', 'warning');
+            await fetch(stopRoute); // Fire and forget mostly, or wait?
+        } catch (e) {
+            console.error("Failed to call stop route", e);
+        }
+    }
+
+    // 2. Remove the terminal UI
+    const term = document.getElementById(id);
+    if (term) {
+        term.remove();
+        const container = document.getElementById('terminals-container');
+        if (container.children.length <= 1) { 
+             const emptyState = container.querySelector('.empty-state');
+             if(emptyState) emptyState.style.display = 'block';
+        }
+    }
+
+    // 3. Reset the original button if ID provided
+    if (buttonId) {
+        const btn = document.getElementById(buttonId);
+        if (btn) {
+            // We need to restore original text. We didn't save it explicitly but we know the structure.
+            // Alternatively, we could have saved it in a data attribute.
+            // For now, let's just make it look "ready" again.
+            // The safest way is to grab the title from the button's execution context... which we don't have easily here.
+            // But we know 'btn' is the element.
+            // HACK: We can just set innerHTML based on a generic template or try to read a stored attribute.
+            // Let's modify the create loop to store the original title in a data attribute.
+            const title = btn.getAttribute('data-original-title') || 'Execute';
+            btn.innerHTML = `<span>${title}</span><i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>`;
+            btn.disabled = false;
+        }
+    }
+}
+
+
+function clearTerminal(id) {
+    const term = document.getElementById(id);
+    if (term) {
+        const body = term.querySelector('.terminal-body');
+        body.innerHTML = '<div class="text-slate-500 italic">History cleared.</div>';
+    }
+}
+
+function logToTerminal(id, text, type = 'info') {
+    const term = document.getElementById(id);
+    if (!term) return;
+    
+    const body = term.querySelector('.terminal-body');
+    const lines = text.split('\n');
+    
+    lines.forEach(line => {
+        if (!line.trim()) return; 
+        
+        const lineEl = document.createElement('div');
+        lineEl.className = 'break-words active-log';
+        
+        if (type === 'error' || line.toLowerCase().includes('error')) {
+            lineEl.className += ' text-red-400';
+        } else if (line.toLowerCase().includes('warning')) {
+             lineEl.className += ' text-yellow-400';
+        } else if (line.toLowerCase().includes('success')) {
+             lineEl.className += ' text-green-400';
+        } else {
+            lineEl.className += ' text-slate-300';
+        }
+        
+        const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        lineEl.innerHTML = `<span class="text-slate-600 mr-2 opacity-50 font-sans tracking-tight text-[10px]">[${time}]</span>${line}`;
+        body.appendChild(lineEl);
+    });
+
+    body.scrollTop = body.scrollHeight;
+}
+
+
+async function executeAction(actionRoute, openLink = false, spawnTerminal = false, title = 'Output', color = 'bg-slate-700', stopRoute = '') {
     if (openLink) {
         window.open(actionRoute, '_blank');
         return;
     }
 
-    // If it's a link (not starting with /api or similar command structure), maybe we just want to visit it?
-    // User said "simple get request", so we'll fetch it. 
-    // If user meant navigation for some, we might need to distinguish. 
-    // But request says "action are simple get request".
-    
-    // However, some actions might be external links (like "Open Studio"). 
-    // If action starts with http, window.open it.
     if (actionRoute.startsWith('http')) {
         window.open(actionRoute, '_blank');
         return;
     }
 
+    const button = event.currentTarget;
+    const originalContent = button.innerHTML;
+    
+    // Store original title if not already stored
+    if (!button.hasAttribute('data-original-title')) {
+        button.setAttribute('data-original-title', title);
+    }
+    
     try {
-        const button = event.currentTarget; // Get the button that was clicked
-        const originalContent = button.innerHTML;
-        
-        // Loading state
+        if (spawnTerminal) {
+             button.innerHTML = '<span class="animate-pulse">[ Running Terminal ]</span>';
+             button.disabled = true;
+
+             const terminalId = 'term-' + Date.now();
+             createTerminal(terminalId, title, color, stopRoute, button.id);
+             
+             try {
+                 const response = await fetch(actionRoute);
+                 const reader = response.body.getReader();
+                 const decoder = new TextDecoder();
+
+                 while(true) {
+                     const {value, done} = await reader.read();
+                     if (done) break;
+                     const text = decoder.decode(value, {stream: true});
+                     logToTerminal(terminalId, text);
+                 }
+                 logToTerminal(terminalId, '>>> Process Finished', 'success');
+                 
+             } catch (e) {
+                 logToTerminal(terminalId, `Error: ${e.message}`, 'error');
+             } finally {
+                 // Revert button state after process finishes (or request finishes)
+                 // NOTE: If we want the button to stay "Running" until manually closed, skip this.
+                 // The user requested: "when stop, the button returns to normal".
+                 // This implies the button should stay disabled/"Running" while the process is active.
+                 // Fetch stream keeps connection open until server closes it.
+                 // If connection closes physically (process ends), we reset.
+                 // If manual close happens, we reset via closeTerminal.
+                 // So we can leave this here for natural termination.
+                 button.innerHTML = originalContent;
+                 button.disabled = false;
+             }
+             return;
+        }
+
+        // Standard Action Logic
         button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Working...';
         button.disabled = true;
 
         const response = await fetch(actionRoute);
         
-        // We can check response content type or status to decide what to do.
-        // For now, duplicate the logic of "confirm" or just log.
         if (response.ok) {
-            // Check if JSON
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 const data = await response.json();
                 console.log('Success:', data);
-                // Maybe show a toast or alert? for now console.
+                // For non-terminal output, we could optionally show a toast or a generic terminal
+                // But for now we stick to console logic or ignore if no UI specified
             } else {
                 const text = await response.text();
                 console.log('Response:', text);
@@ -115,8 +285,8 @@ async function executeAction(actionRoute, openLink = false) {
         } else {
             console.error('Request failed', response.status);
         }
-
-        // Restore button state
+        
+         // Restore button state
         setTimeout(() => {
             button.innerHTML = originalContent;
             button.disabled = false;
@@ -124,11 +294,7 @@ async function executeAction(actionRoute, openLink = false) {
 
     } catch (e) {
         console.error('Action error:', e);
-        // Ensure button is reset even on error
-         const button = event.currentTarget;
-         if(button) {
-             button.disabled = false;
-             button.innerHTML = '<span>Retry</span><i class="fa-solid fa-rotate-right ml-2"></i>';
-         }
+        button.innerHTML = originalContent;
+        button.disabled = false;
     }
 }

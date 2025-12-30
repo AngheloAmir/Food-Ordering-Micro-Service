@@ -42,8 +42,26 @@
         </div>
     </header>
 
-    <main id="main-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        <!-- Content will be injected here by script.js -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Dashboard Column (70% -> col-span-8) -->
+            <div id="dashboard-container" class="lg:col-span-8 space-y-12">
+                <!-- Content injected by script.js -->
+            </div>
+
+            <!-- Console Column (30% -> col-span-4) -->
+            <div class="lg:col-span-4">
+                <div class="sticky top-24">
+                    <div id="terminals-container" class="space-y-4 h-[calc(100vh-8rem)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700">
+                        <!-- Terminals will be injected here -->
+                        <div class="text-center text-slate-500 mt-10 italic empty-state border border-dashed border-slate-800 rounded-xl p-8">
+                            <i class="fa-solid fa-terminal text-4xl mb-3 opacity-20"></i>
+                            <p>No active terminals running</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="/gui/data.js"></script>

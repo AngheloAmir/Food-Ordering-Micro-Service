@@ -35,7 +35,9 @@ window.data = [
                     {
                         title:       "Run Node Server",
                         action:      "/lunch-node",
-                        color:       "bg-blue-500"
+                        color:       "bg-blue-500",
+                        spawnTerminal: true,
+                        onStop:      "/stop-node"
                     },
                 ]
             },
