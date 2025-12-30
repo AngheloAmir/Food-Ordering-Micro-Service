@@ -28,11 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const bgOpacityClass = section.color.replace('bg-', 'bg-') + '/10';
 
             // Generate Buttons HTML
+            // Generate Buttons HTML
             const buttonsHTML = card.buttons.map(btn => {
+                // Escape single quotes (naive but usually sufficient for simple titles)
+                const safeTitle = btn.title.replace(/'/g, "\\'");
+
+                // >>> NEW: Generic Terminal Logic <<<
+                if (btn.runTerminal) {
+                    const termDir = btn.terminalDirectory || '';
+                    // Escape quotes for the function call parameters
+                    const termCmd = btn.terminalCommand ? btn.terminalCommand.replace(/'/g, "\\'") : '';
+                    const termStop = btn.terminalOnStop ? btn.terminalOnStop.replace(/'/g, "\\'") : '';
+
+                    return `
+                        <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
+                                onclick="executeTerminal('${termDir}', '${termCmd}', '${termStop}', '${safeTitle}', '${btn.color}')" 
+                                class="w-full mt-2 flex items-center justify-center px-4 py-2 ${btn.color} hover:opacity-90 text-white text-sm font-medium rounded-lg transition-colors">
+                            <span>${btn.title}</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    `;
+                }
+
+                // >>> Existing Logic <<<
                 const openLink = btn.openlink ? 'true' : 'false';
                 const spawnTerminal = btn.spawnTerminal ? 'true' : 'false';
-                // Escape single quotes in title just in case
-                const safeTitle = btn.title.replace(/'/g, "\\'");
                 const stopRoute = btn.onStop ? btn.onStop : '';
                 
                 return `
@@ -294,6 +314,56 @@ async function executeAction(actionRoute, openLink = false, spawnTerminal = fals
 
     } catch (e) {
         console.error('Action error:', e);
+        button.innerHTML = originalContent;
+        button.disabled = false;
+    }
+}
+
+async function executeTerminal(dir, cmd, stopCmd, title, color) {
+    const button = event.currentTarget;
+    const originalContent = button.innerHTML;
+
+    if (!button.hasAttribute('data-original-title')) {
+        button.setAttribute('data-original-title', title);
+    }
+    
+    button.innerHTML = '<span class="animate-pulse">[ Running Terminal ]</span>';
+    button.disabled = true;
+
+    // Construct the stop route for the close button to use
+    let stopRoute = '';
+    if (stopCmd) {
+        // We'll call /terminal-stop with query params
+        stopRoute = `/terminal-stop?dir=${encodeURIComponent(dir)}&command=${encodeURIComponent(stopCmd)}`;
+    }
+
+    const terminalId = 'term-' + Date.now();
+    createTerminal(terminalId, title, color, stopRoute, button.id);
+    
+    try {
+        const response = await fetch('/terminal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                terminalDirectory: dir,
+                terminalCommand: cmd
+            })
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while(true) {
+            const {value, done} = await reader.read();
+            if (done) break;
+            const text = decoder.decode(value, {stream: true});
+            logToTerminal(terminalId, text);
+        }
+        logToTerminal(terminalId, '>>> Process Finished', 'success');
+        
+    } catch (e) {
+        logToTerminal(terminalId, `Error: ${e.message}`, 'error');
+    } finally {
         button.innerHTML = originalContent;
         button.disabled = false;
     }

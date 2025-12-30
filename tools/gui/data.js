@@ -32,13 +32,21 @@ window.data = [
                 icon:        "fa-brands fa-node",
                 description: "Spin up the main Node.js backend service with hot-reloading enabled.",
                 buttons:     [
+                    // {
+                    //     title:       "Run Node Server",  
+                    //     color:       "bg-blue-500",
+                    //     spawnTerminal: true,
+                    //     action:      "/lunch-node",
+                    //     onStop:      "/stop-node"
+                    // },
                     {
                         title:       "Run Node Server",
-                        action:      "/lunch-node",
                         color:       "bg-blue-500",
-                        spawnTerminal: true,
-                        onStop:      "/stop-node"
-                    },
+                        runTerminal: true,
+                        terminalDirectory: 'backend/node-service',
+                        terminalCommand:   'yarn run dev',
+                        terminalOnStop:    'yarn run stop'
+                    }
                 ]
             },
             {
