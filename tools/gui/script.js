@@ -52,12 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // >>> Existing Logic <<<
                 const openLink = btn.openlink ? 'true' : 'false';
-                const spawnTerminal = btn.spawnTerminal ? 'true' : 'false';
+                const runCustomTerminal = btn.runCustomTerminal ? 'true' : 'false';
                 const stopRoute = btn.onStop ? btn.onStop : '';
                 
                 return `
                     <button id="btn-${Date.now()}-${Math.floor(Math.random()*1000)}" 
-                            onclick="executeAction('${btn.action}', ${openLink}, ${spawnTerminal}, '${safeTitle}', '${btn.color}', '${stopRoute}')" 
+                            onclick="executeAction('${btn.action}', ${openLink}, ${runCustomTerminal}, '${safeTitle}', '${btn.color}', '${stopRoute}')" 
                             class="w-full mt-2 flex items-center justify-center px-4 py-2 ${btn.color} hover:opacity-90 text-white text-sm font-medium rounded-lg transition-colors">
                         <span>${btn.title}</span>
                         <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -228,7 +228,7 @@ function logToTerminal(id, text, type = 'info') {
 }
 
 
-async function executeAction(actionRoute, openLink = false, spawnTerminal = false, title = 'Output', color = 'bg-slate-700', stopRoute = '') {
+async function executeAction(actionRoute, openLink = false, runCustomTerminal = false, title = 'Output', color = 'bg-slate-700', stopRoute = '') {
     if (openLink) {
         window.open(actionRoute, '_blank');
         return;
@@ -248,7 +248,7 @@ async function executeAction(actionRoute, openLink = false, spawnTerminal = fals
     }
     
     try {
-        if (spawnTerminal) {
+        if (runCustomTerminal) {
              button.innerHTML = '<span class="animate-pulse">[ Running Terminal ]</span>';
              button.disabled = true;
 

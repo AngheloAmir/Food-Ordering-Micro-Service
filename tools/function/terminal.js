@@ -25,7 +25,6 @@ module.exports = {
                 }
 
                 const workingDir = path.join(__dirname, '../../', terminalDirectory);
-                console.log(`Launching Terminal Command: "${terminalCommand}" in ${workingDir}`);
 
                 // Set streaming headers
                 res.writeHead(200, {
@@ -33,8 +32,7 @@ module.exports = {
                     'Transfer-Encoding': 'chunked'
                 });
 
-                res.write(`>>> Starting command: ${terminalCommand}\n`);
-                res.write(`>>> Directory: ${terminalDirectory}\n\n`);
+                res.write(`${terminalDirectory}$ ${terminalCommand}`);
 
                 const child = spawn(terminalCommand, {
                     cwd: workingDir,
@@ -52,12 +50,12 @@ module.exports = {
                 });
 
                 child.on('error', (err) => {
-                    res.write(`\n>>> Error starting command: ${err.message}\n`);
+                    res.write(`\n[Error]: ${err.message}\n`);
                     res.end();
                 });
 
                 child.on('close', (code) => {
-                    res.write(`\n>>> Process exited with code ${code}\n`);
+                    res.write(`\n[Close]: Process exited with code ${code}\n`);
                     res.end();
                 });
 
@@ -78,7 +76,6 @@ module.exports = {
                 });
 
             } catch (e) {
-                console.error("Error parsing request body:", e);
                 res.writeHead(400, { 'Content-Type': 'text/plain' });
                 res.end('Invalid JSON');
             }

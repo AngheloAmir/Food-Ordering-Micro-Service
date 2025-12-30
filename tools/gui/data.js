@@ -35,7 +35,7 @@ window.data = [
                     // {
                     //     title:       "Run Node Server",  
                     //     color:       "bg-blue-500",
-                    //     spawnTerminal: true,
+                    //     runCustomTerminal: true,
                     //     action:      "/lunch-node",
                     //     onStop:      "/stop-node"
                     // },
@@ -46,7 +46,13 @@ window.data = [
                         terminalDirectory: 'backend/node-service',
                         terminalCommand:   'yarn run dev',
                         terminalOnStop:    'yarn run stop'
-                    }
+                    },
+                    {
+                        title:       "Check Node Server Status",
+                        action:      "http://localhost:5199/",
+                        color:       "bg-blue-500",
+                        openlink:    true
+                    },
                 ]
             },
             {

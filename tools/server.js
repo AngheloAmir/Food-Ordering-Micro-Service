@@ -3,7 +3,6 @@ const PORT = process.env.PORT || 3000;
 
 const { returnGui, returnGuiStatic } = require('./function/gui');
 const { returnApiTestGui } = require('./function/apitestergui');
-const { launchNodeServer, stopNodeServer } = require('./function/lunchnodeserver');
 const { launchTerminal, stopTerminal } = require('./function/terminal');
 
 const server = http.createServer((req, res) => {
@@ -16,9 +15,6 @@ const server = http.createServer((req, res) => {
     case '/gui/data.js':    return returnGuiStatic(req, res);
     case '/gui/script.js':  return returnGuiStatic(req, res);
    
-    case '/lunch-node':     return launchNodeServer(req, res);
-    case '/stop-node':      return stopNodeServer(req, res);
-
     case '/terminal':       return launchTerminal(req, res);
     case '/terminal-stop':  return stopTerminal(req, res);
     
