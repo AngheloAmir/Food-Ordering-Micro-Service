@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:4510-4559:4510-4559"  # external services port range
     environment:
       - DEBUG=${DEBUG-}
-      - SERVICES=s3,lambda,dynamodb,apigateway,sqs,sns
+      - SERVICES=s3,lambda,dynamodb,apigateway,sqs,sns,logs,cloudwatch
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=us-east-1
     volumes:
